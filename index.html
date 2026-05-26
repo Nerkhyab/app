@@ -41,6 +41,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* اصلاح هدر برای جلوگیری از به‌هم‌ریختگی */
         .header { 
             padding: 10px 20px; display: flex; justify-content: space-between; 
             align-items: center; height: 70px; border-bottom: 1px solid var(--border); 
@@ -87,6 +88,7 @@
         }
         .card.expanded .chart-wrapper { max-height: 220px; padding: 10px; border-top: 1px solid var(--border); }
         
+        /* استایل نمایش سقف و کف قیمت */
         .chart-stats { display: flex; justify-content: space-between; padding: 0 10px 8px; font-size: 0.75rem; opacity: 0.8; border-bottom: 1px dashed var(--border); margin-bottom: 8px; }
         .chart-container { width: 100%; height: 150px; position: relative; }
 
@@ -109,69 +111,23 @@
         }
         .full-modal.active { opacity: 1; visibility: visible; transform: translateY(0); }
 
+        .switch-wrapper {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.08); padding: 15px; border-radius: 15px;
+            margin-bottom: 12px; border: 1px solid var(--border);
+        }
+
+        .setting-btn {
+            padding: 15px; border-radius: 12px; color: var(--text); background: rgba(255, 255, 255, 0.08);
+            margin-top: 10px; cursor: pointer; text-align: center; border: 1px solid var(--border);
+            text-decoration: none; display: block;
+            font-family: 'Vazirmatn', sans-serif !important; font-size: 0.95rem;
+        }
+        .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; color: white !important; border: none !important; }
+
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
         .grid-mode .chart-wrapper, .grid-mode .drag-handle { display: none; }
-
-        /* ================== استایل‌های جدید منوی تنظیمات ================== */
-        .settings-screen {
-            background: rgba(28, 28, 30, 0.6) !important;
-            backdrop-filter: blur(25px) !important;
-            -webkit-backdrop-filter: blur(25px) !important;
-            padding: 20px !important;
-            justify-content: flex-start !important;
-            color: #fff;
-        }
-
-        .settings-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; padding-top: 10px;
-        }
-
-        .header-main-title { font-size: 1.5rem; font-weight: 900; }
-        .close-icon { font-size: 1.5rem; opacity: 0.7; cursor: pointer; }
-        .settings-content { display: flex; flex-direction: column; gap: 15px; }
-
-        .setting-group {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px; padding: 15px;
-        }
-
-        .group-label {
-            display: block; font-size: 0.8rem; margin-bottom: 12px; opacity: 0.8;
-        }
-
-        .segmented-control {
-            display: flex; position: relative; background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px; padding: 4px; height: 45px;
-        }
-
-        .segment {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            font-size: 0.9rem; z-index: 2; cursor: pointer; gap: 8px; font-weight: 500;
-        }
-
-        .segment-slider {
-            position: absolute; top: 4px; bottom: 4px; width: calc(50% - 4px);
-            background: rgba(255, 255, 255, 0.15); border-radius: 10px;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1;
-        }
-
-        /* جهت اسلایدرها بر اساس زبان */
-        [dir="rtl"] .slider-active-second { transform: translateX(-100%); }
-        [dir="ltr"] .slider-active-second { transform: translateX(100%); }
-
-        .action-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 5px; }
-
-        .action-btn {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff; padding: 15px; border-radius: 15px; text-align: center;
-            font-size: 0.95rem; text-decoration: none; cursor: pointer;
-            transition: background 0.3s; font-weight: 500; font-family: 'Vazirmatn', sans-serif;
-            display: block;
-        }
-        .action-btn:active { background: rgba(255, 255, 255, 0.1); }
-        .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; border: none !important; }
     </style>
 </head>
 
@@ -190,64 +146,32 @@
     <div class="bottom-nav">
         <i class="fas fa-cog" style="cursor:pointer;" onclick="openModal('sMod')"></i>
         <span id="update-text" style="font-weight: 800; color: #d4af37;">لحظاتی پیش</span>
-        <i class="fas fa-moon" style="cursor:pointer;" onclick="toggleThemeFromNav()"></i>
+        <i class="fas fa-moon" style="cursor:pointer;" onclick="toggleTheme()"></i>
     </div>
 
-    <div id="sMod" class="full-modal settings-screen">
-        <div class="settings-header">
-            <div class="header-main-title" id="t-settings">تنظیمات</div>
-            <i class="fas fa-times close-icon" onclick="closeModal('sMod')"></i>
+    <div id="sMod" class="full-modal">
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 30px;">
+            <b id="settings-title" style="font-size: 1.3rem;">تنظیمات</b>
+            <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
         </div>
-
-        <div class="settings-content">
-            <div class="setting-group">
-                <span class="group-label" id="t-layout">حالت نمایش</span>
-                <div class="segmented-control">
-                    <div class="segment-slider" id="layout-slider"></div>
-                    <div class="segment" onclick="setAppLayout('list')">
-                        <i class="fas fa-list"></i> <span id="t-list">لیست</span>
-                    </div>
-                    <div class="segment" onclick="setAppLayout('grid')">
-                        <i class="fas fa-th-large"></i> <span id="t-grid">کنار هم</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="setting-group">
-                <span class="group-label" id="t-theme">تم اپلیکیشن</span>
-                <div class="segmented-control">
-                    <div class="segment-slider" id="theme-slider"></div>
-                    <div class="segment" onclick="setAppTheme('light')">
-                        <i class="fas fa-sun"></i> <span id="t-light">روشن</span>
-                    </div>
-                    <div class="segment" onclick="setAppTheme('dark')">
-                        <i class="fas fa-moon"></i> <span id="t-dark">تیره</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="setting-group">
-                <span class="group-label" id="t-lang">زبان برنامه</span>
-                <div class="segmented-control">
-                    <div class="segment-slider" id="lang-slider"></div>
-                    <div class="segment" onclick="setAppLang('en')">English</div>
-                    <div class="segment" onclick="setAppLang('fa')">فارسی</div>
-                </div>
-            </div>
-
-            <div class="action-buttons">
-                <div class="action-btn" onclick="location.reload()" id="t-update">بروزرسانی قیمت‌ها</div>
-                <a href="https://t.me/YourTelegramChannel" target="_blank" class="action-btn" id="t-telegram"><i class="fab fa-telegram"></i> کانال تلگرام</a>
-                <div class="action-btn" onclick="openAbout()" id="t-about">درباره برنامه</div>
-                <div class="action-btn" onclick="shareApp()" id="t-share">پیشنهاد به دوستان</div>
-                <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="action-btn insta-btn" id="t-creator"><i class="fab fa-instagram"></i> اینستاگرام سازنده</a>
-            </div>
+        <div class="switch-wrapper">
+            <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
+            <button onclick="toggleLang()" style="background:rgba(255,255,255,0.1); color:var(--text); border:1px solid var(--border); padding:6px 14px; border-radius:10px; cursor:pointer;">EN / FA</button>
         </div>
+        <div class="switch-wrapper">
+            <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
+            <input type="checkbox" id="layoutToggle" onclick="toggleLayout()" style="width:20px; height:20px; cursor:pointer;">
+        </div>
+        <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
+        <button id="manual-update-btn" class="setting-btn" onclick="location.reload()"> بروزرسانی قیمت‌ها</button>
+        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="setting-btn insta-btn">
+            <i class="fab fa-instagram"></i> اینستاگرام سازنده
+        </a>
     </div>
 
-    <div id="aboutMod" class="full-modal settings-screen">
+    <div id="aboutMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
-            <b style="font-size: 1.2rem;" id="t-about-title">درباره برنامه</b>
+            <b style="font-size: 1.2rem;">درباره برنامه</b>
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
         </div>
         <div style="line-height: 2; text-align: justify; font-size: 0.95rem; font-weight: 300;">
@@ -273,18 +197,8 @@
     ];
 
     const i18n = {
-        fa: { 
-            settings: "تنظیمات", layout: "حالت نمایش", list: "لیست", grid: "کنار هم",
-            theme: "تم اپلیکیشن", light: "روشن", dark: "تیره", lang: "زبان برنامه",
-            telegram: "کانال تلگرام", about: "درباره برنامه", creator: "اینستاگرام سازنده", share: "پیشنهاد به دوستان",
-            lastUpdate: "لحظاتی پیش", updateBtn: "بروزرسانی قیمت‌ها", closedMarket: "Closed Market"
-        },
-        en: { 
-            settings: "Settings", layout: "Layout Mode", list: "List", grid: "Grid",
-            theme: "App Theme", light: "Light", dark: "Dark", lang: "App Language",
-            telegram: "Telegram Channel", about: "About App", creator: "Creator Instagram", share: "Share to Friends",
-            lastUpdate: "Just now", updateBtn: "Manual Update", closedMarket: "Closed Market"
-        }
+        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش" },
+        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now" }
     };
 
     function updateDT() {
@@ -299,81 +213,8 @@
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function toggleTheme() { document.body.classList.toggle('light-mode'); }
     function openAbout() { closeModal('sMod'); openModal('aboutMod'); }
-
-    // --- منطق اسلایدرهای تنظیمات ---
-    function setAppLayout(mode) {
-        const container = document.getElementById('main-container');
-        const slider = document.getElementById('layout-slider');
-        if (mode === 'grid') {
-            container.classList.add('grid-mode');
-            slider.classList.add('slider-active-second');
-            localStorage.setItem('isGridMode', 'true');
-        } else {
-            container.classList.remove('grid-mode');
-            slider.classList.remove('slider-active-second');
-            localStorage.setItem('isGridMode', 'false');
-        }
-        if(window.lastData) renderManual();
-    }
-
-    function setAppTheme(theme) {
-        const slider = document.getElementById('theme-slider');
-        if (theme === 'dark') {
-            document.body.classList.remove('light-mode');
-            slider.classList.add('slider-active-second');
-        } else {
-            document.body.classList.add('light-mode');
-            slider.classList.remove('slider-active-second');
-        }
-        localStorage.setItem('theme', theme);
-    }
-
-    // هماهنگی دکمه تم در نوار پایین با اسلایدر
-    function toggleThemeFromNav() {
-        const isLight = document.body.classList.contains('light-mode');
-        setAppTheme(isLight ? 'dark' : 'light');
-    }
-
-    function setAppLang(lang) {
-        const slider = document.getElementById('lang-slider');
-        currentLang = lang;
-        localStorage.setItem('lang', lang);
-        if (lang === 'fa') {
-            slider.classList.add('slider-active-second');
-        } else {
-            slider.classList.remove('slider-active-second');
-        }
-        applyLang();
-    }
-
-    function applyLang() {
-        const langData = i18n[currentLang];
-        document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-        
-        // اعمال ترجمه به تمام بخش‌های منو
-        const ids = {
-            't-settings': langData.settings, 't-layout': langData.layout, 't-list': langData.list,
-            't-grid': langData.grid, 't-theme': langData.theme, 't-light': langData.light,
-            't-dark': langData.dark, 't-lang': langData.lang, 't-telegram': langData.telegram,
-            't-about': langData.about, 't-creator': langData.creator, 't-share': langData.share,
-            'update-text': langData.lastUpdate, 't-about-title': langData.about, 't-update': langData.updateBtn
-        };
-
-        for (let id in ids) {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = el.innerHTML.includes('<i') ? el.innerHTML.replace(/<\/i>.*$/, `</i> ${ids[id]}`) : ids[id];
-        }
-        if (window.lastData) renderManual();
-    }
-
-    function shareApp() {
-        if (navigator.share) {
-            navigator.share({
-                title: 'نرخ یاب پرو', text: 'قیمت‌های لحظه‌ای بازار ارز را از اینجا دنبال کن:', url: window.location.href
-            });
-        } else { alert("مرورگر شما از قابلیت اشتراک‌گذاری پشتیبانی نمی‌کند."); }
-    }
 
     async function load() {
         try {
@@ -422,4 +263,122 @@
     function createCardHTML(item, r, isMarketOpen) {
         const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
         const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
-        const cardEff
+        const cardEffect = isMarketOpen ? (r.status === 'down' ? 'active-down' : 'active-up') : '';
+        const themeColor = r.status === 'down' ? '#ff5252' : '#00c853';
+
+        let iconHtml = `<img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover; border: 1px solid var(--border)">`;
+        if (item.icon === "custom-mix") {
+            iconHtml = `<div style="position:relative; width:40px; height:40px; border-radius:10px; overflow:hidden; border: 1px solid var(--border); display:flex;">
+                <img src="https://flagcdn.com/w160/us.png" style="width:20px; height:40px; object-fit:cover;"><img src="https://flagcdn.com/w160/ir.png" style="width:20px; height:40px; object-fit:cover;">
+            </div>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = `card ${cardEffect}`;
+        card.setAttribute('data-id', item.id);
+        
+        card.onclick = (e) => {
+            if (e.target.closest('.drag-handle')) return;
+            if (document.getElementById('main-container').classList.contains('grid-mode')) return;
+            const wasExpanded = card.classList.contains('expanded');
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('expanded'));
+            if (!wasExpanded) {
+                card.classList.add('expanded');
+                setTimeout(() => renderSmoothChart(item.id, r.history, themeColor), 100);
+            }
+        };
+
+        card.innerHTML = `
+            <div class="card-main-row">
+                <div class="drag-handle" style="margin-left: 10px; order: -1;"><i class="fas fa-grip-vertical"></i></div>
+                <div style="display: flex; flex-direction: column; align-items: flex-start; flex-grow: 1;">
+                    <div class="status-badge ${colorClass}" style="font-size: 0.7rem; margin-bottom: -2px; direction: ltr; font-weight: bold;">
+                        <span>${r.percent}</span><i class="fas ${arrowIcon}" style="font-size: 0.6rem;"></i>
+                    </div>
+                    <div class="price-val" style="line-height: 1; font-size: 1.8rem;">${r.current}</div>
+                </div>
+                <div class="card-info">
+                    <div style="text-align:right;">
+                        <b>${item.key}</b>
+                        <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
+                        ${!isMarketOpen ? `<div class="market-closed">Closed Market</div>` : ''}
+                    </div>
+                    ${iconHtml}
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <div class="chart-stats">
+                    <span>کف: <b id="min-${item.id}">---</b></span>
+                    <span>سقف: <b id="max-${item.id}">---</b></span>
+                </div>
+                <div class="chart-container"><canvas id="chart-${item.id}"></canvas></div>
+            </div>`;
+        return card;
+    }
+
+    function renderSmoothChart(id, history, color) {
+        if(!history || history.length === 0) return;
+        
+        // استخراج سقف و کف
+        document.getElementById(`max-${id}`).innerText = Math.max(...history).toLocaleString();
+        document.getElementById(`min-${id}`).innerText = Math.min(...history).toLocaleString();
+
+        const canvas = document.getElementById(`chart-${id}`);
+        const ctx = canvas.getContext('2d');
+        if (chartObjects[id]) chartObjects[id].destroy();
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, 150);
+        gradient.addColorStop(0, color + '66');
+        gradient.addColorStop(1, color + '00');
+
+        chartObjects[id] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: history.map((_, i) => i),
+                datasets: [{
+                    data: history, borderColor: color, borderWidth: 2.5,
+                    fill: true, backgroundColor: gradient, tension: 0.4, pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: {
+                        position: 'right', grid: { display: false },
+                        ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 9 }, callback: (v) => v.toLocaleString() }
+                    }
+                }
+            }
+        });
+    }
+
+    function toggleLayout() {
+        const isGrid = document.getElementById('main-container').classList.toggle('grid-mode');
+        localStorage.setItem('isGridMode', isGrid);
+        renderManual();
+    }
+    function toggleLang() { currentLang = currentLang === 'fa' ? 'en' : 'fa'; localStorage.setItem('lang', currentLang); applyLang(); }
+    function applyLang() {
+        const lang = i18n[currentLang];
+        document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+        if(document.getElementById('lang-text')) document.getElementById('lang-text').innerText = lang.langLabel;
+        if(document.getElementById('grid-label-text')) document.getElementById('grid-label-text').innerText = lang.gridLabel;
+        if(document.getElementById('settings-title')) document.getElementById('settings-title').innerText = lang.settings;
+        if(document.getElementById('manual-update-btn')) document.getElementById('manual-update-btn').innerText = lang.updateBtn;
+        if(document.getElementById('update-text')) document.getElementById('update-text').innerText = lang.lastUpdate;
+        load();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('isGridMode') === 'true') {
+            document.getElementById('main-container').classList.add('grid-mode');
+            if(document.getElementById('layoutToggle')) document.getElementById('layoutToggle').checked = true;
+        }
+        applyLang();
+    });
+    setInterval(load, 30000);
+</script>
+</body>
+    </html>
