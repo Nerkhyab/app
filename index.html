@@ -270,6 +270,11 @@
             <span id="manual-update-btn">بروزرسانی قیمت‌ها</span>
             <i class="fas fa-sync-alt" style="font-size: 0.85rem; opacity: 0.5;"></i>
         </div>
+        
+        <div class="single-action-row" onclick="shareApp()">
+    <span id="text-share">پیشنهاد به دوستان</span>
+    <i class="fas fa-share-nodes" style="font-size: 0.85rem; opacity: 0.5;"></i>
+        </div>
 
         <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="single-action-row insta-btn">
             <span id="text-insta"><i class="fab fa-instagram"></i> اینستاگرام سازنده</span>
@@ -477,6 +482,20 @@
         });
     }
 
+    function shareApp() {
+    const lang = i18n[currentLang];
+    if (navigator.share) {
+        navigator.share({
+            title: 'NERKHYAB PRO',
+            text: lang.shareMsg,
+            url: window.location.href
+        }).catch(console.error);
+    } else {
+        // اگر مرورگر قدیمی بود لینک کپی شود
+        navigator.clipboard.writeText(window.location.href);
+        alert(currentLang === 'fa' ? "لینک برنامه کپی شد!" : "Link copied!");
+    }
+    }
     function applyLang() {
         const lang = i18n[currentLang];
         document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
@@ -525,7 +544,14 @@
             langSlider.style.transform = currentLang === 'en' ? 'translateX(-100%)' : 'translateX(0)';
         }
     }
+// در قسمت i18n این موارد را به fa و en اضافه کنید:
+// برای fa:
+share: "پیشنهاد به دوستان", shareMsg: "اپلیکیشن نرخ‌یاب را نصب کنید!",
+// برای en:
+share: "Share App", shareMsg: "Check out the Nerkhyab app!",
 
+// سپس در داخل تابع applyLang() این خط را اضافه کنید:
+if(document.getElementById('text-share')) document.getElementById('text-share').innerText = lang.share;
     window.addEventListener('DOMContentLoaded', () => {
         if (localStorage.getItem('isGridMode') === 'true') {
             document.getElementById('main-container').classList.add('grid-mode');
