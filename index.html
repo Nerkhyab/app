@@ -229,27 +229,63 @@
         <span id="update-text" style="font-weight: 800; color: #d4af37;">لحظاتی پیش</span>
         <i class="fas fa-moon" style="cursor:pointer;" onclick="toggleTheme()"></i>
     </div>
+<div id="sMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
+            <b id="settings-title" style="font-size: 1.2rem;">تنظیمات</b>
+            <i class="fas fa-times" style="font-size: 1.3rem; cursor:pointer; opacity: 0.6;" onclick="closeModal('sMod')"></i>
+        </div>
 
-    <div id="sMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 30px;">
-            <b id="settings-title" style="font-size: 1.3rem;">تنظیمات</b>
-            <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
+        <div class="setting-group">
+            <div class="group-title" id="grid-label-text">حالت نمایش</div>
+            <div class="segmented-control" id="layout-control">
+                <div class="segment-slider" id="layout-slider"></div>
+                <div class="segment-option" id="opt-list" onclick="setControlLayout(false)">
+                    <i class="fas fa-bars"></i> لیست
+                </div>
+                <div class="segment-option" id="opt-grid" onclick="setControlLayout(true)">
+                    <i class="fas fa-th-large"></i> کنار هم
+                </div>
+            </div>
         </div>
-        <div class="switch-wrapper">
-            <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
-            <button onclick="toggleLang()" style="background:rgba(255,255,255,0.1); color:var(--text); border:1px solid var(--border); padding:6px 14px; border-radius:10px; cursor:pointer;">EN / FA</button>
+
+        <div class="setting-group">
+            <div class="group-title">تم</div>
+            <div class="segmented-control" id="theme-control">
+                <div class="segment-slider" id="theme-slider"></div>
+                <div class="segment-option" id="opt-light" onclick="setControlTheme(true)">
+                    <i class="fas fa-sun"></i> روشن
+                </div>
+                <div class="segment-option" id="opt-dark" onclick="setControlTheme(false)">
+                    <i class="fas fa-moon"></i> تیره
+                </div>
+            </div>
         </div>
-        <div class="switch-wrapper">
-            <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
-            <input type="checkbox" id="layoutToggle" onclick="toggleLayout()" style="width:20px; height:20px; cursor:pointer;">
+
+        <div class="setting-group">
+            <div class="group-title">زبان</div>
+            <div class="segmented-control" id="lang-control" style="direction: ltr;">
+                <div class="segment-slider" id="lang-slider"></div>
+                <div class="segment-option" id="opt-en" onclick="setControlLang('en')">English</div>
+                <div class="segment-option" id="opt-fa" onclick="setControlLang('fa')">فارسی</div>
+            </div>
         </div>
-        <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
-        <button id="manual-update-btn" class="setting-btn" onclick="location.reload()"> بروزرسانی قیمت‌ها</button>
-        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="setting-btn insta-btn">
-            <i class="fab fa-instagram"></i> اینستاگرام سازنده
+
+        <div style="margin-top: 10px;"></div>
+
+        <div class="single-action-row" onclick="openAbout()">
+            <span>درباره برنامه</span>
+            <i class="fas fa-chevron-left" style="font-size: 0.8rem; opacity: 0.3;"></i>
+        </div>
+
+        <div class="single-action-row" onclick="location.reload()">
+            <span id="manual-update-btn">بروزرسانی قیمت‌ها</span>
+            <i class="fas fa-sync-alt" style="font-size: 0.85rem; opacity: 0.5;"></i>
+        </div>
+
+        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="single-action-row" style="text-decoration: none; color: #fff; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;">
+            <span><i class="fab fa-instagram" style="margin-left: 6px;"></i> اینستاگرام سازنده</span>
         </a>
-    </div>
-
+                    </div>
     <div id="aboutMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
             <b style="font-size: 1.2rem;">درباره برنامه</b>
