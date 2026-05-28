@@ -253,14 +253,7 @@
             </div>
         </div>
 
-        <div class="setting-group">
-            <div class="group-title">زبان</div>
-            <div class="segmented-control" id="lang-control" style="direction: ltr;">
-                <div class="segment-slider" id="lang-slider"></div>
-                <div class="segment-option" id="opt-en" onclick="setControlLang('en')">English</div>
-                <div class="segment-option" id="opt-fa" onclick="setControlLang('fa')">فارسی</div>
-            </div>
-        </div>
+    
 
         <div style="margin-top: 10px;"></div>
 
@@ -507,7 +500,7 @@
     function applyLang() {
         const lang = i18n[currentLang];
         document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-        if(document.getElementById('lang-text')) document.getElementById('lang-text').innerText = lang.langLabel;
+    
         if(document.getElementById('grid-label-text')) document.getElementById('grid-label-text').innerText = lang.gridLabel;
         if(document.getElementById('settings-title')) document.getElementById('settings-title').innerText = lang.settings;
         if(document.getElementById('manual-update-btn')) document.getElementById('manual-update-btn').innerText = lang.updateBtn;
@@ -572,13 +565,7 @@
         syncUIWithStorage();
     }
 
-    function setControlLang(lang) {
-        if (currentLang !== lang) {
-            currentLang = lang;
-            localStorage.setItem('lang', currentLang);
-            applyLang();
-        }
-    }
+    
 </script>
 </body>
 </html>
