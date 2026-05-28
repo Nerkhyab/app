@@ -128,6 +128,87 @@
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
         .grid-mode .chart-wrapper, .grid-mode .drag-handle { display: none; }
+        /* باکس‌های اصلی هر بخش (حالت نمایش، تم، زبان) */
+.setting-group {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 18px;
+    padding: 12px;
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.group-title {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 2px;
+    padding-right: 4px;
+}
+
+/* ساختار کنترل لغزنده (Segmented Control) */
+.segmented-control {
+    position: relative;
+    display: flex;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 3px;
+    height: 40px;
+    align-items: center;
+    isolation: isolate;
+}
+
+/* گزینه‌های داخل کنترلر */
+.segment-option {
+    flex: 1;
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    z-index: 2;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 100%;
+    transition: color 0.25s ease;
+}
+
+/* لغزنده متحرک پشت دکمه‌ها */
+.segment-slider {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    width: calc(50% - 3px);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    border-radius: 10px;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+/* وضعیت فعال بودن گزینه‌ها */
+.segment-option.active {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* دکمه‌های تکی انتهای منو (درباره، بروزرسانی و...) */
+.single-action-row {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+.single-action-row:active {
+    background: rgba(255, 255, 255, 0.08);
+        }
     </style>
 </head>
 
