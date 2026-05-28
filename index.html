@@ -496,6 +496,86 @@
         applyLang();
     });
     setInterval(load, 30000);
+    // ۱. مدیریت لغزش و عملکرد حالت نمایش (لیست / کنار هم)
+function setControlLayout(isGrid) {
+    const slider = document.getElementById('layout-slider');
+    const optList = document.getElementById('opt-list');
+    const optGrid = document.getElementById('opt-grid');
+    if (!slider || !optList || !optGrid) return;
+
+    const isRtl = document.dir === 'rtl';
+
+    optList.classList.remove('active');
+    optGrid.classList.remove('active');
+
+    if (isGrid) {
+        optGrid.classList.add('active');
+        slider.style.transform = isRtl ? 'translateX(-100%)' : 'translateX(100%)';
+    } else {
+        optList.classList.add('active');
+        slider.style.transform = 'translateX(0)';
+    }
+
+    // متصل کردن به منطق کدهای قبلی خودت برای تغییر چیدمان کارت‌ها
+    const container = document.getElementById('main-container');
+    if (container) {
+        if (isGrid) container.classList.add('grid-mode');
+        else container.classList.remove('grid-mode');
+    }
+    
+    localStorage.setItem('isGridMode', isGrid);
+    if (typeof renderManual === "function") renderManual();
+}
+
+// ۲. مدیریت لغزش و عملکرد تم (روشن / تیره)
+function setControlTheme(isLight) {
+    const slider = document.getElementById('theme-slider');
+    const optLight = document.getElementById('opt-light');
+    const optDark = document.getElementById('opt-dark');
+    if (!slider || !optLight || !optDark) return;
+
+    const isRtl = document.dir === 'rtl';
+
+    optLight.classList.remove('active');
+    optDark.classList.remove('active');
+
+    if (!isLight) { // حالت تیره
+        optDark.classList.add('active');
+        slider.style.transform = isRtl ? 'translateX(-100%)' : 'translateX(100%)';
+        document.body.classList.remove('light-mode');
+    } else { // حالت روشن
+        optLight.classList.add('active');
+        slider.style.transform = 'translateX(0)';
+        document.body.classList.add('light-mode');
+    }
+}
+
+// ۳. مدیریت لغزش و عملکرد زبان (انگلیسی / فارسی)
+function setControlLang(lang) {
+    const slider = document.getElementById('lang-slider');
+    const optEn = document.getElementById('opt-en');
+    const optFa = document.getElementById('opt-fa');
+    if (!slider || !optEn || !optFa) return;
+
+    optEn.classList.remove('active');
+    optFa.classList.remove('active');
+
+    // چون باکس زبان جهت ثابت ltr دارد، جابجایی همیشه در یک جهت است
+    if (lang === 'fa') {
+        optFa.classList.add('active');
+        slider.style.transform = 'translateX(100%)';
+    } else {
+        optEn.classList.add('active');
+        slider.style.transform = 'translateX(0)';
+    }
+
+    // متصل کردن به تابع تغییر زبان اصلی خودت
+    if (typeof currentLang !== 'undefined' && currentLang !== lang) {
+        currentLang = lang;
+        localStorage.setItem('lang', currentLang);
+        if (typeof applyLang === "function") applyLang();
+    }
+    }
 </script>
 </body>
     </html>
