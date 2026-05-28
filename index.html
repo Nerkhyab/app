@@ -534,21 +534,21 @@ function setControlTheme(isLight) {
     const optDark = document.getElementById('opt-dark');
     if (!slider || !optLight || !optDark) return;
 
-    const isRtl = document.dir === 'rtl';
-
-    optLight.classList.remove('active');
-    optDark.classList.remove('active');
-
-    if (!isLight) { // حالت تیره
-        optDark.classList.add('active');
-        slider.style.transform = isRtl ? 'translateX(-100%)' : 'translateX(100%)';
-        document.body.classList.remove('light-mode');
-    } else { // حالت روشن
-        optLight.classList.add('active');
-        slider.style.transform = 'translateX(0)';
-        document.body.classList.add('light-mode');
-    }
+    // برای حالت نمایش (Layout)
+const isRtl = document.dir === 'rtl';
+if (isGrid) {
+    slider.style.transform = isRtl ? 'translateX(-100%)' : 'translateX(100%)';
+} else {
+    slider.style.transform = 'translateX(0)';
 }
+
+// برای تم (Theme)
+const isRtl = document.dir === 'rtl';
+if (!isLight) { // تیره
+    slider.style.transform = isRtl ? 'translateX(-100%)' : 'translateX(100%)';
+} else { // روشن
+    slider.style.transform = 'translateX(0)';
+        }
 
 // ۳. مدیریت لغزش و عملکرد زبان (انگلیسی / فارسی)
 function setControlLang(lang) {
