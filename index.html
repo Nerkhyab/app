@@ -18,6 +18,7 @@
             --text:#fff;
             --border:rgba(255,255,255,0.1);
             --nav:rgba(28,28,30,0.9);
+            --modal-bg: rgba(28, 28, 30, 0.65);
             --green: #00c853;
             --red: #ff5252;
         }
@@ -33,6 +34,7 @@
             --text:#000;
             --border:rgba(0,0,0,0.1);
             --nav:rgba(255,255,255,0.9);
+            --modal-bg: rgba(242, 242, 247, 0.65);
         }
 
         body {
@@ -101,19 +103,13 @@
         }
 
         .full-modal {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: fixed; inset: 0; background: var(--modal-bg); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             display: flex; opacity: 0; visibility: hidden;
             transform: translateY(20px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 2000; padding: 25px; flex-direction: column;
         }
         .full-modal.active { opacity: 1; visibility: visible; transform: translateY(0); }
-
-        .switch-wrapper {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255, 255, 255, 0.08); padding: 15px; border-radius: 15px;
-            margin-bottom: 12px; border: 1px solid var(--border);
-        }
 
         .setting-btn {
             padding: 15px; border-radius: 12px; color: var(--text); background: rgba(255, 255, 255, 0.08);
@@ -222,7 +218,7 @@
         <i class="fas fa-moon" style="cursor:pointer;" onclick="toggleTheme()"></i>
     </div>
 
-    <div id="sMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
+    <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
             <b id="settings-title" style="font-size: 1.2rem;">تنظیمات</b>
             <i class="fas fa-times" style="font-size: 1.3rem; cursor:pointer; opacity: 0.6;" onclick="closeModal('sMod')"></i>
@@ -233,40 +229,40 @@
             <div class="segmented-control" id="layout-control">
                 <div class="segment-slider" id="layout-slider"></div>
                 <div class="segment-option" id="opt-list" onclick="setControlLayout(false)">
-                    <i class="fas fa-bars"></i> لیست
+                    <i class="fas fa-bars"></i> <span id="text-list">لیست</span>
                 </div>
                 <div class="segment-option" id="opt-grid" onclick="setControlLayout(true)">
-                    <i class="fas fa-th-large"></i> کنار هم
+                    <i class="fas fa-th-large"></i> <span id="text-grid">کنار هم</span>
                 </div>
             </div>
         </div>
 
         <div class="setting-group">
-            <div class="group-title">تم</div>
+            <div class="group-title" id="theme-label-text">تم</div>
             <div class="segmented-control" id="theme-control">
                 <div class="segment-slider" id="theme-slider"></div>
                 <div class="segment-option" id="opt-light" onclick="setControlTheme(true)">
-                    <i class="fas fa-sun"></i> روشن
+                    <i class="fas fa-sun"></i> <span id="text-light">روشن</span>
                 </div>
                 <div class="segment-option" id="opt-dark" onclick="setControlTheme(false)">
-                    <i class="fas fa-moon"></i> تیره
+                    <i class="fas fa-moon"></i> <span id="text-dark">تیره</span>
                 </div>
             </div>
         </div>
 
         <div class="setting-group">
-            <div class="group-title">زبان</div>
-            <div class="segmented-control" id="lang-control" style="direction: ltr;">
+            <div class="group-title" id="lang-label-text">زبان</div>
+            <div class="segmented-control" id="lang-control">
                 <div class="segment-slider" id="lang-slider"></div>
-                <div class="segment-option" id="opt-en" onclick="setControlLang('en')">English</div>
                 <div class="segment-option" id="opt-fa" onclick="setControlLang('fa')">فارسی</div>
+                <div class="segment-option" id="opt-en" onclick="setControlLang('en')">English</div>
             </div>
         </div>
 
         <div style="margin-top: 10px;"></div>
 
         <div class="single-action-row" onclick="openAbout()">
-            <span>درباره برنامه</span>
+            <span id="text-about">درباره برنامه</span>
             <i class="fas fa-chevron-left" style="font-size: 0.8rem; opacity: 0.3;"></i>
         </div>
 
@@ -275,22 +271,18 @@
             <i class="fas fa-sync-alt" style="font-size: 0.85rem; opacity: 0.5;"></i>
         </div>
 
-        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="single-action-row" style="text-decoration: none; color: #fff; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;">
-            <span><i class="fab fa-instagram" style="margin-left: 6px;"></i> اینستاگرام سازنده</span>
+        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="single-action-row insta-btn">
+            <span id="text-insta"><i class="fab fa-instagram"></i> اینستاگرام سازنده</span>
         </a>
     </div>
 
-    <div id="aboutMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
+    <div id="aboutMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
-            <b style="font-size: 1.2rem;">درباره برنامه</b>
+            <b id="about-title" style="font-size: 1.2rem;">درباره برنامه</b>
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
         </div>
-        <div style="line-height: 2; text-align: justify; font-size: 0.95rem; font-weight: 300;">
-            <b style="color: #d4af37;">منبع قیمت:</b><br>
-            ما در این برنامه هیچ اطلاعاتی از شما جمع‌آوری نمی‌کنیم، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
-            <b style="color: #d4af37;"> برنامه‌نویس:</b><br>
-            صفی الله بهادری غوریانی.<br><br>
-            جهت ارتباط با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.
+        <div id="about-text" style="line-height: 2; text-align: justify; font-size: 0.95rem; font-weight: 300;">
+            <!-- Content will be injected by JS for translation -->
         </div>
     </div>
 
@@ -307,8 +299,16 @@
     ];
 
     const i18n = {
-        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش" },
-        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now" }
+        fa: { 
+            settings: "تنظیمات", updateBtn: "بروزرسانی قیمت‌ها", gridLabel: "حالت نمایش", themeLabel: "تم", langLabel: "زبان", lastUpdate: "لحظاتی پیش",
+            list: "لیست", grid: "کنار هم", light: "روشن", dark: "تیره", about: "درباره برنامه", insta: "اینستاگرام سازنده", aboutTitle: "درباره برنامه",
+            aboutText: "<b style='color: #d4af37;'>منبع قیمت:</b><br>ما در این برنامه هیچ اطلاعاتی از شما جمع‌آوری نمی‌کنیم، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br><b style='color: #d4af37;'> برنامه‌نویس:</b><br>صفی الله بهادری غوریانی.<br><br>جهت ارتباط با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید."
+        },
+        en: { 
+            settings: "Settings", updateBtn: "Update Rates", gridLabel: "Display Mode", themeLabel: "Theme", langLabel: "Language", lastUpdate: "Just now",
+            list: "List", grid: "Grid", light: "Light", dark: "Dark", about: "About App", insta: "Developer Instagram", aboutTitle: "About App",
+            aboutText: "<b style='color: #d4af37;'>Source:</b><br>We do not collect any personal data. Prices are fetched automatically from verified sources in the Herat Money Exchange Union and are updated regularly every day.<br><br><b style='color: #d4af37;'>Developer:</b><br>Safiullah Bahadori Ghoriani.<br><br>To contact the developer, click the 'Developer Instagram' button in the settings menu."
+        }
     };
 
     function updateDT() {
@@ -480,11 +480,23 @@
     function applyLang() {
         const lang = i18n[currentLang];
         document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-        if(document.getElementById('lang-text')) document.getElementById('lang-text').innerText = lang.langLabel;
-        if(document.getElementById('grid-label-text')) document.getElementById('grid-label-text').innerText = lang.gridLabel;
+        
         if(document.getElementById('settings-title')) document.getElementById('settings-title').innerText = lang.settings;
+        if(document.getElementById('grid-label-text')) document.getElementById('grid-label-text').innerText = lang.gridLabel;
+        if(document.getElementById('theme-label-text')) document.getElementById('theme-label-text').innerText = lang.themeLabel;
+        if(document.getElementById('lang-label-text')) document.getElementById('lang-label-text').innerText = lang.langLabel;
+        if(document.getElementById('text-list')) document.getElementById('text-list').innerText = lang.list;
+        if(document.getElementById('text-grid')) document.getElementById('text-grid').innerText = lang.grid;
+        if(document.getElementById('text-light')) document.getElementById('text-light').innerText = lang.light;
+        if(document.getElementById('text-dark')) document.getElementById('text-dark').innerText = lang.dark;
+        if(document.getElementById('text-about')) document.getElementById('text-about').innerText = lang.about;
         if(document.getElementById('manual-update-btn')) document.getElementById('manual-update-btn').innerText = lang.updateBtn;
         if(document.getElementById('update-text')) document.getElementById('update-text').innerText = lang.lastUpdate;
+        if(document.getElementById('text-insta')) document.getElementById('text-insta').innerHTML = `<i class="fab fa-instagram" style="margin-left: 6px;"></i> ${lang.insta}`;
+        
+        if(document.getElementById('about-title')) document.getElementById('about-title').innerText = lang.aboutTitle;
+        if(document.getElementById('about-text')) document.getElementById('about-text').innerHTML = lang.aboutText;
+        
         load();
     }
 
@@ -496,27 +508,30 @@
         if(layoutSlider) {
             document.getElementById('opt-list').classList.toggle('active', !isGrid);
             document.getElementById('opt-grid').classList.toggle('active', isGrid);
-            layoutSlider.style.transform = isGrid ? (document.dir === 'rtl' ? 'translateX(-100%)' : 'translateX(100%)') : 'translateX(0)';
+            layoutSlider.style.transform = isGrid ? 'translateX(-100%)' : 'translateX(0)';
         }
 
         const themeSlider = document.getElementById('theme-slider');
         if(themeSlider) {
             document.getElementById('opt-light').classList.toggle('active', isLight);
             document.getElementById('opt-dark').classList.toggle('active', !isLight);
-            themeSlider.style.transform = !isLight ? (document.dir === 'rtl' ? 'translateX(-100%)' : 'translateX(100%)') : 'translateX(0)';
+            themeSlider.style.transform = !isLight ? 'translateX(-100%)' : 'translateX(0)';
         }
 
         const langSlider = document.getElementById('lang-slider');
         if(langSlider) {
-            document.getElementById('opt-en').classList.toggle('active', currentLang === 'en');
             document.getElementById('opt-fa').classList.toggle('active', currentLang === 'fa');
-            langSlider.style.transform = currentLang === 'fa' ? 'translateX(100%)' : 'translateX(0)';
+            document.getElementById('opt-en').classList.toggle('active', currentLang === 'en');
+            langSlider.style.transform = currentLang === 'en' ? 'translateX(-100%)' : 'translateX(0)';
         }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
         if (localStorage.getItem('isGridMode') === 'true') {
             document.getElementById('main-container').classList.add('grid-mode');
+        }
+        if (localStorage.getItem('isLightMode') === 'true') {
+            document.body.classList.add('light-mode');
         }
         applyLang();
     });
@@ -539,6 +554,7 @@
         } else {
             document.body.classList.remove('light-mode');
         }
+        localStorage.setItem('isLightMode', isLight);
         syncUIWithStorage();
     }
 
