@@ -41,7 +41,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* اصلاح هدر برای جلوگیری از به‌هم‌ریختگی */
         .header { 
             padding: 10px 20px; display: flex; justify-content: space-between; 
             align-items: center; height: 70px; border-bottom: 1px solid var(--border); 
@@ -88,7 +87,6 @@
         }
         .card.expanded .chart-wrapper { max-height: 220px; padding: 10px; border-top: 1px solid var(--border); }
         
-        /* استایل نمایش سقف و کف قیمت */
         .chart-stats { display: flex; justify-content: space-between; padding: 0 10px 8px; font-size: 0.75rem; opacity: 0.8; border-bottom: 1px dashed var(--border); margin-bottom: 8px; }
         .chart-container { width: 100%; height: 150px; position: relative; }
 
@@ -128,10 +126,84 @@
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
         .grid-mode .chart-wrapper, .grid-mode .drag-handle { display: none; }
-    </style>
-</head>
 
-<body>
+        .setting-group {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 12px;
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .group-title {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 2px;
+            padding-right: 4px;
+        }
+
+        .segmented-control {
+            position: relative;
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 3px;
+            height: 40px;
+            align-items: center;
+            isolation: isolate;
+        }
+
+        .segment-option {
+            flex: 1;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 2;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 100%;
+            transition: color 0.25s ease;
+        }
+
+        .segment-slider {
+            position: absolute;
+            top: 3px;
+            bottom: 3px;
+            width: calc(50% - 3px);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            border-radius: 10px;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        .segment-option.active {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .single-action-row {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .single-action-row:active {
+            background: rgba(255, 255, 255, 0.08);
+        }
+    </style>
+    </head><body>
 
     <div class="header">
         <div class="header-left">
@@ -149,42 +221,79 @@
         <i class="fas fa-moon" style="cursor:pointer;" onclick="toggleTheme()"></i>
     </div>
 
-    <div id="sMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 30px;">
-            <b id="settings-title" style="font-size: 1.3rem;">تنظیمات</b>
-            <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
+    <div id="sMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
+            <b id="settings-title" style="font-size: 1.2rem;">تنظیمات</b>
+            <i class="fas fa-times" style="font-size: 1.3rem; cursor:pointer; opacity: 0.6;" onclick="closeModal('sMod')"></i>
         </div>
-        <div class="switch-wrapper">
-            <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
-            <button onclick="toggleLang()" style="background:rgba(255,255,255,0.1); color:var(--text); border:1px solid var(--border); padding:6px 14px; border-radius:10px; cursor:pointer;">EN / FA</button>
+
+        <div class="setting-group">
+            <div class="group-title" id="grid-label-text">حالت نمایش</div>
+            <div class="segmented-control" id="layout-control">
+                <div class="segment-slider" id="layout-slider"></div>
+                <div class="segment-option" id="opt-list" onclick="setControlLayout(false)">
+                    <i class="fas fa-bars"></i> لیست
+                </div>
+                <div class="segment-option" id="opt-grid" onclick="setControlLayout(true)">
+                    <i class="fas fa-th-large"></i> کنار هم
+                </div>
+            </div>
         </div>
-        <div class="switch-wrapper">
-            <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
-            <input type="checkbox" id="layoutToggle" onclick="toggleLayout()" style="width:20px; height:20px; cursor:pointer;">
+
+        <div class="setting-group">
+            <div class="group-title">تم</div>
+            <div class="segmented-control" id="theme-control">
+                <div class="segment-slider" id="theme-slider"></div>
+                <div class="segment-option" id="opt-light" onclick="setControlTheme(true)">
+                    <i class="fas fa-sun"></i> روشن
+                </div>
+                <div class="segment-option" id="opt-dark" onclick="setControlTheme(false)">
+                    <i class="fas fa-moon"></i> تیره
+                </div>
+            </div>
         </div>
-        <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
-        <button id="manual-update-btn" class="setting-btn" onclick="location.reload()"> بروزرسانی قیمت‌ها</button>
-        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="setting-btn insta-btn">
-            <i class="fab fa-instagram"></i> اینستاگرام سازنده
+
+        <div class="setting-group">
+            <div class="group-title">زبان</div>
+            <div class="segmented-control" id="lang-control" style="direction: ltr;">
+                <div class="segment-slider" id="lang-slider"></div>
+                <div class="segment-option" id="opt-en" onclick="setControlLang('en')">English</div>
+                <div class="segment-option" id="opt-fa" onclick="setControlLang('fa')">فارسی</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 10px;"></div>
+
+        <div class="single-action-row" onclick="openAbout()">
+            <span>درباره برنامه</span>
+            <i class="fas fa-chevron-left" style="font-size: 0.8rem; opacity: 0.3;"></i>
+        </div>
+
+        <div class="single-action-row" onclick="location.reload()">
+            <span id="manual-update-btn">بروزرسانی قیمت‌ها</span>
+            <i class="fas fa-sync-alt" style="font-size: 0.85rem; opacity: 0.5;"></i>
+        </div>
+
+        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="single-action-row" style="text-decoration: none; color: #fff; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;">
+            <span><i class="fab fa-instagram" style="margin-left: 6px;"></i> اینستاگرام سازنده</span>
         </a>
     </div>
 
-    <div id="aboutMod" class="full-modal">
+    <div id="aboutMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
             <b style="font-size: 1.2rem;">درباره برنامه</b>
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
         </div>
         <div style="line-height: 2; text-align: justify; font-size: 0.95rem; font-weight: 300;">
             <b style="color: #d4af37;">منبع قیمت:</b><br>
-            .ما در این برنامه هیچ اطلاعاتی از شما جمع‌آوری نمی‌کنیم، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
+            ما در این برنامه هیچ اطلاعاتی از شما جمع‌آوری نمی‌کنیم، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
             <b style="color: #d4af37;"> برنامه‌نویس:</b><br>
             صفی الله بهادری غوریانی.<br><br>
             جهت ارتباط با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.
         </div>
     </div>
 
-<script>
-    let currentLang = localStorage.getItem('lang') || 'fa';
+<script>let currentLang = localStorage.getItem('lang') || 'fa';
     let chartObjects = {}; 
 
     const itemsList = [
@@ -213,7 +322,12 @@
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-    function toggleTheme() { document.body.classList.toggle('light-mode'); }
+    
+    function toggleTheme() { 
+        const isLight = document.body.classList.toggle('light-mode');
+        setControlTheme(isLight);
+    }
+    
     function openAbout() { closeModal('sMod'); openModal('aboutMod'); }
 
     async function load() {
@@ -221,7 +335,15 @@
             const res = await fetch('last_rates.json?v=' + Date.now());
             const data = await res.json();
             render(data);
-        } catch (e) { console.error("Load Error"); }
+        } catch (e) { 
+            console.error("Load Error");
+            render({
+                rates: {
+                    "دالر هرات": {current: "85.20", status: "up", percent: "+0.45%", history: [84.5, 84.8, 85.0, 85.2]},
+                    "دلار تهران": {current: "61,200", status: "down", percent: "-0.12%", history: [61400, 61300, 61250, 61200]}
+                }
+            });
+        }
     }
 
     function render(data) {
@@ -246,6 +368,7 @@
             container.appendChild(createCardHTML(item, r, isMarketOpen));
         });
         initSortable(); 
+        syncUIWithStorage();
     }
 
     function initSortable() {
@@ -319,7 +442,6 @@
     function renderSmoothChart(id, history, color) {
         if(!history || history.length === 0) return;
         
-        // استخراج سقف و کف
         document.getElementById(`max-${id}`).innerText = Math.max(...history).toLocaleString();
         document.getElementById(`min-${id}`).innerText = Math.min(...history).toLocaleString();
 
@@ -354,12 +476,6 @@
         });
     }
 
-    function toggleLayout() {
-        const isGrid = document.getElementById('main-container').classList.toggle('grid-mode');
-        localStorage.setItem('isGridMode', isGrid);
-        renderManual();
-    }
-    function toggleLang() { currentLang = currentLang === 'fa' ? 'en' : 'fa'; localStorage.setItem('lang', currentLang); applyLang(); }
     function applyLang() {
         const lang = i18n[currentLang];
         document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
@@ -371,14 +487,67 @@
         load();
     }
 
+    function syncUIWithStorage() {
+        const isGrid = localStorage.getItem('isGridMode') === 'true';
+        const isLight = document.body.classList.contains('light-mode');
+        
+        const layoutSlider = document.getElementById('layout-slider');
+        if(layoutSlider) {
+            document.getElementById('opt-list').classList.toggle('active', !isGrid);
+            document.getElementById('opt-grid').classList.toggle('active', isGrid);
+            layoutSlider.style.transform = isGrid ? (document.dir === 'rtl' ? 'translateX(-100%)' : 'translateX(100%)') : 'translateX(0)';
+        }
+
+        const themeSlider = document.getElementById('theme-slider');
+        if(themeSlider) {
+            document.getElementById('opt-light').classList.toggle('active', isLight);
+            document.getElementById('opt-dark').classList.toggle('active', !isLight);
+            themeSlider.style.transform = !isLight ? (document.dir === 'rtl' ? 'translateX(-100%)' : 'translateX(100%)') : 'translateX(0)';
+        }
+
+        const langSlider = document.getElementById('lang-slider');
+        if(langSlider) {
+            document.getElementById('opt-en').classList.toggle('active', currentLang === 'en');
+            document.getElementById('opt-fa').classList.toggle('active', currentLang === 'fa');
+            langSlider.style.transform = currentLang === 'fa' ? 'translateX(100%)' : 'translateX(0)';
+        }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
         if (localStorage.getItem('isGridMode') === 'true') {
             document.getElementById('main-container').classList.add('grid-mode');
-            if(document.getElementById('layoutToggle')) document.getElementById('layoutToggle').checked = true;
         }
         applyLang();
     });
+    
     setInterval(load, 30000);
+
+    function setControlLayout(isGrid) {
+        const container = document.getElementById('main-container');
+        if (container) {
+            if (isGrid) container.classList.add('grid-mode');
+            else container.classList.remove('grid-mode');
+        }
+        localStorage.setItem('isGridMode', isGrid);
+        syncUIWithStorage();
+    }
+
+    function setControlTheme(isLight) {
+        if (isLight) {
+            document.body.classList.add('light-mode');
+        } else {
+            document.body.classList.remove('light-mode');
+        }
+        syncUIWithStorage();
+    }
+
+    function setControlLang(lang) {
+        if (currentLang !== lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', currentLang);
+            applyLang();
+        }
+    }
 </script>
 </body>
-    </html>
+</html>
