@@ -784,6 +784,44 @@ window.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('shortcutDismissed', 'true');
         }
                         }
+                        // توابع کنترل تنظیمات
+function setControlLayout(isGrid) {
+    const container = document.getElementById('main-container');
+    if (container) {
+        if (isGrid) container.classList.add('grid-mode');
+        else container.classList.remove('grid-mode');
+    }
+    localStorage.setItem('isGridMode', isGrid);
+}
+
+function setControlTheme(isLight) {
+    if (isLight) {
+        document.body.classList.add('light-mode');
+    } else {
+        document.body.classList.remove('light-mode');
+    }
+    localStorage.setItem('isLightMode', isLight);
+}
+
+// اصلاح لود اولیه برای اعمال تنظیمات ذخیره شده
+window.addEventListener('DOMContentLoaded', () => {
+    // اعمال تم (پیش‌فرض روشن)
+    const savedTheme = localStorage.getItem('isLightMode');
+    if (savedTheme === 'true' || savedTheme === null) {
+        document.body.classList.add('light-mode');
+    } else {
+        document.body.classList.remove('light-mode');
+    }
+
+    // اعمال چیدمان (پیش‌فرض جدولی)
+    const savedGrid = localStorage.getItem('isGridMode');
+    const container = document.getElementById('main-container');
+    if (container && (savedGrid === 'true' || savedGrid === null)) {
+        container.classList.add('grid-mode');
+    }
+    
+    applyLang();
+});
 </script>
 </body>
 </html>
