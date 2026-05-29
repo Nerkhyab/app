@@ -41,48 +41,55 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        .header { 
-    padding: 20px 20px 10px; 
+       .header { 
+    padding: 12px 20px 4px; /* کاهش پدینگ برای کم شدن چشمگیر ارتفاع هدر */
     display: flex; 
+    flex-direction: row-reverse; /* جابجایی مکان: متن برند به چپ و ساعت/تاریخ به راست منتقل می‌شود */
     justify-content: space-between; 
-    align-items: flex-end; /* تراز شدن المان‌ها با کف هدر */
+    align-items: flex-end; 
     background: var(--bg); 
     position: sticky; 
     top: 0; 
     z-index: 1001;
-    border-bottom: none; /* حذف خط زیر هدر مطابق نمونه */
+    border-bottom: none; 
 }
 .header-left { display: flex; align-items: center; gap: 12px; }
 
 .main-logo { 
-    display: none; /* مخفی کردن لوگوی کوچک هدر برای ست شدن با طرح متنی جدید */
+    display: none; 
 }
 
 .brand-name { 
     font-weight: 900; 
     line-height: 1; 
-    font-size: 2.2rem; /* بزرگ و مدرن شدن نام برنامه */
-    letter-spacing: -1px;
+    font-size: 1.6rem; /* ریزتر و استاندارد شدن سایز متن برند */
+    letter-spacing: -0.5px;
+    text-align: left;
 }
 
 .date-time { 
     display: flex; 
-    flex-direction: column; /* قرارگیری ساعت و تاریخ روی هم */
-    align-items: flex-end; /* راست‌چین شدن کامل متن‌ها */
-    gap: 4px; 
+    flex-direction: column; 
+    align-items: flex-start; /* تراز شدن دقیق متون ساعت و تاریخ با لبه‌ی راست صفحه */
+    gap: 2px; 
     white-space: nowrap; 
 }
 .date-time b { 
-    font-size: 1.1rem; 
+    font-size: 1.05rem; 
     font-weight: 800; 
     color: var(--text); 
 }
 .date-time span { 
-    font-size: 0.8rem; 
-    opacity: 0.5; /* کم‌رنگ شدن تاریخ مانند نمونه */
+    font-size: 0.75rem; 
+    opacity: 0.5; 
 }
-        
-        .container { padding:15px 20px 100px; display:flex; flex-direction:column; gap:12px; }
+
+.container { 
+    padding: 5px 20px 100px; /* کاهش پدینگ بالای کانتینر برای بالا آمدن کارت‌ها و چسبیدن به هدر */
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+} 
 
         .card {
             background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
@@ -346,14 +353,15 @@
         en: { settings: "Settings", updateBtn: "Update Rates", shareBtn: "Recommend to Friends", shareMsg: "Follow real-time currency rates with Nerkhyab Pro app!", gridLabel: "Display Mode", langLabel: "Language: English", lastUpdate: "Just now", calcTitle: "Calculator", calcWelcome: "This section will be available soon!" }
     };
 
-    function updateDT() {
+   function updateDT() {
         const now = new Date();
+        now.setHours(now.getHours() + 1); // جلو بردن ساعت به مدت دقیق ۱ ساعت
         const hh = String(now.getHours()).padStart(2, '0');
         const mm = String(now.getMinutes()).padStart(2, '0');
         const j = jalaali.toJalaali(now);
         const dtEl = document.getElementById('dt');
         if(dtEl) dtEl.innerHTML = `<b>${hh}:${mm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
-    }
+                        } 
     updateDT(); setInterval(updateDT, 1000);
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
