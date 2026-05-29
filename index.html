@@ -163,19 +163,35 @@
         }
         .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; color: white !important; border: none !important; }
 
-        .container.grid-mode {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    padding: 20px;
+        /* اصلاح چیدمان شبکه */
+.container.grid-mode {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important; /* ایجاد دو ستون مساوی */
+    gap: 15px !important;
+    padding: 20px !important;
 }
 
+/* اصلاح ظاهر کارت در حالت شبکه برای پهن‌تر شدن */
+.grid-mode .card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    border-radius: 25px !important; /* ظاهر برجسته و گرد */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+}
+
+/* اصلاح المان‌های داخلی کارت در شبکه */
 .grid-mode .card-main-row {
-    flex-direction: column-reverse;
-    text-align: right;
-    padding: 0;
-    gap: 5px;
-    align-items: flex-start;
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 0 !important;
+    gap: 10px !important;
+}
+
+.grid-mode .drag-handle {
+    display: none !important; /* حذف آیکون درگ در حالت شبکه برای زیبایی */
 }
         .setting-group {
             background: rgba(255, 255, 255, 0.04);
@@ -492,16 +508,20 @@ function updateDT() {
             }
         };
 
-        card.innerHTML = `
-            <div class="card-main-row">
-                <div class="drag-handle" style="margin-left: 10px; order: -1;"><i class="fas fa-grip-vertical"></i></div>
-                <div style="display: flex; flex-direction: column; align-items: flex-start; flex-grow: 1;">
-                    <div class="status-badge ${colorClass}" style="font-size: 0.7rem; margin-bottom: -2px; direction: ltr; font-weight: bold;">
-                        <span>${r.percent}</span><i class="fas ${arrowIcon}" style="font-size: 0.6rem;"></i>
-                    </div>
-                    <div class="price-val" style="line-height: 1; font-size: 1.8rem;">${r.current}</div>
-                </div>
-                <div class="card-info">
+        // در تابع createCardHTML این بخش را جایگزین کنید:
+card.innerHTML = `
+    <div class="card-main-row">
+        ${iconHtml}
+        <div style="width: 100%; text-align: center;">
+            <div style="font-size: 0.8rem; font-weight: bold; margin-top: 5px;">${item.key}</div>
+            <div class="status-badge ${colorClass}" style="justify-content: center; margin-top: 5px;">
+                <span>${r.percent}</span><i class="fas ${arrowIcon}"></i>
+            </div>
+            <div class="price-val" style="font-size: 1.4rem;">${r.current}</div>
+        </div>
+    
+    <div class="chart-wrapper">...</div>`; // سایر بخش‌های نمودار همان‌طور باقی بماند
+         <div class="card-info">
                     <div style="text-align:right;">
                         <b>${item.key}</b>
                         <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
