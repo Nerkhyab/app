@@ -238,8 +238,92 @@
         .single-action-row:active {
             background: rgba(255, 255, 255, 0.08);
         }
+        /* استایل اختصاصی اعلان میانبر صفحه اصلی */
+        .shortcut-alert {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            gap: 12px;
+            animation: slideDown 0.4s ease-out;
+        }
+        .shortcut-alert-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .shortcut-icon {
+            font-size: 1.6rem;
+            color: #d4af37; /* رنگ طلایی شیک متناسب با دکمه‌های ناوبری شما */
+        }
+        .shortcut-alert-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: right;
+        }
+        .shortcut-title {
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        .shortcut-subtitle {
+            font-size: 0.73rem;
+            opacity: 0.6;
+            color: var(--text);
+        }
+        .shortcut-alert-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .shortcut-add-btn {
+            background: #d4af37;
+            color: #000;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+            font-family: 'Vazirmatn', sans-serif;
+            transition: opacity 0.2s;
+        }
+        .shortcut-add-btn:active {
+            opacity: 0.8;
+        }
+        .shortcut-close-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            opacity: 0.5;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 4px;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style></head><body>
-
+<div id="shortcut-notification" class="shortcut-alert" style="display: none;">
+        <div class="shortcut-alert-right">
+            <i class="fas fa-mobile-alt shortcut-icon"></i>
+            <div class="shortcut-alert-info">
+                <span class="shortcut-title">افزودن نرخ‌یاب به صفحه اصلی</span>
+                <span class="shortcut-subtitle">برای دسترسی سریع‌تر و بدون نیاز به مرورگر، میانبر را اضافه کنید</span>
+            </div>
+        </div>
+        <div class="shortcut-alert-left">
+            <button onclick="handleShortcutClick()" id="shortcut-btn" class="shortcut-add-btn">افزودن</button>
+            <button onclick="closeShortcutNotification()" class="shortcut-close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+</div>
     <div class="header">
         <div class="header-left">
             <img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">
@@ -611,7 +695,62 @@ function updateDT() {
         syncUIWithStorage();
     }
 
-    
+    let deferredPrompt;
+
+    // ۱. گوش دادن به مرورگرهای اندروید برای نصب بومی میانبر
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        const isDismissed = localStorage.getItem('shortcutDismissed');
+        const shortcutBox = document.getElementById('shortcut-notification');
+        if (!isDismissed && shortcutBox) {
+            shortcutBox.style.display = 'flex';
+        }
+    });
+
+    // ۲. نمایش عمومی بنر برای آیفون یا مرورگرهای دیگر به عنوان راهنما
+    window.addEventListener('DOMContentLoaded', () => {
+        const isDismissed = localStorage.getItem('shortcutDismissed');
+        const shortcutBox = document.getElementById('shortcut-notification');
+        
+        if (!isDismissed && shortcutBox) {
+            // اگر بعد از ۲ ثانیه سیستم نصب بومی فعال نشد (مثل آیفون)، بنر را به عنوان راهنما نشان بده
+            setTimeout(() => {
+                if (shortcutBox.style.display !== 'flex') {
+                    const btn = document.getElementById('shortcut-btn');
+                    if(btn) btn.innerText = "راهنما";
+                    shortcutBox.style.display = 'flex';
+                }
+            }, 2000);
+        }
+    });
+
+    // ۳. مدیریت کلیک روی دکمه افزودن/راهنما
+    function handleShortcutClick() {
+        if (deferredPrompt) {
+            // اجرای درخواست نصب بومی مرورگر (مخصوص اندروید کروم)
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    closeShortcutNotification();
+                }
+                deferredPrompt = null;
+            });
+        } else {
+            // نمایش راهنمای ساده متنی برای کاربران آیفون (iOS) یا سایر مرورگرها
+            alert("راهنمای افزودن به صفحه گوشی:\n\n۱. در آیفون (Safari) روی دکمه Share [یا در اندروید روی سه نقطه بالای مرورگر] کلیک کنید.\n\n۲. گزینه 'Add to Home Screen' یا 'افزودن به صفحه اصلی' را انتخاب کنید.");
+        }
+    }
+
+    // ۴. بستن بنر و ذخیره در حافظه برای عدم مزاحمت مجدد
+    function closeShortcutNotification() {
+        const shortcutBox = document.getElementById('shortcut-notification');
+        if (shortcutBox) {
+            shortcutBox.style.display = 'none';
+            localStorage.setItem('shortcutDismissed', 'true');
+        }
+                        }
 </script>
 </body>
 </html>
