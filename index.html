@@ -583,13 +583,19 @@ function updateDT() {
         }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-        if (localStorage.getItem('isGridMode') === 'true') {
-            document.getElementById('main-container').classList.add('grid-mode');
-        }
-        applyLang();
-    });
-    
+   window.addEventListener('DOMContentLoaded', () => {
+
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+    }
+
+    if (localStorage.getItem('isGridMode') === 'true') {
+        document.getElementById('main-container').classList.add('grid-mode');
+    }
+
+    applyLang();
+    syncUIWithStorage();
+}); 
     setInterval(load, 30000);
 
     function setControlLayout(isGrid) {
@@ -603,12 +609,15 @@ function updateDT() {
     }
 
     function setControlTheme(isLight) {
-        if (isLight) {
-            document.body.classList.add('light-mode');
-        } else {
-            document.body.classList.remove('light-mode');
-        }
-        syncUIWithStorage();
+    if (isLight) {
+        document.body.classList.add('light-mode');
+    } else {
+        document.body.classList.remove('light-mode');
+    }
+
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+
+    syncUIWithStorage();
     }
 
     
