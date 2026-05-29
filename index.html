@@ -693,9 +693,10 @@ function setControlTheme(isLight) {
     } else {
         document.body.classList.remove('light-mode');
     }
-    localStorage.setItem('isLightMode', isLight); // ذخیره وضعیت تم
+    // اضافه کردن این خط برای ذخیره وضعیت:
+    localStorage.setItem('isLightMode', isLight); 
     syncUIWithStorage();
-}
+                        }
     function setControlTheme(isLight) {
         if (isLight) {
             document.body.classList.add('light-mode');
@@ -728,11 +729,24 @@ function setControlTheme(isLight) {
     applyLang();
 });
 
-    // ۲. نمایش عمومی بنر برای آیفون یا مرورگرهای دیگر به عنوان راهنما
-    window.addEventListener('DOMContentLoaded', () => {
-        const isDismissed = localStorage.getItem('shortcutDismissed');
-        const shortcutBox = document.getElementById('shortcut-notification');
-        
+window.addEventListener('DOMContentLoaded', () => {
+    // ۱. بررسی و اعمال حالت جدولی (پیش‌فرض: جدولی)
+    const savedGrid = localStorage.getItem('isGridMode');
+    if (savedGrid === null || savedGrid === 'true') {
+        document.getElementById('main-container').classList.add('grid-mode');
+    }
+
+    // ۲. بررسی و اعمال حالت تم (پیش‌فرض: روشن)
+    const savedTheme = localStorage.getItem('isLightMode');
+    // اگر کاربر قبلا چیزی انتخاب نکرده (null) یا مقدارش 'true' است، تم روشن باشد
+    if (savedTheme === null || savedTheme === 'true') {
+        document.body.classList.add('light-mode');
+    } else {
+        document.body.classList.remove('light-mode');
+    }
+    
+    applyLang();
+});
         if (!isDismissed && shortcutBox) {
             // اگر بعد از ۲ ثانیه سیستم نصب بومی فعال نشد (مثل آیفون)، بنر را به عنوان راهنما نشان بده
             setTimeout(() => {
