@@ -42,18 +42,46 @@
         }
 
         .header { 
-            padding: 10px 20px; display: flex; justify-content: space-between; 
-            align-items: center; height: 70px; border-bottom: 1px solid var(--border); 
-            background: var(--bg); position: sticky; top: 0; z-index: 1001;
-        }
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .main-logo { width:50px; height:50px; border-radius:12px; object-fit: cover; }
-        .brand-name { font-weight:900; line-height: 1.2; font-size: 0.85rem; text-align: left; }
+    padding: 20px 20px 10px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end; /* تراز شدن المان‌ها با کف هدر */
+    background: var(--bg); 
+    position: sticky; 
+    top: 0; 
+    z-index: 1001;
+    border-bottom: none; /* حذف خط زیر هدر مطابق نمونه */
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
 
-        .date-time { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; white-space: nowrap; }
-        .date-time b { font-size: 1.2rem; font-weight: 900; }
-        .date-time span { font-size: 0.95rem; opacity: 0.8; }
+.main-logo { 
+    display: none; /* مخفی کردن لوگوی کوچک هدر برای ست شدن با طرح متنی جدید */
+}
 
+.brand-name { 
+    font-weight: 900; 
+    line-height: 1; 
+    font-size: 2.2rem; /* بزرگ و مدرن شدن نام برنامه */
+    letter-spacing: -1px;
+}
+
+.date-time { 
+    display: flex; 
+    flex-direction: column; /* قرارگیری ساعت و تاریخ روی هم */
+    align-items: flex-end; /* راست‌چین شدن کامل متن‌ها */
+    gap: 4px; 
+    white-space: nowrap; 
+}
+.date-time b { 
+    font-size: 1.1rem; 
+    font-weight: 800; 
+    color: var(--text); 
+}
+.date-time span { 
+    font-size: 0.8rem; 
+    opacity: 0.5; /* کم‌رنگ شدن تاریخ مانند نمونه */
+}
+        
         .container { padding:15px 20px 100px; display:flex; flex-direction:column; gap:12px; }
 
         .card {
@@ -208,7 +236,7 @@
     <div class="header">
         <div class="header-left">
             <img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">
-            <div class="brand-name">NERKHYAB<br>PRO</div>
+    <div class="brand-name">NERKHYAB KHORASAN</div>
         </div>
         <div class="date-time" id="dt"></div>
     </div>
