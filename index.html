@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>NERKHYAB KHORASAN</title>
+    <title>BECHAND?! </title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
@@ -13,13 +13,13 @@
 
     <style>
         :root {
-            --bg:#000;
-            --card:rgba(255,255,255,0.08);
-            --text:#fff;
-            --border:rgba(255,255,255,0.1);
-            --nav:rgba(28,28,30,0.9);
-            --green: #00c853;
-            --red: #ff5252;
+    --bg:#343030;
+    --card:#1d1d1f;
+    --text:#fff;
+    --border:rgba(255,255,255,0.06);
+    --nav:rgba(35,35,35,0.92);
+    --green:#00c853;
+    --red:#ff5252;
         }
         #update-text {
             color: #ffffff !important;
@@ -36,7 +36,11 @@
         }
 
         body {
-            margin:0; background:var(--bg); color:var(--text);
+            margin:0; background: linear-gradient(
+    180deg,
+    #403b3b 0%,
+    #343030 100%
+); color:var(--text);
             font-family:'Vazirmatn', sans-serif; overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
@@ -46,7 +50,7 @@
             display: flex; 
             flex-direction: column; 
             align-items: flex-start; /* ثابت ماندن نام برند در سمت چپ */
-            background: var(--bg); 
+            background: rgba(70,65,65,0.95);
             position: sticky; 
             top: 0; 
             z-index: 1001;
@@ -91,7 +95,9 @@
             gap: 12px; 
                         }
         .card {
-            background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
+            
+        background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
+           box-shadow:0 10px 30px rgba(0,0,0,0.30);
             border-radius:20px; padding:0; display:flex; flex-direction:column;
             transition: all 0.3s ease; cursor: pointer; overflow: hidden;
             -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
