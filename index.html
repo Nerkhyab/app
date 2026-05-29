@@ -676,16 +676,26 @@ function updateDT() {
     
     setInterval(load, 30000);
 
-    function setControlLayout(isGrid) {
-        const container = document.getElementById('main-container');
-        if (container) {
-            if (isGrid) container.classList.add('grid-mode');
-            else container.classList.remove('grid-mode');
-        }
-        localStorage.setItem('isGridMode', isGrid);
-        syncUIWithStorage();
+    
+function setControlLayout(isGrid) {
+    const container = document.getElementById('main-container');
+    if (container) {
+        if (isGrid) container.classList.add('grid-mode');
+        else container.classList.remove('grid-mode');
     }
+    localStorage.setItem('isGridMode', isGrid);
+    syncUIWithStorage();
+}
 
+function setControlTheme(isLight) {
+    if (isLight) {
+        document.body.classList.add('light-mode');
+    } else {
+        document.body.classList.remove('light-mode');
+    }
+    localStorage.setItem('isLightMode', isLight); // ذخیره وضعیت تم
+    syncUIWithStorage();
+}
     function setControlTheme(isLight) {
         if (isLight) {
             document.body.classList.add('light-mode');
@@ -697,17 +707,26 @@ function updateDT() {
 
     let deferredPrompt;
 
-    // ۱. گوش دادن به مرورگرهای اندروید برای نصب بومی میانبر
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        
-        const isDismissed = localStorage.getItem('shortcutDismissed');
-        const shortcutBox = document.getElementById('shortcut-notification');
-        if (!isDismissed && shortcutBox) {
-            shortcutBox.style.display = 'flex';
-        }
-    });
+    window.addEventListener('DOMContentLoaded', () => {
+    // اگر کاربر قبلا انتخابی نکرده بود، مقدار پیش‌فرض را تنظیم کن
+    if (localStorage.getItem('isGridMode') === null) {
+        localStorage.setItem('isGridMode', 'true'); // حالت پیش‌فرض: جدولی
+    }
+    if (localStorage.getItem('isLightMode') === null) {
+        localStorage.setItem('isLightMode', 'true'); // حالت پیش‌فرض: روشن
+    }
+
+    // اعمال تنظیمات
+    if (localStorage.getItem('isGridMode') === 'true') {
+        document.getElementById('main-container').classList.add('grid-mode');
+    }
+    
+    if (localStorage.getItem('isLightMode') === 'true') {
+        document.body.classList.add('light-mode');
+    }
+    
+    applyLang();
+});
 
     // ۲. نمایش عمومی بنر برای آیفون یا مرورگرهای دیگر به عنوان راهنما
     window.addEventListener('DOMContentLoaded', () => {
