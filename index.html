@@ -41,27 +41,26 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        
-.header { 
-            padding: 4px 20px 6px; /* پدینگ بسیار کم برای کشیدن نوشته‌ها به بالاترین نقطه */
+        .header { 
+            padding: 26px 20px 12px; /* افزایش پدینگ بالا برای فاصله گرفتن اصولی از سقف مرورگر */
             display: flex; 
-            flex-direction: column; /* چیدمان عمودی: نام برند بالا و تاریخ/ساعت زیر آن */
-            align-items: flex-start; /* تراز شدن کامل المان‌ها از سمت چپ زیر هم */
+            flex-direction: column; 
+            align-items: flex-start; /* ثابت ماندن نام برند در سمت چپ */
             background: var(--bg); 
             position: sticky; 
             top: 0; 
             z-index: 1001;
             border-bottom: none; 
-            gap: 4px; /* فاصله کوتاه و مناسب بین نام برند و ردیف زمان */
-            direction: ltr; /* تنظیم جهت چپ به راست اختصاصی هدر برای نظم متون انگلیسی و اعداد */
+            gap: 14px; /* تنظیم فاصله عمودی کاملاً یکسان و متناسب بین نام برند و بخش زمان */
+            direction: ltr; 
         }
         .header-left { display: flex; align-items: center; }
-        .main-logo { display: none; } /* مخفی ماندن لوگو */
+        .main-logo { display: none; } 
 
         .brand-name { 
             font-weight: 900; 
             line-height: 1; 
-            font-size: 1.8rem; /* سایز بزرگ، خوانا و شیک برای نام برند */
+            font-size: 1.8rem; 
             letter-spacing: -0.5px;
             text-align: left;
             margin: 0;
@@ -69,29 +68,29 @@
 
         .date-time { 
             display: flex; 
-            flex-direction: row; /* قرارگیری ساعت و تاریخ دقیقاً در بغل هم */
+            flex-direction: row; 
             align-items: center; 
-            gap: 12px; /* ایجاد فاصله استاندارد بین ساعت و تاریخ */
+            align-self: center; /* معجزه این خط: باکس ساعت و تاریخ را دقیقاً به وسط صفحه هدایت می‌کند */
+            gap: 12px; 
             white-space: nowrap; 
         }
         .date-time b { 
-            font-size: 1rem; 
-            font-weight: 800; 
+            font-size: 1.1rem; 
+            font-weight: 900; 
             color: var(--text); 
         }
         .date-time span { 
-            font-size: 1rem; 
-            font-weight: 800; /* ضخیم (Bold) شدن فونت تاریخ کاملاً هم‌وزن با ساعت */
+            font-size: 1.1rem; 
+            font-weight: 900; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
             color: var(--text); 
-            opacity: 1; /* پررنگ و یکدست شدن با رنگ ساعت */
         }
 
         .container { 
-            padding: 12px 20px 100px; /* تنظیم فاصله بالای کارت‌ها نسبت به هدر جدید */
+            padding: 8px 20px 100px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
             display: flex; 
             flex-direction: column; 
             gap: 12px; 
-        }
+                        }
         .card {
             background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
             border-radius:20px; padding:0; display:flex; flex-direction:column;
@@ -354,15 +353,25 @@
         en: { settings: "Settings", updateBtn: "Update Rates", shareBtn: "Recommend to Friends", shareMsg: "Follow real-time currency rates with Nerkhyab Pro app!", gridLabel: "Display Mode", langLabel: "Language: English", lastUpdate: "Just now", calcTitle: "Calculator", calcWelcome: "This section will be available soon!" }
     };
 
-   function updateDT() {
+function updateDT() {
         const now = new Date();
-        now.setHours(now.getHours() + 1); // جلو بردن ساعت به مدت دقیق ۱ ساعت
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
+        now.setHours(now.getHours() + 1); // جلو بردن ساعت به مدت ۱ ساعت
+        
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        
+        hours = hours % 12;
+        hours = hours ? hours : 12; // تبدیل ساعت 0 به 12 در فرمت 12 ساعته
+        const hh = String(hours).padStart(2, '0');
+        
         const j = jalaali.toJalaali(now);
         const dtEl = document.getElementById('dt');
-        if(dtEl) dtEl.innerHTML = `<b>${hh}:${mm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
-                        } 
+        if(dtEl) {
+            // نمایش ساعت همراه با پسوند AM/PM و تاریخ در کنار هم با فونت ضخیم
+            dtEl.innerHTML = `<b>${hh}:${minutes} ${ampm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
+        }
+            }
     updateDT(); setInterval(updateDT, 1000);
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
