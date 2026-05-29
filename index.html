@@ -56,8 +56,7 @@
         }
         .header-left { display: flex; align-items: center; }
         .main-logo { display: none; } 
-
-        .brand-name { 
+                .brand-name { 
             font-weight: 900; 
             line-height: 1; 
             font-size: 1.8rem; 
@@ -133,9 +132,8 @@
             width:85%; background:var(--nav); backdrop-filter:blur(20px); 
             border-radius:30px; padding:12px 20px; display:flex;
             justify-content:space-between; align-items:center; border:1px solid var(--border); z-index: 1000;
-        }
-
-        .full-modal {
+                        }
+         .full-modal {
             position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); 
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             display: flex; opacity: 0; visibility: hidden;
@@ -238,92 +236,8 @@
         .single-action-row:active {
             background: rgba(255, 255, 255, 0.08);
         }
-        /* استایل اختصاصی اعلان میانبر صفحه اصلی */
-        .shortcut-alert {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.06);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 20px;
-            gap: 12px;
-            animation: slideDown 0.4s ease-out;
-        }
-        .shortcut-alert-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .shortcut-icon {
-            font-size: 1.6rem;
-            color: #d4af37; /* رنگ طلایی شیک متناسب با دکمه‌های ناوبری شما */
-        }
-        .shortcut-alert-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            text-align: right;
-        }
-        .shortcut-title {
-            font-weight: 800;
-            font-size: 0.9rem;
-            color: var(--text);
-        }
-        .shortcut-subtitle {
-            font-size: 0.73rem;
-            opacity: 0.6;
-            color: var(--text);
-        }
-        .shortcut-alert-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .shortcut-add-btn {
-            background: #d4af37;
-            color: #000;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            cursor: pointer;
-            white-space: nowrap;
-            font-family: 'Vazirmatn', sans-serif;
-            transition: opacity 0.2s;
-        }
-        .shortcut-add-btn:active {
-            opacity: 0.8;
-        }
-        .shortcut-close-btn {
-            background: none;
-            border: none;
-            color: var(--text);
-            opacity: 0.5;
-            font-size: 1.1rem;
-            cursor: pointer;
-            padding: 4px;
-        }
-        @keyframes slideDown {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
     </style></head><body>
-<div id="shortcut-notification" class="shortcut-alert" style="display: none;">
-        <div class="shortcut-alert-right">
-            <i class="fas fa-mobile-alt shortcut-icon"></i>
-            <div class="shortcut-alert-info">
-                <span class="shortcut-title">افزودن نرخ‌یاب به صفحه اصلی</span>
-                <span class="shortcut-subtitle">برای دسترسی سریع‌تر و بدون نیاز به مرورگر، میانبر را اضافه کنید</span>
-            </div>
-        </div>
-        <div class="shortcut-alert-left">
-            <button onclick="handleShortcutClick()" id="shortcut-btn" class="shortcut-add-btn">افزودن</button>
-            <button onclick="closeShortcutNotification()" class="shortcut-close-btn">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-</div>
+
     <div class="header">
         <div class="header-left">
             <img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">
@@ -332,7 +246,7 @@
         <div class="date-time" id="dt"></div>
     </div>
 
-    <div id="main-container" class="container"></div>
+            <div id="main-container" class="container"></div>
 
     <div class="bottom-nav">
         <i class="fas fa-cog" style="cursor:pointer;" onclick="openModal('sMod')"></i>
@@ -408,9 +322,8 @@
             صفی الله بهادری غوریانی.<br><br>
             جهت ارتباط با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.
         </div>
-    </div>
-
-    <!-- مودال جدید برای ماشین حساب -->
+                </div>
+                    <!-- مودال جدید برای ماشین حساب -->
     <div id="calcMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
             <b id="calc-title" style="font-size: 1.2rem;">ماشین حساب</b>
@@ -498,7 +411,7 @@ function updateDT() {
         }
     }
 
-    function render(data) {
+                        function render(data) {
         window.lastData = data;
         renderManual();
     }
@@ -625,9 +538,9 @@ function updateDT() {
                 }
             }
         });
-    }
+                        }
 
-    function applyLang() {
+                        function applyLang() {
         const lang = i18n[currentLang];
         document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
     
@@ -676,27 +589,16 @@ function updateDT() {
     
     setInterval(load, 30000);
 
-    
-function setControlLayout(isGrid) {
-    const container = document.getElementById('main-container');
-    if (container) {
-        if (isGrid) container.classList.add('grid-mode');
-        else container.classList.remove('grid-mode');
+    function setControlLayout(isGrid) {
+        const container = document.getElementById('main-container');
+        if (container) {
+            if (isGrid) container.classList.add('grid-mode');
+            else container.classList.remove('grid-mode');
+        }
+        localStorage.setItem('isGridMode', isGrid);
+        syncUIWithStorage();
     }
-    localStorage.setItem('isGridMode', isGrid);
-    syncUIWithStorage();
-}
 
-function setControlTheme(isLight) {
-    if (isLight) {
-        document.body.classList.add('light-mode');
-    } else {
-        document.body.classList.remove('light-mode');
-    }
-    // اضافه کردن این خط برای ذخیره وضعیت:
-    localStorage.setItem('isLightMode', isLight); 
-    syncUIWithStorage();
-                        }
     function setControlTheme(isLight) {
         if (isLight) {
             document.body.classList.add('light-mode');
@@ -706,122 +608,9 @@ function setControlTheme(isLight) {
         syncUIWithStorage();
     }
 
-    let deferredPrompt;
-
-    window.addEventListener('DOMContentLoaded', () => {
-    // اگر کاربر قبلا انتخابی نکرده بود، مقدار پیش‌فرض را تنظیم کن
-    if (localStorage.getItem('isGridMode') === null) {
-        localStorage.setItem('isGridMode', 'true'); // حالت پیش‌فرض: جدولی
-    }
-    if (localStorage.getItem('isLightMode') === null) {
-        localStorage.setItem('isLightMode', 'true'); // حالت پیش‌فرض: روشن
-    }
-
-    // اعمال تنظیمات
-    if (localStorage.getItem('isGridMode') === 'true') {
-        document.getElementById('main-container').classList.add('grid-mode');
-    }
     
-    if (localStorage.getItem('isLightMode') === 'true') {
-        document.body.classList.add('light-mode');
-    }
-    
-    applyLang();
-});
-
-window.addEventListener('DOMContentLoaded', () => {
-    // ۱. بررسی و اعمال حالت جدولی (پیش‌فرض: جدولی)
-    const savedGrid = localStorage.getItem('isGridMode');
-    if (savedGrid === null || savedGrid === 'true') {
-        document.getElementById('main-container').classList.add('grid-mode');
-    }
-
-    // ۲. بررسی و اعمال حالت تم (پیش‌فرض: روشن)
-    const savedTheme = localStorage.getItem('isLightMode');
-    // اگر کاربر قبلا چیزی انتخاب نکرده (null) یا مقدارش 'true' است، تم روشن باشد
-    if (savedTheme === null || savedTheme === 'true') {
-        document.body.classList.add('light-mode');
-    } else {
-        document.body.classList.remove('light-mode');
-    }
-    
-    applyLang();
-});
-        if (!isDismissed && shortcutBox) {
-            // اگر بعد از ۲ ثانیه سیستم نصب بومی فعال نشد (مثل آیفون)، بنر را به عنوان راهنما نشان بده
-            setTimeout(() => {
-                if (shortcutBox.style.display !== 'flex') {
-                    const btn = document.getElementById('shortcut-btn');
-                    if(btn) btn.innerText = "راهنما";
-                    shortcutBox.style.display = 'flex';
-                }
-            }, 2000);
-        }
-    });
-
-    // ۳. مدیریت کلیک روی دکمه افزودن/راهنما
-    function handleShortcutClick() {
-        if (deferredPrompt) {
-            // اجرای درخواست نصب بومی مرورگر (مخصوص اندروید کروم)
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    closeShortcutNotification();
-                }
-                deferredPrompt = null;
-            });
-        } else {
-            // نمایش راهنمای ساده متنی برای کاربران آیفون (iOS) یا سایر مرورگرها
-            alert("راهنمای افزودن به صفحه گوشی:\n\n۱. در آیفون (Safari) روی دکمه Share [یا در اندروید روی سه نقطه بالای مرورگر] کلیک کنید.\n\n۲. گزینه 'Add to Home Screen' یا 'افزودن به صفحه اصلی' را انتخاب کنید.");
-        }
-    }
-
-    // ۴. بستن بنر و ذخیره در حافظه برای عدم مزاحمت مجدد
-    function closeShortcutNotification() {
-        const shortcutBox = document.getElementById('shortcut-notification');
-        if (shortcutBox) {
-            shortcutBox.style.display = 'none';
-            localStorage.setItem('shortcutDismissed', 'true');
-        }
-                        }
-                        // توابع کنترل تنظیمات
-function setControlLayout(isGrid) {
-    const container = document.getElementById('main-container');
-    if (container) {
-        if (isGrid) container.classList.add('grid-mode');
-        else container.classList.remove('grid-mode');
-    }
-    localStorage.setItem('isGridMode', isGrid);
-}
-
-function setControlTheme(isLight) {
-    if (isLight) {
-        document.body.classList.add('light-mode');
-    } else {
-        document.body.classList.remove('light-mode');
-    }
-    localStorage.setItem('isLightMode', isLight);
-}
-
-// اصلاح لود اولیه برای اعمال تنظیمات ذخیره شده
-window.addEventListener('DOMContentLoaded', () => {
-    // اعمال تم (پیش‌فرض روشن)
-    const savedTheme = localStorage.getItem('isLightMode');
-    if (savedTheme === 'true' || savedTheme === null) {
-        document.body.classList.add('light-mode');
-    } else {
-        document.body.classList.remove('light-mode');
-    }
-
-    // اعمال چیدمان (پیش‌فرض جدولی)
-    const savedGrid = localStorage.getItem('isGridMode');
-    const container = document.getElementById('main-container');
-    if (container && (savedGrid === 'true' || savedGrid === null)) {
-        container.classList.add('grid-mode');
-    }
-    
-    applyLang();
-});
 </script>
 </body>
 </html>
+
+                        
