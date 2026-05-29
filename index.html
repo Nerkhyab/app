@@ -41,56 +41,57 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-       .header { 
-    padding: 12px 20px 4px; /* کاهش پدینگ برای کم شدن چشمگیر ارتفاع هدر */
-    display: flex; 
-    flex-direction: row-reverse; /* جابجایی مکان: متن برند به چپ و ساعت/تاریخ به راست منتقل می‌شود */
-    justify-content: space-between; 
-    align-items: flex-end; 
-    background: var(--bg); 
-    position: sticky; 
-    top: 0; 
-    z-index: 1001;
-    border-bottom: none; 
-}
-.header-left { display: flex; align-items: center; gap: 12px; }
+        
+.header { 
+            padding: 4px 20px 6px; /* پدینگ بسیار کم برای کشیدن نوشته‌ها به بالاترین نقطه */
+            display: flex; 
+            flex-direction: column; /* چیدمان عمودی: نام برند بالا و تاریخ/ساعت زیر آن */
+            align-items: flex-start; /* تراز شدن کامل المان‌ها از سمت چپ زیر هم */
+            background: var(--bg); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1001;
+            border-bottom: none; 
+            gap: 4px; /* فاصله کوتاه و مناسب بین نام برند و ردیف زمان */
+            direction: ltr; /* تنظیم جهت چپ به راست اختصاصی هدر برای نظم متون انگلیسی و اعداد */
+        }
+        .header-left { display: flex; align-items: center; }
+        .main-logo { display: none; } /* مخفی ماندن لوگو */
 
-.main-logo { 
-    display: none; 
-}
+        .brand-name { 
+            font-weight: 900; 
+            line-height: 1; 
+            font-size: 1.8rem; /* سایز بزرگ، خوانا و شیک برای نام برند */
+            letter-spacing: -0.5px;
+            text-align: left;
+            margin: 0;
+        }
 
-.brand-name { 
-    font-weight: 900; 
-    line-height: 1; 
-    font-size: 1.6rem; /* ریزتر و استاندارد شدن سایز متن برند */
-    letter-spacing: -0.5px;
-    text-align: left;
-}
+        .date-time { 
+            display: flex; 
+            flex-direction: row; /* قرارگیری ساعت و تاریخ دقیقاً در بغل هم */
+            align-items: center; 
+            gap: 12px; /* ایجاد فاصله استاندارد بین ساعت و تاریخ */
+            white-space: nowrap; 
+        }
+        .date-time b { 
+            font-size: 1rem; 
+            font-weight: 800; 
+            color: var(--text); 
+        }
+        .date-time span { 
+            font-size: 1rem; 
+            font-weight: 800; /* ضخیم (Bold) شدن فونت تاریخ کاملاً هم‌وزن با ساعت */
+            color: var(--text); 
+            opacity: 1; /* پررنگ و یکدست شدن با رنگ ساعت */
+        }
 
-.date-time { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: flex-start; /* تراز شدن دقیق متون ساعت و تاریخ با لبه‌ی راست صفحه */
-    gap: 2px; 
-    white-space: nowrap; 
-}
-.date-time b { 
-    font-size: 1.05rem; 
-    font-weight: 800; 
-    color: var(--text); 
-}
-.date-time span { 
-    font-size: 0.75rem; 
-    opacity: 0.5; 
-}
-
-.container { 
-    padding: 5px 20px 100px; /* کاهش پدینگ بالای کانتینر برای بالا آمدن کارت‌ها و چسبیدن به هدر */
-    display: flex; 
-    flex-direction: column; 
-    gap: 12px; 
-} 
-
+        .container { 
+            padding: 12px 20px 100px; /* تنظیم فاصله بالای کارت‌ها نسبت به هدر جدید */
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+        }
         .card {
             background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
             border-radius:20px; padding:0; display:flex; flex-direction:column;
