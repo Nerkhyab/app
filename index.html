@@ -43,7 +43,7 @@
         }
 
         .header { 
-            padding: 20px 16px 10px; /* افزایش پدینگ بالا برای فاصله گرفتن اصولی از سقف مرورگر */
+            padding: 26px 20px 12px; /* افزایش پدینگ بالا برای فاصله گرفتن اصولی از سقف مرورگر */
             display: flex; 
             flex-direction: column; 
             align-items: flex-start; /*  چپ ثابت ماندن نام برند در سمت
@@ -75,33 +75,29 @@
             white-space: nowrap; 
         }
         .date-time b { 
-            font-size: 1.1rem; 
-            font-weight: 900; 
+            font-size: 1rem; 
+            font-weight: 800; 
             color: var(--text); 
         }
         .date-time span { 
-            font-size: 1.1rem; 
-            font-weight: 900; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
+            font-size: 1rem; 
+            font-weight: 800; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
             color: var(--text); 
         }
 
         .container { 
-            padding: 8px 20px 100px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
+            padding: 7px 16px 80px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
             display: flex; 
             flex-direction: column; 
-            gap: 12px; 
+            gap: 10px; 
                         }
         .card {
-    background: var(--card);
-    backdrop-filter: blur(15px);
-    border: 1px solid var(--border);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
-    border-radius: 25px; 
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s ease;
-    position: relative;
+            
+        background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
+           box-shadow:0 10px 30px rgba(0,0,0,0.30);
+            border-radius:20px; padding:0; display:flex; flex-direction:column;
+            transition: all 0.3s ease; cursor: pointer; overflow: hidden;
+            -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
         }
 
         .card-main-row { display: flex; justify-content: space-between; align-items: center; padding: 14px; width: 100%; box-sizing: border-box; }
@@ -140,7 +136,7 @@
             border-radius:30px; padding:12px 20px; display:flex;
             justify-content:space-between; align-items:center; border:1px solid var(--border); z-index: 1000;
                         }
-         .full-modal {
+          .full-modal {
             position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); 
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             display: flex; opacity: 0; visibility: hidden;
@@ -163,30 +159,10 @@
         }
         .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; color: white !important; border: none !important; }
 
+        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
+        .grid-mode .chart-wrapper, .grid-mode .drag-handle { display: none; }
 
-
-/* اصلاح ظاهر کارت در حالت شبکه برای پهن‌تر شدن */
-.grid-mode .card {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 20px !important;
-    border-radius: 25px !important; /* ظاهر برجسته و گرد */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
-}
-
-/* اصلاح المان‌های داخلی کارت در شبکه */
-.grid-mode .card-main-row {
-    flex-direction: column !important;
-    text-align: center !important;
-    padding: 0 !important;
-    gap: 10px !important;
-}
-
-.grid-mode .drag-handle {
-    display: none !important; /* حذف آیکون درگ در حالت شبکه برای زیبایی */
-}
         .setting-group {
             background: rgba(255, 255, 255, 0.04);
             border-radius: 18px;
@@ -419,7 +395,7 @@ function updateDT() {
         } else {
             navigator.clipboard.writeText(window.location.href);
             alert(currentLang === 'fa' ? "لینک برنامه کپی شد!" : "App link copied!");
-        }
+                  }
     }
 
     async function load() {
@@ -502,20 +478,16 @@ function updateDT() {
             }
         };
 
-        // در تابع createCardHTML این بخش را جایگزین کنید:
-card.innerHTML = `
-    <div class="card-main-row">
-        ${iconHtml}
-        <div style="width: 100%; text-align: center;">
-            <div style="font-size: 0.8rem; font-weight: bold; margin-top: 5px;">${item.key}</div>
-            <div class="status-badge ${colorClass}" style="justify-content: center; margin-top: 5px;">
-                <span>${r.percent}</span><i class="fas ${arrowIcon}"></i>
-            </div>
-            <div class="price-val" style="font-size: 1.4rem;">${r.current}</div>
-        </div>
-    
-    <div class="chart-wrapper">...</div>`; // سایر بخش‌های نمودار همان‌طور باقی بماند
-         <div class="card-info">
+        card.innerHTML = `
+            <div class="card-main-row">
+                <div class="drag-handle" style="margin-left: 10px; order: -1;"><i class="fas fa-grip-vertical"></i></div>
+                <div style="display: flex; flex-direction: column; align-items: flex-start; flex-grow: 1;">
+                    <div class="status-badge ${colorClass}" style="font-size: 0.7rem; margin-bottom: -2px; direction: ltr; font-weight: bold;">
+                        <span>${r.percent}</span><i class="fas ${arrowIcon}" style="font-size: 0.6rem;"></i>
+                    </div>
+                    <div class="price-val" style="line-height: 1; font-size: 1.8rem;">${r.current}</div>
+                </div>
+                <div class="card-info">
                     <div style="text-align:right;">
                         <b>${item.key}</b>
                         <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
@@ -588,7 +560,6 @@ card.innerHTML = `
     function syncUIWithStorage() {
         const isGrid = localStorage.getItem('isGridMode') === 'true';
         const isLight = document.body.classList.contains('light-mode');
-        
         const layoutSlider = document.getElementById('layout-slider');
         if(layoutSlider) {
             document.getElementById('opt-list').classList.toggle('active', !isGrid);
@@ -652,5 +623,6 @@ card.innerHTML = `
 </script>
 </body>
 </html>
+
 
                         
