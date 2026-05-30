@@ -43,7 +43,7 @@
         }
 
         .header { 
-            padding: 26px 20px 12px; /* افزایش پدینگ بالا برای فاصله گرفتن اصولی از سقف مرورگر */
+            padding: 20px 20px 12px; /* افزایش پدینگ بالا برای فاصله گرفتن اصولی از سقف مرورگر */
             display: flex; 
             flex-direction: column; 
             align-items: flex-start; /*  چپ ثابت ماندن نام برند در سمت
@@ -60,8 +60,8 @@
                 .brand-name { 
             font-weight: 900; 
             line-height: 1; 
-            font-size: 1.8rem; 
-            letter-spacing: -0.5px;
+            font-size: 1.5rem; 
+            letter-spacing: -0.4px;
             text-align: left;
             margin: 0;
         }
@@ -75,18 +75,18 @@
             white-space: nowrap; 
         }
         .date-time b { 
-            font-size: 0.7rem; 
-            font-weight: 700; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
             color: var(--text); 
         }
         .date-time span { 
-            font-size: 0.7rem; 
-            font-weight: 700; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
+            font-size: 0.8rem; 
+            font-weight: 600; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
             color: var(--text); 
         }
 
         .container { 
-            padding: 6px 14px 70px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
+            padding: 10px 16px 80px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
             display: flex; 
             flex-direction: column; 
             gap: 9px; 
@@ -94,7 +94,7 @@
         .card {
             
         background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
-           box-shadow:0 10px 30px rgba(0,0,0,0.30);
+           box-shadow:0 8px 25px rgba(0,0,0,0.30);
             border-radius:20px; padding:0; display:flex; flex-direction:column;
             transition: all 0.3s ease; cursor: pointer; overflow: hidden;
             -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
@@ -107,13 +107,13 @@
         .card.active-down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
         .card.active-down .price-val { color: var(--red); }
 
-        .price-box { display:flex; flex-direction:column; gap:3px; }
+        .price-box { display:flex; flex-direction:column; gap:4px; }
         .status-badge { display:flex; align-items:center; gap:4px; padding:0; background:transparent !important; font-size:0.70rem; direction:ltr; }
         
         .text-up { color: var(--green) !important; }
         .text-down { color: var(--red) !important; }
 
-        .price-val { font-size:1.9rem; font-weight:900; transition: color 0.3s; }
+        .price-val { font-size:1.7rem; font-weight:700; transition: color 0.3s; }
         .card-info { display:flex; align-items:center; gap:10px; }
         .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
 
