@@ -27,41 +27,13 @@
             letter-spacing: 0.5px;
             opacity: 0.8;
         }
-        /* اصلاح اصلی برای سفید و مربع شدن کارت‌ها */
-/* اصلاح رنگ متن‌ها برای پس‌زمینه سفید در حالت روشن */
-body.light-mode .card b,
-body.light-mode .card .price-val,
-body.light-mode .card .price-box {
-    color: #000000 !important;
-}
-
-/* اطمینان از رنگ‌بندی صحیح در کارت‌های سفید */
-body.light-mode .card {
-    background: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-    border-radius: 25px !important;
-    aspect-ratio: 1 / 1 !important;
-}
-
-/* رفع مشکل دیده نشدن عنوان ارز و نوسانات */
-body.light-mode .card .status-badge,
-body.light-mode .card .status-badge span {
-    color: #000000 !important; /* یا می‌توانید برای درصدها همان سبز و قرمز را نگه دارید */
-}
-
-/* حفظ رنگ سبز و قرمز برای درصد نوسان در حالت روشن */
-body.light-mode .card .text-up { color: var(--green) !important; }
-body.light-mode .card .text-down { color: var(--red) !important; }
-
-/* تنظیم چیدمان داخل کارت برای حالت مربعی */
-.grid-mode .card-main-row {
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 10px !important;
-    padding: 12px !important;
-}
+        body.light-mode {
+            --bg:#f2f2f7;
+            --card:#ffffff;
+            --text:#000;
+            --border:rgba(0,0,0,0.1);
+            --nav:rgba(255,255,255,0.9);
+        }
 
         body {
             background: var(--bg);
@@ -69,51 +41,52 @@ body.light-mode .card .text-down { color: var(--red) !important; }
             font-family:'Vazirmatn', sans-serif; overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
-.header { 
-    padding: 16px; 
-    display: flex; 
-    flex-direction: row; /* تغییر به حالت ردیفی */
-    justify-content: space-between; /* فاصله انداختن بین نام برند و تاریخ */
-    align-items: center; 
-    background: var(--bg);
-    position: sticky; 
-    top: 0; 
-    z-index: 1001;
-    direction: ltr; /* جهت را برای چیدمان بهتر روی LTR نگه دارید */
-}
 
-.header-left { 
-    display: flex; 
-    align-items: center; 
-}
+        .header { 
+            padding: 16px 16px 10px; /* افزایش پدینگ بالا برای فاصله گرفتن اصولی از سقف مرورگر */
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start; /*  چپ ثابت ماندن نام برند در سمت
+            background: var(--bg);
+            position: sticky; 
+            top: 0; 
+            z-index: 1001;
+            border-bottom: none; 
+            gap: 14px; /* تنظیم فاصله عمودی کاملاً یکسان و متناسب بین نام برند و بخش زمان */
+            direction: ltr; 
+        }background: var(--bg);
+        .header-left { display: flex; align-items: center; }
+        .main-logo { display: none; } 
+                .brand-name { 
+            font-weight: 900; 
+            line-height: 1; 
+            font-size: 1.7rem; 
+            letter-spacing: -0.4px;
+            text-align: left;
+            margin: 0;
+        }
 
-.brand-name { 
-    font-weight: 1000; 
-    font-size: 2.2rem; 
-    margin: 0;
-}
-
-.date-time { 
-    display: flex; 
-    flex-direction: column; /* ساعت و تاریخ زیر هم در سمت راست */
-    align-items: flex-end; /* تراز به راست */
-    gap: 0px; 
-}
-
-.date-time b, .date-time span { 
-    font-size: 1.2rem; 
-    color: var(--text); 
-    line-height: 1.2;
-}
-        تنظیم فاصله عمودی کاملاً یکسان و متناسب بین نام برند و 
+        .date-time { 
+            display: flex; 
+            flex-direction: row; 
+            align-items: center; 
+            align-self: center; /* معجزه این خط: باکس ساعت و تاریخ را دقیقاً به وسط صفحه هدایت می‌کند */
+            gap: 15px; 
+            white-space: nowrap; 
+        }
+        .date-time b { 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            color: var(--text); 
+        }
         .date-time span { 
-            font-size: 0.9rem; 
-            font-weight: 700; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
+            font-size: 0.8rem; 
+            font-weight: 600; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
             color: var(--text); 
         }
 
         .container { 
-            padding: 16px 14px 50px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
+            padding: 10px 16px 80px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
             display: flex; 
             flex-direction: column; 
             gap: 9px; 
@@ -156,7 +129,8 @@ body.light-mode .card .text-down { color: var(--red) !important; }
 
         .drag-handle { color: var(--text); opacity: 0.2; padding: 10px 5px; cursor: grab; display: flex; align-items: center; font-size: 1.1rem; }
         .drag-handle:active { cursor: grabbing; opacity: 0.6; }
-                .bottom-nav {
+
+        .bottom-nav {
             position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
             width:85%; background:var(--nav); backdrop-filter:blur(20px); 
             border-radius:30px; padding:12px 20px; display:flex;
@@ -176,8 +150,7 @@ body.light-mode .card .text-down { color: var(--red) !important; }
             background: rgba(255, 255, 255, 0.08); padding: 15px; border-radius: 15px;
             margin-bottom: 12px; border: 1px solid var(--border);
         }
-
-        .setting-btn {
+            .setting-btn {
             padding: 15px; border-radius: 12px; color: var(--text); background: rgba(255, 255, 255, 0.08);
             margin-top: 10px; cursor: pointer; text-align: center; border: 1px solid var(--border);
             text-decoration: none; display: block;
@@ -268,10 +241,11 @@ body.light-mode .card .text-down { color: var(--red) !important; }
     </style></head><body>
 
     <div class="header">
-    <div class="header-left">
-        <div class="brand-name">BECHAND?!</div>
-    </div>
-    <div class="date-time" id="dt"></div>
+        <div class="header-left">
+            <img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">
+    <div class="brand-name">BECHAND?! </div>
+        </div>
+        <div class="date-time" id="dt"></div>
     </div>
 
             <div id="main-container" class="container"></div>
@@ -287,7 +261,8 @@ body.light-mode .card .text-down { color: var(--red) !important; }
             <b id="settings-title" style="font-size: 1.2rem;">تنظیمات</b>
             <i class="fas fa-times" style="font-size: 1.3rem; cursor:pointer; opacity: 0.6;" onclick="closeModal('sMod')"></i>
         </div>
-             <div class="setting-group">
+
+        <div class="setting-group">
             <div class="group-title" id="grid-label-text">حالت نمایش</div>
             <div class="segmented-control" id="layout-control">
                 <div class="segment-slider" id="layout-slider"></div>
@@ -311,11 +286,7 @@ body.light-mode .card .text-down { color: var(--red) !important; }
                     <i class="fas fa-moon"></i> تیره
                 </div>
             </div>
-        </div>
-
-    
-
-        <div style="margin-top: 10px;"></div>
+        </div>               <div style="margin-top: 10px;"></div>
 
         <div class="single-action-row" onclick="openAbout()">
             <span>درباره برنامه</span>
@@ -347,7 +318,7 @@ body.light-mode .card .text-down { color: var(--red) !important; }
             ما در این برنامه هیچ اطلاعاتی از شما جمع‌آوری نمی‌کنیم، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
             <b style="color: #d4af37;"> برنامه‌نویس:</b><br>
             صفی الله بهادری غوریانی.<br><br>
-            جهت ارتباط با برنامه‌نویس پروژه یا انتقاد و پیشنهاد در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.
+            جهت ارتباط با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.
         </div>
                 </div>
                     <!-- مودال جدید برای ماشین حساب -->
@@ -361,71 +332,294 @@ body.light-mode .card .text-down { color: var(--red) !important; }
             <p id="calc-welcome" style="font-size: 1.1rem; font-weight: 300;">این بخش به‌زودی فعال می‌شود!</p>
         </div>
                     </div><script>let currentLang = localStorage.getItem('lang') || 'fa';
+    let chartObjects = {}; 
 
-const itemsList = [
-    {id: "usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
-    {id: "eur-herat", key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
-    {id: "toman-check", key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
-    {id: "toman-bank", key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-    {id: "kaldar", key:"کلدار هرات", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"},
-    {id: "tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
-];
+    const itemsList = [
+        {id: "usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
+        {id: "eur-herat", key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
+        {id: "toman-check", key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
+        {id: "toman-bank", key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+        {id: "kaldar", key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"},
+        {id: "tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
+    ];
 
+    const i18n = {
+        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی قیمت‌ها", shareBtn: "پیشنهاد به دوستان", shareMsg: "قیمت‌های لحظه‌ای بازار ارز را با اپلیکیشن نرخ‌یاب پرو دنبال کنید!", gridLabel: "حالت نمایش", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", calcTitle: "ماشین حساب", calcWelcome: "این بخش به‌زودی فعال می‌شود!" },
+        en: { settings: "Settings", updateBtn: "Update Rates", shareBtn: "Recommend to Friends", shareMsg: "Follow real-time currency rates with Nerkhyab Pro app!", gridLabel: "Display Mode", langLabel: "Language: English", lastUpdate: "Just now", calcTitle: "Calculator", calcWelcome: "This section will be available soon!" }
+    };
 
+function updateDT() {
+        const now = new Date();
+        now.setHours(now.getHours() + 1); // جلو بردن ساعت به مدت ۱ ساعت
+        
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        
+        hours = hours % 12;
+        hours = hours ? hours : 12; // تبدیل ساعت 0 به 12 در فرمت 12 ساعته
+        const hh = String(hours).padStart(2, '0');
+        
+        const j = jalaali.toJalaali(now);
+        const dtEl = document.getElementById('dt');
+        if(dtEl) {
+            // نمایش ساعت همراه با پسوند AM/PM و تاریخ در کنار هم با فونت ضخیم
+            dtEl.innerHTML = `<b>${hh}:${minutes} ${ampm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
+        }
+            }
+    updateDT(); setInterval(updateDT, 1000);
 
-function openModal(id) { document.getElementById(id).classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-function createCardHTML(item, r) {
-    const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
-    const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
-    let iconHtml = `<img src="${item.icon}" style="width:35px; height:35px; border-radius:8px; object-fit:cover;">`;
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     
-    const card = document.createElement('div');
-    card.className = `card`; 
-    card.innerHTML = `
-        <div style="padding: 15px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                ${iconHtml}
-                <div style="font-weight: 800; color: #000;">${item.key}</div>
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                <div class="status-badge ${colorClass}" style="font-weight: bold;">${r.percent} <i class="fas ${arrowIcon}"></i></div>
-                <div class="price-val" style="font-size: 1.5rem; font-weight: 900; color: #000;">${r.current}</div>
-            </div>
-        </div>`;
-    return card;
-}
+    function toggleTheme() { 
+        const isLight = document.body.classList.toggle('light-mode');
+        setControlTheme(isLight);
+    }
+    
+    function openAbout() { closeModal('sMod'); openModal('aboutMod'); }
 
-async function load() {
-    try {
-        const res = await fetch('last_rates.json?v=' + Date.now());
-        const data = await res.json();
+    function shareApp() {
+        const lang = i18n[currentLang];
+        if (navigator.share) {
+            navigator.share({
+                title: 'NERKHYAB PRO',
+                text: lang.shareMsg,
+                url: window.location.href
+            }).catch(console.error);
+        } else {
+
+navigator.clipboard.writeText(window.location.href);
+            alert(currentLang === 'fa' ? "لینک برنامه کپی شد!" : "App link copied!");
+                  }
+    }
+
+    async function load() {
+        try {
+            const res = await fetch('last_rates.json?v=' + Date.now());
+            const data = await res.json();
+            render(data);
+        } catch (e) { 
+            console.error("Load Error");
+            render({
+                rates: {
+                    "دالر هرات": {current: "85.20", status: "up", percent: "+0.45%", history: [84.5, 84.8, 85.0, 85.2]},
+                    "دلار تهران": {current: "61,200", status: "down", percent: "-0.12%", history: [61400, 61300, 61250, 61200]}
+                }
+            });
+        }
+    }
+
+                        function render(data) {
+        window.lastData = data;
+        renderManual();
+    }
+
+    function renderManual() {
+        const data = window.lastData;
+        if (!data) return;
         const container = document.getElementById('main-container');
         container.innerHTML = '';
-        itemsList.forEach(item => {
-            const r = data.rates[item.key] || {current: "---", status: "up", percent: "0%"};
-            container.appendChild(createCardHTML(item, r));
+        const now = new Date();
+        const hour = now.getHours();
+        const isMarketOpen = (hour >= 7 && hour < 18);
+        let order = JSON.parse(localStorage.getItem('cards-order'));
+        let sortedList = [...itemsList];
+        if (order) sortedList.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+
+        sortedList.forEach(item => {
+            const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", status: "up", percent: "0.00%", history: []};
+            container.appendChild(createCardHTML(item, r, isMarketOpen));
         });
-    } catch (e) { console.error("Error loading"); }
-}
+        initSortable(); 
+        syncUIWithStorage();
+    }
 
-function setControlLayout(isGrid) {
-    document.getElementById('main-container').classList.toggle('grid-mode', isGrid);
-    localStorage.setItem('isGridMode', isGrid);
-}
+    function initSortable() {
+        const grid = document.getElementById('main-container');
+        if (!grid) return;
+        new Sortable(grid, {
+            handle: '.drag-handle', animation: 150, forceFallback: true,
+            onStart: function() { if (window.navigator.vibrate) window.navigator.vibrate(40); },
+            onEnd: function() {
+                const newOrder = Array.from(grid.children).map(card => card.dataset.id);
+                localStorage.setItem('cards-order', JSON.stringify(newOrder));
+            }
+        });
+    }function createCardHTML(item, r, isMarketOpen) {
+        const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
+        const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
+        const cardEffect = isMarketOpen ? (r.status === 'down' ? 'active-down' : 'active-up') : '';
+        const themeColor = r.status === 'down' ? '#ff5252' : '#00c853';
 
-function setControlTheme(isLight) {
-    document.body.classList.toggle('light-mode', isLight);
+        let iconHtml = `<img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover; border: 1px solid var(--border)">`;
+        if (item.icon === "custom-mix") {
+            iconHtml = `<div style="position:relative; width:40px; height:40px; border-radius:10px; overflow:hidden; border: 1px solid var(--border); display:flex;">
+                <img src="https://flagcdn.com/w160/us.png" style="width:20px; height:40px; object-fit:cover;"><img src="https://flagcdn.com/w160/ir.png" style="width:20px; height:40px; object-fit:cover;">
+            </div>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = `card ${cardEffect}`;
+        card.setAttribute('data-id', item.id);
+        
+        card.onclick = (e) => {
+            if (e.target.closest('.drag-handle')) return;
+            if (document.getElementById('main-container').classList.contains('grid-mode')) return;
+            const wasExpanded = card.classList.contains('expanded');
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('expanded'));
+            if (!wasExpanded) {
+                card.classList.add('expanded');
+                setTimeout(() => renderSmoothChart(item.id, r.history, themeColor), 100);
+            }
+        };
+
+        card.innerHTML = `
+            <div class="card-main-row">
+                <div class="drag-handle" style="margin-left: 10px; order: -1;"><i class="fas fa-grip-vertical"></i></div>
+                <div style="display: flex; flex-direction: column; align-items: flex-start; flex-grow: 1;">
+                    <div class="status-badge ${colorClass}" style="font-size: 0.7rem; margin-bottom: -2px; direction: ltr; font-weight: bold;">
+                        <span>${r.percent}</span><i class="fas ${arrowIcon}" style="font-size: 0.6rem;"></i>
+                    </div>
+                    <div class="price-val" style="line-height: 1; font-size: 1.8rem;">${r.current}</div>
+                </div>
+                <div class="card-info">
+                    <div style="text-align:right;">
+                        <b>${item.key}</b>
+                        <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
+                        ${!isMarketOpen ? `<div class="market-closed">Closed Market</div>` : ''}
+                    </div>
+                    ${iconHtml}
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <div class="chart-stats">
+                    <span>کف: <b id="min-${item.id}">---</b></span>
+                    <span>سقف: <b id="max-${item.id}">---</b></span>
+                </div>
+                <div class="chart-container"><canvas id="chart-${item.id}"></canvas></div>
+            </div>`;
+        return card;
+    }
+
+    function renderSmoothChart(id, history, color) {
+        if(!history || history.length === 0) return;
+        
+        document.getElementById(`max-${id}`).innerText = Math.max(...history).toLocaleString();
+        document.getElementById(`min-${id}`).innerText = Math.min(...history).toLocaleString();
+
+        const canvas = document.getElementById(`chart-${id}`);
+        const ctx = canvas.getContext('2d');
+        if (chartObjects[id]) chartObjects[id].destroy();
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, 150);
+        gradient.addColorStop(0, color + '66');
+        gradient.addColorStop(1, color + '00');
+
+        chartObjects[id] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: history.map((_, i) => i),
+                datasets: [{
+                    data: history, borderColor: color, borderWidth: 2.5,
+                    fill: true, backgroundColor: gradient, tension: 0.4, pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: {
+                        position: 'right', grid: { display: false },
+                        ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 9 }, callback: (v) => v.toLocaleString() }
+                    }
+                }
+            }
+        });
+                        }
+
+                              function applyLang() {
+        const lang = i18n[currentLang];
+        document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+    
+        if(document.getElementById('grid-label-text')) document.getElementById('grid-label-text').innerText = lang.gridLabel;
+        if(document.getElementById('settings-title')) document.getElementById('settings-title').innerText = lang.settings;
+        if(document.getElementById('manual-update-btn')) document.getElementById('manual-update-btn').innerText = lang.updateBtn;
+        if(document.getElementById('manual-share-btn')) document.getElementById('manual-share-btn').innerText = lang.shareBtn;
+        if(document.getElementById('update-text')) document.getElementById('update-text').innerText = lang.lastUpdate;
+        if(document.getElementById('calc-title')) document.getElementById('calc-title').innerText = lang.calcTitle;
+        if(document.getElementById('calc-welcome')) document.getElementById('calc-welcome').innerText = lang.calcWelcome;
+        load();
+    }
+
+    function syncUIWithStorage() {
+        const isGrid = localStorage.getItem('isGridMode') === 'true';
+        const isLight = document.body.classList.contains('light-mode');
+        const layoutSlider = document.getElementById('layout-slider');
+        if(layoutSlider) {
+            document.getElementById('opt-list').classList.toggle('active', !isGrid);
+            document.getElementById('opt-grid').classList.toggle('active', isGrid);
+            layoutSlider.style.transform = isGrid ? (document.dir === 'rtl' ? 'translateX(-100%)' : 'translateX(100%)') : 'translateX(0)';
+        }
+
+        const themeSlider = document.getElementById('theme-slider');
+        if(themeSlider) {
+            document.getElementById('opt-light').classList.toggle('active', isLight);
+            document.getElementById('opt-dark').classList.toggle('active', !isLight);
+            themeSlider.style.transform = !isLight ? (document.dir === 'rtl' ? 'translateX(-100%)' : 'translateX(100%)') : 'translateX(0)';
+        }
+
+        const langSlider = document.getElementById('lang-slider');
+        if(langSlider) {
+            document.getElementById('opt-en').classList.toggle('active', currentLang === 'en');
+            document.getElementById('opt-fa').classList.toggle('active', currentLang === 'fa');
+            langSlider.style.transform = currentLang === 'fa' ? 'translateX(100%)' : 'translateX(0)';
+        }
+    }
+
+   window.addEventListener('DOMContentLoaded', () => {
+
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+    }
+
+    if (localStorage.getItem('isGridMode') === 'true') {
+        document.getElementById('main-container').classList.add('grid-mode');
+    }
+
+    applyLang();
+    syncUIWithStorage();
+}); 
+    setInterval(load, 30000);
+
+    function setControlLayout(isGrid) {
+        const container = document.getElementById('main-container');
+        if (container) {
+            if (isGrid) container.classList.add('grid-mode');
+            else container.classList.remove('grid-mode');
+        }
+        localStorage.setItem('isGridMode', isGrid);
+        syncUIWithStorage();
+    }
+
+    function setControlTheme(isLight) {
+    if (isLight) {
+        document.body.classList.add('light-mode');
+    } else {
+        document.body.classList.remove('light-mode');
+    }
+
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
-}
 
-window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
-    if (localStorage.getItem('isGridMode') === 'true') document.getElementById('main-container').classList.add('grid-mode');
-    updateDT();
-    load();
-});
-                    </script>  
+    syncUIWithStorage();
+    }
+
+    
+</script>
 </body>
 </html>
+
+
+                        
+                        
