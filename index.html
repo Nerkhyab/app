@@ -475,18 +475,45 @@ function updateDT() {
                 localStorage.setItem('cards-order', JSON.stringify(newOrder));
             }
         });
-    }function createCardHTML(item, r, isMarketOpen) {
-        const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
-        const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
-        const cardEffect = isMarketOpen ? (r.status === 'down' ? 'active-down' : 'active-up') : '';
-        const themeColor = r.status === 'down' ? '#ff5252' : '#00c853';
+    function createCardHTML(item, r, isMarketOpen) {
+    const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
+    const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
+    
+    // انتخاب آیکون پرچم
+    let iconHtml = `<img src="${item.icon}" style="width:35px; height:35px; border-radius:8px; object-fit:cover;">`;
+    if (item.icon === "custom-mix") {
+        iconHtml = `<div style="position:relative; width:35px; height:35px; border-radius:8px; overflow:hidden; display:flex;">
+            <img src="https://flagcdn.com/w160/us.png" style="width:17px; height:35px; object-fit:cover;"><img src="https://flagcdn.com/w160/ir.png" style="width:17px; height:35px; object-fit:cover;">
+        </div>`;
+    }
 
-        let iconHtml = `<img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover; border: 1px solid var(--border)">`;
-        if (item.icon === "custom-mix") {
-            iconHtml = `<div style="position:relative; width:40px; height:40px; border-radius:10px; overflow:hidden; border: 1px solid var(--border); display:flex;">
-                <img src="https://flagcdn.com/w160/us.png" style="width:20px; height:40px; object-fit:cover;"><img src="https://flagcdn.com/w160/ir.png" style="width:20px; height:40px; object-fit:cover;">
-            </div>`;
-                        }
+    const card = document.createElement('div');
+    card.className = `card`; 
+    card.setAttribute('data-id', item.id);
+    
+    // ساختار جدید داخلی کارت
+    card.innerHTML = `
+        <div style="padding: 15px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; box-sizing: border-box;">
+            
+            <!-- ردیف بالا: آیکون چپ، نام ارز راست -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                ${iconHtml}
+                <div style="text-align: right; font-weight: 800; font-size: 1.1rem; color: #000;">${item.key}</div>
+            </div>
+
+            <!-- ردیف پایین: نرخ ارز پایین چپ -->
+            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <div class="status-badge ${colorClass}" style="font-size: 0.8rem; font-weight: bold; margin-bottom: 2px;">
+                    ${r.percent} <i class="fas ${arrowIcon}"></i>
+                </div>
+                <div class="price-val" style="font-size: 1.5rem; font-weight: 900; color: #000; line-height: 1;">
+                    ${r.current}
+                </div>
+            </div>
+        </div>
+    `;
+    return card;
+    }
                         const card = document.createElement('div');
         card.className = `card ${cardEffect}`;
         card.setAttribute('data-id', item.id);
