@@ -375,7 +375,6 @@ function updateDT() {
     const now = new Date();
     // افزودن یک ساعت (۳۶۰۰۰۰۰ میلی‌ثانیه) به زمان فعلی
     now.setTime(now.getTime() + (60 * 60 * 1000)); 
-    const ampm = hours >= 12 ? 'PM' : 'AM';
     
     // تبدیل ساعت به فرمت ۱۲ ساعته
     hours = hours % 12;
