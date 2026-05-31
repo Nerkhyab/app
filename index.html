@@ -371,22 +371,7 @@ const itemsList = [
     {id: "tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
 ];
 
-function updateDT() {
-    const now = new Date();
-    // افزودن یک ساعت (۳۶۰۰۰۰۰ میلی‌ثانیه) به زمان فعلی
-    now.setTime(now.getTime() + (60 * 60 * 1000)); 
-    
-    // تبدیل ساعت به فرمت ۱۲ ساعته
-    hours = hours % 12;
-    hours = hours ? hours : 12; // ساعت 0 باید 12 باشد
-    const strHours = String(hours).padStart(2, '0');
-    const j = jalaali.toJalaali(now);
-    const dtEl = document.getElementById('dt');
-    if(dtEl) {
-        // نمایش ساعت با فرمت اصلاح شده و تاریخ
-        dtEl.innerHTML = `<b>${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
-    }
-}
+
 
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
