@@ -27,13 +27,26 @@
             letter-spacing: 0.5px;
             opacity: 0.8;
         }
-        body.light-mode {
-            --bg:#f2f2f7;
-            --card:#ffffff;
-            --text:#000;
-            --border:rgba(0,0,0,0.1);
-            --nav:rgba(255,255,255,0.9);
-        }
+        /* اصلاح اصلی برای سفید و مربع شدن کارت‌ها */
+body.light-mode .card {
+    background: #ffffff !important; /* رنگ سفید خالص */
+    border: none !important;        /* حذف حاشیه برای تمیزی بیشتر */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; /* سایه نرم برای جدا شدن از پس‌زمینه */
+    border-radius: 25px !important; /* گردی لبه‌ها */
+    aspect-ratio: 1 / 1 !important; /* تضمین مربع بودن */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* تنظیم چیدمان داخل کارت برای حالت مربعی */
+.grid-mode .card-main-row {
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 10px !important;
+}
 
         body {
             background: var(--bg);
