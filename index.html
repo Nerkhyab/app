@@ -42,30 +42,28 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        .header { 
-            padding: 16px 16px 10px; /* افزایش پدینگ بالا برای فاصله گرفتن اصولی از سقف مرورگر */
+.header { 
+            padding: 24px 16px 10px; /* افزایش پدینگ برای فاصله بهتر از سقف */
             display: flex; 
-            flex-direction: column; 
-            align-items: flex-start; /*  چپ ثابت ماندن نام برند در سمت
+            flex-direction: row; /* تغییر به حالت ردیفی برای قرار گرفتن روبروی هم */
+            justify-content: space-between; /* هدایت عنوان به چپ و تاریخ به راست */
+            align-items: center; /* تراز شدن عمودی دقیق آیتم‌ها */
             background: var(--bg);
             position: sticky; 
             top: 0; 
             z-index: 1001;
-            border-bottom: none; 
-            gap: 14px; /* تنظیم فاصله عمودی کاملاً یکسان و متناسب بین نام برند و بخش زمان */
             direction: ltr; 
-        }background: var(--bg);
-        .header-left { display: flex; align-items: center; }
-        .main-logo { display: none; } 
-                .brand-name { 
+                          }
+
+
+        .brand-name { 
             font-weight: 900; 
             line-height: 1; 
-            font-size: 1.7rem; 
+            font-size: 2.2rem; 
             letter-spacing: -0.4px;
             text-align: left;
             margin: 0;
         }
-
         .date-time { 
             display: flex; 
             flex-direction: row; 
