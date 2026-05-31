@@ -69,44 +69,43 @@ body.light-mode .card .text-down { color: var(--red) !important; }
             font-family:'Vazirmatn', sans-serif; overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
+.header { 
+    padding: 16px; 
+    display: flex; 
+    flex-direction: row; /* تغییر به حالت ردیفی */
+    justify-content: space-between; /* فاصله انداختن بین نام برند و تاریخ */
+    align-items: center; 
+    background: var(--bg);
+    position: sticky; 
+    top: 0; 
+    z-index: 1001;
+    direction: ltr; /* جهت را برای چیدمان بهتر روی LTR نگه دارید */
+}
 
-        .header { 
-            padding: 16px 16px 10px; /* افزایش پدینگ بالا برای فاصله گرفتن اصولی از سقف مرورگر */
-            display: flex; 
-            flex-direction: column; 
-            align-items: flex-start; /*  چپ ثابت ماندن نام برند در سمت
-            background: var(--bg);
-            position: sticky; 
-            top: 0; 
-            z-index: 1001;
-            border-bottom: none; 
-            gap: 14px; /* تنظیم فاصله عمودی کاملاً یکسان و متناسب بین نام برند و بخش زمان */
-            direction: ltr; 
-        }background: var(--bg);
-        .header-left { display: flex; align-items: center; }
-        .main-logo { display: none; } 
-                .brand-name { 
-            font-weight: 900; 
-            line-height: 1; 
-            font-size: 1.7rem; 
-            letter-spacing: -0.4px;
-            text-align: left;
-            margin: 0;
-        }
+.header-left { 
+    display: flex; 
+    align-items: center; 
+}
 
-        .date-time { 
-            display: flex; 
-            flex-direction: row; 
-            align-items: center; 
-            align-self: center; /* معجزه این خط: باکس ساعت و تاریخ را دقیقاً به وسط صفحه هدایت می‌کند */
-            gap: 15px; 
-            white-space: nowrap; 
-        }
-        .date-time b { 
-            font-size: 0.8rem; 
-            font-weight: 600; 
-            color: var(--text); 
-        }
+.brand-name { 
+    font-weight: 900; 
+    font-size: 1.5rem; 
+    margin: 0;
+}
+
+.date-time { 
+    display: flex; 
+    flex-direction: column; /* ساعت و تاریخ زیر هم در سمت راست */
+    align-items: flex-end; /* تراز به راست */
+    gap: 0px; 
+}
+
+.date-time b, .date-time span { 
+    font-size: 0.75rem; 
+    color: var(--text); 
+    line-height: 1.2;
+}
+        تنظیم فاصله عمودی کاملاً یکسان و متناسب بین نام برند و 
         .date-time span { 
             font-size: 0.8rem; 
             font-weight: 600; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
@@ -114,7 +113,7 @@ body.light-mode .card .text-down { color: var(--red) !important; }
         }
 
         .container { 
-            padding: 10px 16px 80px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
+            padding: 13px 12px 65px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
             display: flex; 
             flex-direction: column; 
             gap: 9px; 
@@ -269,11 +268,10 @@ body.light-mode .card .text-down { color: var(--red) !important; }
     </style></head><body>
 
     <div class="header">
-        <div class="header-left">
-            <img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">
-    <div class="brand-name">BECHAND?! </div>
-        </div>
-        <div class="date-time" id="dt"></div>
+    <div class="header-left">
+        <div class="brand-name">BECHAND?!</div>
+    </div>
+    <div class="date-time" id="dt"></div>
     </div>
 
             <div id="main-container" class="container"></div>
