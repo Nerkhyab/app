@@ -28,16 +28,31 @@
             opacity: 0.8;
         }
         /* اصلاح اصلی برای سفید و مربع شدن کارت‌ها */
-body.light-mode .card {
-    background: #ffffff !important; /* رنگ سفید خالص */
-    border: none !important;        /* حذف حاشیه برای تمیزی بیشتر */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; /* سایه نرم برای جدا شدن از پس‌زمینه */
-    border-radius: 25px !important; /* گردی لبه‌ها */
-    aspect-ratio: 1 / 1 !important; /* تضمین مربع بودن */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+/* اصلاح رنگ متن‌ها برای پس‌زمینه سفید در حالت روشن */
+body.light-mode .card b,
+body.light-mode .card .price-val,
+body.light-mode .card .price-box {
+    color: #000000 !important;
 }
+
+/* اطمینان از رنگ‌بندی صحیح در کارت‌های سفید */
+body.light-mode .card {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    border-radius: 25px !important;
+    aspect-ratio: 1 / 1 !important;
+}
+
+/* رفع مشکل دیده نشدن عنوان ارز و نوسانات */
+body.light-mode .card .status-badge,
+body.light-mode .card .status-badge span {
+    color: #000000 !important; /* یا می‌توانید برای درصدها همان سبز و قرمز را نگه دارید */
+}
+
+/* حفظ رنگ سبز و قرمز برای درصد نوسان در حالت روشن */
+body.light-mode .card .text-up { color: var(--green) !important; }
+body.light-mode .card .text-down { color: var(--red) !important; }
 
 /* تنظیم چیدمان داخل کارت برای حالت مربعی */
 .grid-mode .card-main-row {
