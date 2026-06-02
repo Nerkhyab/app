@@ -247,7 +247,8 @@
             opacity: 0;
             visibility: hidden;
         }
-        .splash-logo {
+
+           .splash-logo {
             text-align: center;
             color: white;
             animation: fadeScale 0.6s ease-out;
@@ -276,7 +277,7 @@
 </head>
 <body>
 
-    <div id="splashScreen" class="splash-overlay">
+<div id="splashScreen" class="splash-overlay">
     <div class="splash-logo">
         <div class="main">BeChand<span>?!</span></div>
         <div class="sub">賲乇噩毓 乇爻賲蹖 亘丕夭丕乇 丕乇夭 賴乇丕鬲</div>
@@ -360,7 +361,7 @@
     </a>
 </div>
 
-<div id="aboutMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px);">
+    <div id="aboutMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px);">
     <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
         <b style="font-size: 1.2rem;">丿乇亘丕乇賴 亘乇賳丕賲賴</b>
         <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
@@ -406,8 +407,9 @@
         </div>
         <div id="weekdayLabels" style="display: flex; justify-content: space-between; direction: ltr; font-size: 0.5rem; opacity: 0.8; padding: 8px 4px 0;"></div>
     </div>
-                                                                                            </div>
-        <script>
+</div>
+
+<script>
     (function() {
         const splash = document.getElementById('splashScreen');
         const hasSeenSplash = localStorage.getItem('bechand_splash_shown');
@@ -566,7 +568,7 @@
         if (!grid) return;
         new Sortable(grid, {
             handle: '.card',
-            delay: 1000,          // 鬲睾蹖蹖乇 丕夭 1500 亘賴 1000 賲蹖賱蹖鈥屫з嗃屬� (1 孬丕賳蹖賴)
+            delay: 1000,
             delayOnTouchOnly: true,
             animation: 150,
             onStart: () => { if (window.navigator.vibrate) window.navigator.vibrate(20); },
@@ -591,7 +593,8 @@
                 <img src="https://flagcdn.com/w160/us.png" style="width:20px; height:40px; object-fit:cover;"><img src="https://flagcdn.com/w160/ir.png" style="width:20px; height:40px; object-fit:cover;">
             </div>`;
         }
-const card = document.createElement('div');
+
+        const card = document.createElement('div');
         card.className = `card ${cardEffect}`;
         card.setAttribute('data-id', item.id);
         card.onclick = (e) => {
@@ -680,6 +683,7 @@ const card = document.createElement('div');
                     pointRadius: 0
                 }]
             },
+
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
@@ -772,4 +776,3 @@ const card = document.createElement('div');
 </script>
 </body>
 </html>
-            
