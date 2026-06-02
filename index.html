@@ -708,23 +708,36 @@ const card = document.createElement('div');
         }
     }
 
-   window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', () => {
+    // تنظیم پیش‌فرض برای اولین بار: تم روشن و حالت جدولی
+    if (localStorage.getItem('theme') === null) {
+        localStorage.setItem('theme', 'light');
+    }
+    if (localStorage.getItem('isGridMode') === null) {
+        localStorage.setItem('isGridMode', 'true');
+    }
 
+    // اعمال تم بر اساس مقدار localStorage
     if (localStorage.getItem('theme') === 'light') {
         document.body.classList.add('light-mode');
-        window.addEventListener('DOMContentLoaded', () => {
-    // ... کدهای قبلی ...
-    initInstallGuide();  // اضافه کن
-});
+    } else {
+        document.body.classList.remove('light-mode');
     }
 
+    // اعمال حالت نمایش بر اساس مقدار localStorage
+    const container = document.getElementById('main-container');
     if (localStorage.getItem('isGridMode') === 'true') {
-        document.getElementById('main-container').classList.add('grid-mode');
+        container.classList.add('grid-mode');
+    } else {
+        container.classList.remove('grid-mode');
     }
 
+    // اجرای توابع دیگر
     applyLang();
     syncUIWithStorage();
-}); 
+    initInstallGuide();
+    initNewInstallGuide();
+});
     setInterval(load, 30000);
 
     function setControlLayout(isGrid) {
