@@ -196,7 +196,7 @@ body.light-mode .full-modal * {
             direction: rtl !important;
         }
 
-                .group-title {
+             .group-title {
             font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.5);
             margin-bottom: 2px;
@@ -371,7 +371,12 @@ body.light-mode .full-modal * {
             <i class="fas fa-share-nodes" style="font-size: 0.85rem; opacity: 0.5;"></i>
         </div>
 
-        <div id="aboutMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
+        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="single-action-row" style="text-decoration: none; color: #fff; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;">
+            <span><i class="fab fa-instagram" style="margin-left: 6px;"></i> اینستاگرام سازنده</span>
+        </a>
+    </div>
+
+    <div id="aboutMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
             <b style="font-size: 1.2rem;">درباره برنامه</b>
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
@@ -439,10 +444,7 @@ function updateDT() {
         const isLight = document.body.classList.toggle('light-mode');
         setControlTheme(isLight);
     }
-    function openAbout() {
-    closeModal('sMod');
-    openModal('aboutMod');
-                        }
+    
     function openAbout() { closeModal('sMod'); openModal('aboutMod'); }
 
     function shareApp() {
@@ -491,8 +493,8 @@ function initInstallGuide() {
             guideBar.style.display = 'flex';
         }
     }
-
-        // دکمه "نصب کردم" - برای همیشه نوار رو غیرفعال کن
+    
+    // دکمه "نصب کردم" - برای همیشه نوار رو غیرفعال کن
     if (confirmBtn) {
         confirmBtn.onclick = function() {
             guideBar.style.display = 'none';
@@ -582,8 +584,8 @@ if (document.readyState === 'loading') {
             iconHtml = `<div style="position:relative; width:40px; height:40px; border-radius:10px; overflow:hidden; border: 1px solid var(--border); display:flex;">
                 <img src="https://flagcdn.com/w160/us.png" style="width:20px; height:40px; object-fit:cover;"><img src="https://flagcdn.com/w160/ir.png" style="width:20px; height:40px; object-fit:cover;">
             </div>`;
-                        }
-               const card = document.createElement('div');
+        }
+const card = document.createElement('div');
         card.className = `card ${cardEffect}`;
         card.setAttribute('data-id', item.id);
         
@@ -687,6 +689,10 @@ if (document.readyState === 'loading') {
             layoutSlider.style.transform = isGrid ? (document.dir === 'rtl' ? 'translateX(-100%)' : 'translateX(100%)') : 'translateX(0)';
         }
 
+        function openAbout() {
+    closeModal('sMod');
+    openModal('aboutMod');
+}
         const themeSlider = document.getElementById('theme-slider');
         if(themeSlider) {
             document.getElementById('opt-light').classList.toggle('active', isLight);
@@ -782,5 +788,5 @@ if (document.readyState === 'loading') {
 </script>
 </body>
 </html>
-
     
+        
