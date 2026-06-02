@@ -439,7 +439,10 @@ function updateDT() {
         const isLight = document.body.classList.toggle('light-mode');
         setControlTheme(isLight);
     }
-    
+    function openAbout() {
+    closeModal('sMod');
+    openModal('aboutMod');
+                        }
     function openAbout() { closeModal('sMod'); openModal('aboutMod'); }
 
     function shareApp() {
