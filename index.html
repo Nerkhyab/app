@@ -27,43 +27,61 @@
             letter-spacing: 0.5px;
             opacity: 0.8;
         }
-        body.light-mode {
-            --bg:#f2f2f7;
-            --card:#ffffff;
-            --text:#000;
-            --border:rgba(0,0,0,0.1);
-            --nav:rgba(255,255,255,0.9);
+body.light-mode {
+    --bg: #efebe5;
+    --card: #ffffff !important;  /* اضافه کردن !important برای اطمینان */
+    --text: #000;
+    --border: rgba(0,0,0,0.1);
+    --nav: rgba(255,255,255,0.9);
         }
+        body, .full-modal, .full-modal * {
+    color: var(--text);
+}
 
+        /* مخفی کردن نوار قدیمی */
+#installGuideBar { display: none !important; }
+        
+.bottom-nav i, .bottom-nav span {
+    color: var(--text);
+}
         body {
             background: var(--bg);
-); color:var(--text);
             font-family:'Vazirmatn', sans-serif; overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
+        body.light-mode .full-modal {
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+body.light-mode .full-modal,
+body.light-mode .full-modal * {
+    color: #000 !important;
+}
 
         .header { 
             padding: 16px 16px 10px; /* افزایش پدینگ بالا برای فاصله گرفتن اصولی از سقف مرورگر */
             display: flex; 
             flex-direction: column; 
-            align-items: flex-start; /*  چپ ثابت ماندن نام برند در سمت
+            align-items: flex-start; */ چپ ثابت ماندن نام برند در سمت
             background: var(--bg);
             position: sticky; 
             top: 0; 
             z-index: 1001;
             border-bottom: none; 
-            gap: 14px; /* تنظیم فاصله عمودی کاملاً یکسان و متناسب بین نام برند و بخش زمان */
+            gap: 4px; /* تنظیم فاصله عمودی کاملاً یکسان و متناسب بین نام برند و بخش زمان */
             direction: ltr; 
-        }background: var(--bg);
+        }
+        .background: var(--bg);
         .header-left { display: flex; align-items: center; }
         .main-logo { display: none; } 
                 .brand-name { 
-            font-weight: 900; 
+            font-weight: 990; 
             line-height: 1; 
-            font-size: 1.8rem; 
+            font-size: 2rem; 
             letter-spacing: -0.4px;
             text-align: left;
             margin: 0;
+         color: var(--text);
         }
 
         .date-time { 
@@ -75,25 +93,28 @@
             white-space: nowrap; 
         }
         .date-time b { 
-            font-size: 0.850rem; 
-            font-weight: 270; 
+            font-size: 0.900rem; 
+            font-weight: 300; 
             color: var(--text); 
         }
         .date-time span { 
-            font-size: 0.850rem; 
-            font-weight: 270; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
+            font-size: 0.900rem; 
+            font-weight: 300; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
             color: var(--text); 
         }
 
         .container { 
-            padding: 10px 16px 80px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
+            padding: 10px 7px 80px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
             display: flex; 
             flex-direction: column; 
             gap: 9px; 
                         }
         .card {
-            
-        background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
+        
+    background: var(--card) !important;
+            color: var(--text) !important; /* اضافه کردن این خط برای سفید شدن متن کارت در حالت تاریک */
+    border:1px solid var(--border);
+        border:1px solid var(--border);
            box-shadow:0 8px 25px rgba(0,0,0,0.30);
             border-radius:20px; padding:0; display:flex; flex-direction:column;
             transition: all 0.3s ease; cursor: pointer; overflow: hidden;
@@ -108,12 +129,12 @@
         .card.active-down .price-val { color: var(--red); }
 
         .price-box { display:flex; flex-direction:column; gap:4px; }
-        .status-badge { display:flex; align-items:center; gap:4px; padding:0; background:transparent !important; font-size:0.70rem; direction:ltr; }
+        .status-badge { display:flex; align-items:center; gap:4px; padding:0; background:transparent !important; font-size:0.5rem; direction:ltr; }
         
         .text-up { color: var(--green) !important; }
         .text-down { color: var(--red) !important; }
 
-        .price-val { font-size:1.7rem; font-weight:700; transition: color 0.3s; }
+        .price-val { font-size:1.8rem; font-weight:700; transition: color 0.3s; }
         .card-info { display:flex; align-items:center; gap:10px; }
         .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
 
@@ -131,6 +152,7 @@
         .drag-handle:active { cursor: grabbing; opacity: 0.6; }
 
         .bottom-nav {
+                    .bottom-nav i, .bottom-nav span { color: var(--text); }
             position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
             width:85%; background:var(--nav); backdrop-filter:blur(20px); 
             border-radius:30px; padding:12px 20px; display:flex;
@@ -143,6 +165,8 @@
             transform: translateY(20px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 2000; padding: 25px; flex-direction: column;
         }
+                .full-modal i, .full-modal .single-action-row span { color: var(--text); }
+        .full-modal .single-action-row { color: var(--text); }
         .full-modal.active { opacity: 1; visibility: visible; transform: translateY(0); }
 
         .switch-wrapper {
@@ -161,8 +185,7 @@
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 20px 8px; gap: 15px; }
         .grid-mode .chart-wrapper, .grid-mode .drag-handle { display: none; }
-
-        .setting-group {
+              .setting-group {
             background: rgba(255, 255, 255, 0.04);
             border-radius: 18px;
             padding: 12px;
@@ -173,7 +196,7 @@
             direction: rtl !important;
         }
 
-        .group-title {
+                .group-title {
             font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.5);
             margin-bottom: 2px;
@@ -248,6 +271,26 @@
         <div class="date-time" id="dt"></div>
     </div>
 
+        <!-- نوار یادآوری نصب برنامه -->
+<div id="installGuideBar" style="background: linear-gradient(135deg, #1e6b5e, #134b42); margin: 0 10px 12px 10px; padding: 12px 16px; border-radius: 16px; display: none; align-items: center; justify-content: space-between; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); direction: rtl;">
+    <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+        <i class="fas fa-mobile-alt" style="font-size: 1.3rem; color: #ffd966;"></i>
+        <div style="font-size: 0.7rem; color: #fff; line-height: 1.4;">
+            <strong>📱 نصب برنامه در صفحه اصلی گوشی</strong><br>
+            با کلیک روی <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 0.65rem;">⋮ سه نقطه</span> بالای مرورگر → <strong>افزودن به صفحه اصلی</strong>
+        </div>
+    </div>
+    <button id="confirmInstallBtn" style="background: #ffd966; border: none; border-radius: 20px; padding: 6px 14px; font-size: 0.7rem; font-weight: bold; color: #1a3a33; cursor: pointer;">✓ نصب کردم</button>
+    <i id="closeGuideBtn" class="fas fa-times" style="color: #ccc; cursor: pointer; padding: 6px; font-size: 0.9rem;"></i>
+</div>
+        <!-- نوار راهنمای نصب برنامه -->
+<div id="newInstallGuideBar" style="background: linear-gradient(135deg, #2a7f6e, #1a5f52); margin: 0 10px 12px 10px; padding: 12px 16px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); direction: rtl; cursor: pointer;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-info-circle" style="font-size: 1.3rem; color: #ffd966;"></i>
+        <span style="font-size: 0.85rem; font-weight: bold; color: #fff;">📱 راهنمای نصب برنامه</span>
+    </div>
+    <i class="fas fa-chevron-left" style="color: #ffd966; font-size: 0.8rem;"></i>
+</div>
             <div id="main-container" class="container"></div>
 
     <div class="bottom-nav">
@@ -255,7 +298,32 @@
         <span id="update-text" style="font-weight: 800; color: #d4af37;">لحظاتی پیش</span>
         <i class="fas fa-calculator" style="cursor:pointer;" onclick="openModal('calcMod')"></i>
     </div>
-
+<!-- مودال راهنمای نصب -->
+<div id="newInstallModal" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.98); backdrop-filter: blur(25px); direction: rtl;">
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <b style="font-size: 1.2rem; color: #ffd966;">📱 راهنمای نصب برنامه</b>
+            <i class="fas fa-times" style="font-size: 1.3rem; cursor: pointer; opacity: 0.6;" onclick="closeModal('newInstallModal')"></i>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; text-align: center;">
+            <i class="fas fa-arrow-down" style="font-size: 2rem; color: #ffd966; margin-bottom: 10px; display: block;"></i>
+            <p style="font-size: 0.95rem; line-height: 1.8; text-align: justify; margin-bottom: 20px;">
+                جهت استفاده و تجربه بهتر از برنامه، با استفاده از <strong style="color: #ffd966;">سه نقطه ⋮ بالای مرورگرتان</strong>، 
+                گزینه <strong style="color: #ffd966;">«افزودن به صفحه اصلی»</strong> را انتخاب کنید.
+            </p>
+            <p style="font-size: 0.85rem; line-height: 1.8; text-align: justify; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px;">
+                ✅ با افزودن برنامه به صفحه گوشیتان، دیگر نیازی نیست هر بار وارد سایت شوید<br>
+                ✅ فقط با کلیک بر روی علامت برنامه در صفحه اصلی گوشیتان، مستقیماً وارد برنامه خواهید شد
+            </p>
+        </div>
+        
+        <button id="newInstallConfirmBtn" style="background: #ffd966; border: none; border-radius: 30px; padding: 12px; font-size: 1rem; font-weight: bold; color: #1a3a33; cursor: pointer; font-family: Vazirmatn; margin-top: 10px;">
+            ✓ نصب کردم، دیگر نمایش نده
+        </button>
+    </div>
+</div>
+        
     <div id="sMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
             <b id="settings-title" style="font-size: 1.2rem;">تنظیمات</b>
@@ -303,23 +371,18 @@
             <i class="fas fa-share-nodes" style="font-size: 0.85rem; opacity: 0.5;"></i>
         </div>
 
-        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="single-action-row" style="text-decoration: none; color: #fff; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;">
-            <span><i class="fab fa-instagram" style="margin-left: 6px;"></i> اینستاگرام برنامه‌نویس</span>
-        </a>
-    </div>
-
-    <div id="aboutMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
+        <div id="aboutMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
             <b style="font-size: 1.2rem;">درباره برنامه</b>
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
         </div>
         <div style="line-height: 2; text-align: justify; font-size: 0.95rem; font-weight: 300;">
             <b style="color: #d4af37;">منبع قیمت:</b><br>
-            ما در این برنامه هیچ اطلاعاتی از شما جمع‌آوری نمی‌کنیم، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.قیمت‌های نمایش داده‌شده در اپلیکیشن از سایتهای جهانی و منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
+            ما در این برنامه هیچ اطلاعاتی از شما جمع‌آوری نمی‌کنیم، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
             <b style="color: #d4af37;"> برنامه‌نویس:</b><br>
             صفی الله بهادری غوریانی.<br><br>
-            جهت ارتباط با برنامه‌نویس پروژه و یا انتقاد و پیشنهاد به (اینستاگرام سازنده) پیام بگذارید.
-        </div>
+            جهت ارتباط با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.
+               </div>
                 </div>
                     <!-- مودال جدید برای ماشین حساب -->
     <div id="calcMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
@@ -344,7 +407,7 @@
     ];
 
     const i18n = {
-        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی قیمت‌ها", shareBtn: "پیشنهاد به دوستان", shareMsg: "قیمت‌های لحظه‌ای بازار ارز هرات را با اپلیکیشن« به چند »دنبال کنید!", gridLabel: "حالت نمایش", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", calcTitle: "ماشین حساب", calcWelcome: "این بخش به‌زودی فعال می‌شود!" },
+        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی قیمت‌ها", shareBtn: "پیشنهاد به دوستان", shareMsg: "قیمت‌های لحظه‌ای بازار ارز را با اپلیکیشن نرخ‌یاب پرو دنبال کنید!", gridLabel: "حالت نمایش", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", calcTitle: "ماشین حساب", calcWelcome: "این بخش به‌زودی فعال می‌شود!" },
         en: { settings: "Settings", updateBtn: "Update Rates", shareBtn: "Recommend to Friends", shareMsg: "Follow real-time currency rates with Nerkhyab Pro app!", gridLabel: "Display Mode", langLabel: "Language: English", lastUpdate: "Just now", calcTitle: "Calculator", calcWelcome: "This section will be available soon!" }
     };
 
@@ -394,6 +457,65 @@ navigator.clipboard.writeText(window.location.href);
                   }
     }
 
+                        // مدیریت نوار یادآوری نصب برنامه
+function initInstallGuide() {
+    const guideBar = document.getElementById('installGuideBar');
+    const confirmBtn = document.getElementById('confirmInstallBtn');
+    const closeBtn = document.getElementById('closeGuideBtn');
+    
+    if (!guideBar) return;
+    
+    // آخرین باری که نوار نمایش داده شده رو چک کن
+    const lastShownDate = localStorage.getItem('guideLastShownDate');
+    const today = new Date().toDateString();
+    const isInstalledConfirmed = localStorage.getItem('appInstalledConfirmed') === 'true';
+    
+    // اگه کاربر قبلاً تأیید کرده که نصب کرده، دیگه نشون نده
+    if (isInstalledConfirmed) {
+        guideBar.style.display = 'none';
+        return;
+    }
+    
+    // هر روز فقط یک بار نشون بده
+    if (lastShownDate !== today) {
+        guideBar.style.display = 'flex';
+        localStorage.setItem('guideLastShownDate', today);
+    } else {
+        // اگه امروز قبلاً نشون داده شده، مخفی نگه دار
+        if (localStorage.getItem('guideHiddenToday') === 'true') {
+            guideBar.style.display = 'none';
+        } else {
+            guideBar.style.display = 'flex';
+        }
+    }
+
+        // دکمه "نصب کردم" - برای همیشه نوار رو غیرفعال کن
+    if (confirmBtn) {
+        confirmBtn.onclick = function() {
+            guideBar.style.display = 'none';
+            localStorage.setItem('appInstalledConfirmed', 'true');
+            localStorage.removeItem('guideHiddenToday');
+            // یه پیام تبریک کوچولو نشون بده
+            alert('🎉 ممنون! حالا می‌تونی از طریق آیکون برنامه توی صفحه اصلی گوشیت وارد بشی.');
+        };
+    }
+    
+    // دکمه بستن معمولی - فقط امروز نوار رو مخفی کن (فردا دوباره میاد)
+    if (closeBtn) {
+        closeBtn.onclick = function() {
+            guideBar.style.display = 'none';
+            localStorage.setItem('guideHiddenToday', 'true');
+        };
+    }
+}
+
+// مقداردهی اولیه وقتی صفحه لود شد
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initInstallGuide);
+    initNewInstallGuide();
+} else {
+    initInstallGuide();
+                        }
     async function load() {
         try {
             const res = await fetch('last_rates.json?v=' + Date.now());
@@ -457,9 +579,8 @@ navigator.clipboard.writeText(window.location.href);
             iconHtml = `<div style="position:relative; width:40px; height:40px; border-radius:10px; overflow:hidden; border: 1px solid var(--border); display:flex;">
                 <img src="https://flagcdn.com/w160/us.png" style="width:20px; height:40px; object-fit:cover;"><img src="https://flagcdn.com/w160/ir.png" style="width:20px; height:40px; object-fit:cover;">
             </div>`;
-        }
-
-        const card = document.createElement('div');
+                        }
+               const card = document.createElement('div');
         card.className = `card ${cardEffect}`;
         card.setAttribute('data-id', item.id);
         
@@ -488,7 +609,7 @@ navigator.clipboard.writeText(window.location.href);
                         <b>${item.key}</b>
                         <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
                         ${!isMarketOpen ? `<div class="market-closed">Closed Market</div>` : ''}
-                    </div>
+                            </div>
                     ${iconHtml}
                 </div>
             </div>
@@ -582,6 +703,10 @@ navigator.clipboard.writeText(window.location.href);
 
     if (localStorage.getItem('theme') === 'light') {
         document.body.classList.add('light-mode');
+        window.addEventListener('DOMContentLoaded', () => {
+    // ... کدهای قبلی ...
+    initInstallGuide();  // اضافه کن
+});
     }
 
     if (localStorage.getItem('isGridMode') === 'true') {
@@ -614,12 +739,45 @@ navigator.clipboard.writeText(window.location.href);
 
     syncUIWithStorage();
     }
+// نوار و مودال راهنمای نصب (جدید)
+function initNewInstallGuide() {
+    const guideBar = document.getElementById('newInstallGuideBar');
+    const installModal = document.getElementById('newInstallModal');
+    const confirmBtn = document.getElementById('newInstallConfirmBtn');
+    
+    const isInstalled = localStorage.getItem('appInstalledConfirmedNew') === 'true';
+    
+    if (isInstalled && guideBar) {
+        guideBar.style.display = 'none';
+        return;
+    }
+    
+    if (guideBar) {
+        guideBar.onclick = function() {
+            if (installModal) installModal.classList.add('active');
+        };
+    }
+    
+    if (confirmBtn) {
+        confirmBtn.onclick = function() {
+            localStorage.setItem('appInstalledConfirmedNew', 'true');
+            if (installModal) installModal.classList.remove('active');
+            if (guideBar) guideBar.style.display = 'none';
+            alert('🎉 ممنون! برنامه با موفقیت نصب شد.');
+        };
+    }
+}
 
+// اجرا کن بدون اینکه کدهای قبلی رو خراب کنه
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNewInstallGuide);
+} else {
+    initNewInstallGuide();
+        }
+                    
     
 </script>
 </body>
 </html>
 
-
-                        
-                        
+    
