@@ -167,106 +167,9 @@
 </div></div>
 
 <script>
-// ==================== داده‌های نمونه ====================
-const sampleRates = {
-    "دالر هرات": { current: "63.80", status: "down", percent: "-0.08%", history: [63.85,63.8,63.75,63.8,63.85,63.8,63.75] },
-    "یورو هرات": { current: "73.00", status: "down", percent: "-0.95%", history: [73.5,73.3,73.2,73.0,72.8,73.0,73.0] },
-    "تومان بانکی": { current: "0.36", status: "down", percent: "-5.26%", history: [0.38,0.37,0.36,0.36,0.35,0.36,0.36] },
-    "تومان چک": { current: "0.48", status: "down", percent: "-11.11%", history: [0.54,0.53,0.52,0.51,0.49,0.48,0.48] },
-    "دلار تهران": { current: "173,900", status: "up", percent: "+0.06%", history: [173000,173500,173800,173900,173900,173900,173900] },
-    "کلدار": { current: "221.00", status: "up", percent: "+4.25%", history: [212,215,218,220,221,221,221] }
-};
-const itemsList = [
-    {id:"usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
-    {id:"eur-herat", key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
-    {id:"toman-bank", key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-    {id:"toman-check", key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
-    {id:"tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"},
-    {id:"kaldar", key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"}
-];// ==================== توابع کمکی ====================
-function openModal(id) { document.getElementById(id).classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-function updateDateTime() {
-    const now = new Date(); now.setHours(now.getHours()+1);
-    let h = now.getHours(); const m = String(now.getMinutes()).padStart(2,'0'); const s = String(now.getSeconds()).padStart(2,'0');
-    const ap = h>=12?'PM':'AM'; h = h%12||12;
-    document.getElementById('timeDisplay').innerText = `${String(h).padStart(2,'0')}:${m}:${s} ${ap}`;
-    const j = jalaali.toJalaali(now);
-    document.getElementById('dateDisplay').innerText = `${j.jy}/${j.jm}/${j.jd}`;
-}
-setInterval(updateDateTime,1000); updateDateTime();
-
-function copyLink() {
-    const link = document.getElementById('appLink').innerText;
-    navigator.clipboard.writeText(link).then(()=>alert('✅ لینک کپی شد!')).catch(()=>{const ta=document.createElement('textarea'); ta.value=link; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('✅ لینک کپی شد!');});
-}
-// ==================== بارگذاری داده از سرور ====================
-async function load() {
-    try {
-        const res = await fetch('rates.json?v=' + Date.now());
-        const data = await res.json();
-        window.lastData = data;
-        renderManual();  // تابع موجود در کد شما
-    } catch (e) {
-        console.error("خطا در دریافت داده:", e);
-        window.lastData = { rates: sampleRates };
-        load();
     }
-    
-// ==================== کارت‌ها ====================
-let currentTheme = localStorage.getItem('theme') || 'light';
-let currentLayout = true;
-localStorage.setItem('isGridMode', 'true');
-if(currentTheme==='light') document.body.classList.add('light-mode');
-else document.body.classList.remove('light-mode');
 
-function createCardHTML(item, r) {
-    const isUp = r.status === 'up';
-    const cardDiv = document.createElement('div');
-    cardDiv.className = `card ${isUp ? 'active-up' : 'active-down'}`;
-    cardDiv.setAttribute('data-id', item.id);
-    let iconHtml = `<img class="icon-img" src="${item.icon}" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">`;
-    if(item.icon === "custom-mix") iconHtml = `<div class="custom-mix-icon"><img src="https://flagcdn.com/w160/us.png"><img src="https://flagcdn.com/w160/ir.png"></div>`;
-    cardDiv.innerHTML = `
-        <div class="card-main-row">
-            <div class="list-left">
-                <div class="status-badge ${isUp ? 'text-up' : 'text-down'}">
-                    <span>${r.percent}</span>
-                    <span class="circle-arrow"><i class="fas ${isUp ? 'fa-arrow-up' : 'fa-arrow-down'}"></i></span>
-                </div>
-                <div class="price-val">${r.current}</div>
-            </div>
-            <div class="list-right">
-                <div class="card-info">
-                    <div><b>${item.key}</b><div style="font-size:0.7rem;opacity:0.6;">${item.sub}</div></div>
-                    ${iconHtml}
-                </div>
-            </div>
-        </div>`;
-    cardDiv.onclick = (e) => { e.stopPropagation(); showChart(item.key, r.history, iconHtml, r.status, r.percent); };
-    return cardDiv;
-}
-
-function renderCards() {
-    const container = document.getElementById('main-container');
-    container.innerHTML = '';
-    let order = JSON.parse(localStorage.getItem('cards-order'));
-    let list = [...itemsList];
-    if(order) list.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
-    list.forEach(item => {
-        const r = sampleRates[item.key] || { current:"---", status:"up", percent:"0%", history:[] };
-        container.appendChild(createCardHTML(item, r));
-    });
-    initSortable();
-    if(currentLayout) container.classList.add('grid-mode');
-    else container.classList.remove('grid-mode');
-}
-function initSortable() {
-    const container = document.getElementById('main-container');
-    new Sortable(container, { handle: '.card', delay: 1000, delayOnTouchOnly: true, animation: 150,
-        onEnd: () => { const order = Array.from(container.children).map(c=>c.dataset.id); localStorage.setItem('cards-order', JSON.stringify(order)); }
-    });
-    }// ==================== نمودار ====================
+// ==================== ظ†ظ…ظˆط¯ط§ط± ====================
 let chartInstance = null;
 let currentChartRange = 'week';
 function showChart(title, history, iconHtml, status, percent) {
@@ -292,8 +195,7 @@ function renderChart(range) {
     let labels = [];
     for(let i=0;i<points;i++){
         if(range==='week'){
-            const d = new Date(today); d.setDate(today.getDate()-i);
-            const days = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
+            const d = new Date(today); d.setDate(today.getDate()-i);const days = ['غŒع©ط´ظ†ط¨ظ‡','ط¯ظˆط´ظ†ط¨ظ‡','ط³ظ‡â€Œط´ظ†ط¨ظ‡','ع†ظ‡ط§ط±ط´ظ†ط¨ظ‡','ظ¾ظ†ط¬ط´ظ†ط¨ظ‡','ط¬ظ…ط¹ظ‡','ط´ظ†ط¨ظ‡'];
             labels.push(days[d.getDay()]);
         } else {
             const d = new Date(today); d.setDate(today.getDate()-i);
@@ -314,7 +216,7 @@ function renderChart(range) {
     });
 }
 
-// ==================== تنظیمات (لغزنده‌ها عملی) ====================
+// ==================== طھظ†ط¸غŒظ…ط§طھ (ظ„ط؛ط²ظ†ط¯ظ‡â€Œظ‡ط§ ط¹ظ…ظ„غŒ) ====================
 function setLayout(isGrid) {
     currentLayout = isGrid;
     localStorage.setItem('isGridMode', isGrid);
@@ -344,64 +246,50 @@ document.getElementById('themeDark').onclick = () => { if(!(currentTheme==='dark
 setLayout(currentLayout);
 setTheme(currentTheme === 'light');
 
-// ==================== دکمه‌های مودال تنظیمات ====================
+// ==================== ط¯ع©ظ…ظ‡â€Œظ‡ط§غŒ ظ…ظˆط¯ط§ظ„ طھظ†ط¸غŒظ…ط§طھ ====================
 document.getElementById('aboutBtn').onclick = () => openModal('aboutModal');
-document.getElementById('updateBtn').onclick = () => { alert('قیمت‌ها به‌روزرسانی شدند!'); location.reload(); };
+document.getElementById('updateBtn').onclick = () => { alert('ظ‚غŒظ…طھâ€Œظ‡ط§ ط¨ظ‡â€Œط±ظˆط²ط±ط³ط§ظ†غŒ ط´ط¯ظ†ط¯!'); location.reload(); };
 document.getElementById('shareBtn').onclick = () => {
     if (navigator.share) {
-        navigator.share({ title: 'BeChand?!', text: 'قیمت‌های لحظه‌ای بازار ارز', url: window.location.href }).catch(console.error);
+        navigator.share({ title: 'BeChand?!', text: 'ظ‚غŒظ…طھâ€Œظ‡ط§غŒ ظ„ط­ط¸ظ‡â€Œط§غŒ ط¨ط§ط²ط§ط± ط§ط±ط²', url: window.location.href }).catch(console.error);
     } else {
         navigator.clipboard.writeText(window.location.href);
-        alert('✅ لینک برنامه کپی شد!');
+        alert('âœ… ظ„غŒظ†ع© ط¨ط±ظ†ط§ظ…ظ‡ ع©ظ¾غŒ ط´ط¯!');
     }
 };
-document.getElementById('installGuideBtn').onclick = () => openModal('installModal');// ==================== ماشین حساب ساده و کارآمد ====================
+document.getElementById('installGuideBtn').onclick = () => openModal('installModal');
+
+// ==================== ظ…ط§ط´غŒظ† ط­ط³ط§ط¨ ====================
 let calcExpression = '';
 const calcDisplay = document.getElementById('calcDisplay');
-
-function updateCalcDisplay() {
-    calcDisplay.innerText = calcExpression || '0';
-}
-
+function updateCalcDisplay() { calcDisplay.innerText = calcExpression || '0'; }
 function handleCalcButton(value) {
-    if (value === 'clear_all') {
-        calcExpression = '';
-    } else if (value === 'clear_last') {
-        calcExpression = calcExpression.slice(0, -1);
-    } else if (value === 'equal') {
+    if (value === 'clear_all') { calcExpression = ''; }
+    else if (value === 'clear_last') { calcExpression = calcExpression.slice(0, -1); }
+    else if (value === 'equal') {
         try {
-            let expr = calcExpression.replace(/×/g, '*').replace(/÷/g, '/');
+            let expr = calcExpression.replace(/أ—/g, '*').replace(/أ·/g, '/');
             let result = eval(expr);
             calcExpression = String(result);
-        } catch(e) {
-            calcExpression = 'Error';
-        }
+        } catch(e) { calcExpression = 'Error'; }
     } else {
         calcExpression += value;
     }
     updateCalcDisplay();
 }
-
-// اتصال رویدادها به دکمه‌ها
 document.querySelectorAll('#calcButtons .calc-btn').forEach(btn => {
     btn.onclick = () => {
         const type = btn.getAttribute('data-type');
         const val = btn.getAttribute('data-value');
-        if (type === 'number') {
-            handleCalcButton(val);
-        } else if (type === 'dot') {
-            handleCalcButton('.');
-        } else if (type === 'operator') {
-            handleCalcButton(val);
-        } else if (type === 'clear') {
-            handleCalcButton(val === 'all' ? 'clear_all' : 'clear_last');
-        } else if (type === 'equal') {
-            handleCalcButton('equal');
-        }
+        if (type === 'number') handleCalcButton(val);
+        else if (type === 'dot') handleCalcButton('.');
+        else if (type === 'operator') handleCalcButton(val);
+        else if (type === 'clear') handleCalcButton(val === 'all' ? 'clear_all' : 'clear_last');
+        else if (type === 'equal') handleCalcButton('equal');
     };
 });
 
-// ==================== دکمه‌های نمودار در مودال ====================
+// ==================== ط¯ع©ظ…ظ‡â€Œظ‡ط§غŒ ظ†ظ…ظˆط¯ط§ط± ط¯ط± ظ…ظˆط¯ط§ظ„ ====================
 document.querySelectorAll('#chartModal .range-btn').forEach(btn => {
     btn.onclick = () => {
         document.querySelectorAll('#chartModal .range-btn').forEach(b=>b.classList.remove('active'));
@@ -412,13 +300,15 @@ document.querySelectorAll('#chartModal .range-btn').forEach(btn => {
 });
 document.getElementById('chartModal').addEventListener('click', (e)=>{ if(e.target===document.getElementById('chartModal')) closeModal('chartModal'); });
 
-// ==================== اسپلش ====================
+// ==================== ط§ط³ظ¾ظ„ط´ ====================
 if(!localStorage.getItem('splashShown')){
     setTimeout(()=>{ document.getElementById('splashScreen').classList.add('hide'); setTimeout(()=>document.getElementById('splashScreen').style.display='none',500); },2000);
     localStorage.setItem('splashShown','true');
 } else document.getElementById('splashScreen').style.display='none';
 
-renderCards();
+// ==================== ط§ط¬ط±ط§غŒ ط§ظˆظ„غŒظ‡ ====================
+load();
+setInterval(load, 30000); // ظ‡ط± غ³غ° ط«ط§ظ†غŒظ‡ غŒع©ط¨ط§ط± ط¨ظ‡â€Œط±ظˆط²ط±ط³ط§ظ†غŒ
 </script>
 </body>
 </html>
