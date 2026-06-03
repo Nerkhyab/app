@@ -119,6 +119,17 @@
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
         }
+        /* پایین بردن عدد نرخ در کارت‌های جدولی - بدون شرط media */
+.container.grid-mode .card {
+    padding-bottom: 4px !important;  /* عدد را به 0 یا 2px هم می‌توانید کاهش دهید */
+}
+
+.container.grid-mode .list-left {
+    justify-content: flex-end !important;  /* عدد را به پایین می‌چسباند */
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+        }
     </style>
 </head>
 <body><div id="splashScreen" class="splash-overlay"><div class="splash-logo"><div class="main">BeChand<span>?!</span></div><div class="sub">مرجع رسمی بازار ارز هرات</div></div></div>
