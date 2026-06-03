@@ -130,6 +130,53 @@
     flex-direction: column !important;
     height: 100% !important;
         }
+        /* ===== حالت لیستی (غیر جدولی) ===== */
+.container:not(.grid-mode) .card {
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+}
+
+.container:not(.grid-mode) .card-main-row {
+    flex-direction: column;
+    gap: 12px;
+}
+
+.container:not(.grid-mode) .list-right {
+    order: 1;
+    width: 100%;
+}
+
+.container:not(.grid-mode) .list-left {
+    order: 2;
+    width: 100%;
+    align-items: flex-end;
+    text-align: left;
+}
+
+.container:not(.grid-mode) .card-info {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.container:not(.grid-mode) .card-info div {
+    order: 1;
+    text-align: right;
+}
+
+.container:not(.grid-mode) .custom-mix-icon,
+.container:not(.grid-mode) .icon-img {
+    order: 2;
+}
+
+.container:not(.grid-mode) .status-badge {
+    justify-content: flex-end;
+}
+
+.container:not(.grid-mode) .price-val {
+    font-size: 1.8rem;
+        }
     </style>
 </head>
 <body><div id="splashScreen" class="splash-overlay"><div class="splash-logo"><div class="main">BeChand<span>?!</span></div><div class="sub">مرجع رسمی بازار ارز هرات</div></div></div>
