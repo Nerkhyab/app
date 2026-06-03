@@ -343,24 +343,49 @@ document.getElementById('shareBtn').onclick = () => {
         alert('✅ لینک برنامه کپی شد!');
     }
 };
-document.getElementById('installGuideBtn').onclick = () => openModal('installModal');// ==================== ماشین حساب ====================
-let calcCurrent = '0', calcPrev = '', calcOp = null, calcWait = false;
-const calcDisp = document.getElementById('calcDisplay');
-function updateCalcDisp() { calcDisp.innerText = calcCurrent; }
-function calcNumber(n) { if(calcWait){ calcCurrent=n; calcWait=false; } else { calcCurrent = calcCurrent==='0'? n : calcCurrent+n; } updateCalcDisp(); }
-function calcDot() { if(calcWait){ calcCurrent='0.'; calcWait=false; } else if(calcCurrent.indexOf('.')===-1) calcCurrent+='.'; updateCalcDisp(); }
-function calcClearAll() { calcCurrent='0'; calcPrev=''; calcOp=null; calcWait=false; updateCalcDisp(); }
-function calcClearLast() { if(calcWait) return; if(calcCurrent.length===1) calcCurrent='0'; else calcCurrent=calcCurrent.slice(0,-1); updateCalcDisp(); }
-function calcOperation(op) { const val = parseFloat(calcCurrent); if(calcPrev!=='' && !calcWait){ let res; switch(calcOp){ case '+': res = parseFloat(calcPrev)+val; break; case '-': res = parseFloat(calcPrev)-val; break; case '*': res = parseFloat(calcPrev)*val; break; case '/': res = parseFloat(calcPrev)/val; break; } calcCurrent = String(res); updateCalcDisp(); } calcPrev = calcCurrent; calcOp = op; calcWait = true; }
-function calcEqual() { if(calcOp===null || calcWait) return; const val = parseFloat(calcCurrent); let res; switch(calcOp){ case '+': res = parseFloat(calcPrev)+val; break; case '-': res = parseFloat(calcPrev)-val; break; case '*': res = parseFloat(calcPrev)*val; break; case '/': res = parseFloat(calcPrev)/val; break; } calcCurrent = String(res); updateCalcDisp(); calcPrev=''; calcOp=null; calcWait=false; }
+document.getElementById('installGuideBtn').onclick = () => openModal('installModal');// ==================== ماشین حساب ساده و کارآمد ====================
+let calcExpression = '';
+const calcDisplay = document.getElementById('calcDisplay');
+
+function updateCalcDisplay() {
+    calcDisplay.innerText = calcExpression || '0';
+}
+
+function handleCalcButton(value) {
+    if (value === 'clear_all') {
+        calcExpression = '';
+    } else if (value === 'clear_last') {
+        calcExpression = calcExpression.slice(0, -1);
+    } else if (value === 'equal') {
+        try {
+            let expr = calcExpression.replace(/×/g, '*').replace(/÷/g, '/');
+            let result = eval(expr);
+            calcExpression = String(result);
+        } catch(e) {
+            calcExpression = 'Error';
+        }
+    } else {
+        calcExpression += value;
+    }
+    updateCalcDisplay();
+}
+
+// اتصال رویدادها به دکمه‌ها
 document.querySelectorAll('#calcButtons .calc-btn').forEach(btn => {
     btn.onclick = () => {
-        const type = btn.getAttribute('data-type'), val = btn.getAttribute('data-value');
-        if(type==='number') calcNumber(val);
-        else if(type==='dot') calcDot();
-        else if(type==='operator') calcOperation(val);
-        else if(type==='clear') val==='all' ? calcClearAll() : calcClearLast();
-        else if(type==='equal') calcEqual();
+        const type = btn.getAttribute('data-type');
+        const val = btn.getAttribute('data-value');
+        if (type === 'number') {
+            handleCalcButton(val);
+        } else if (type === 'dot') {
+            handleCalcButton('.');
+        } else if (type === 'operator') {
+            handleCalcButton(val);
+        } else if (type === 'clear') {
+            handleCalcButton(val === 'all' ? 'clear_all' : 'clear_last');
+        } else if (type === 'equal') {
+            handleCalcButton('equal');
+        }
     };
 });
 
