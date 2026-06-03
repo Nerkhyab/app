@@ -203,7 +203,8 @@ function copyLink() {
 
 // ==================== کارت‌ها ====================
 let currentTheme = localStorage.getItem('theme') || 'light';
-let currentLayout = localStorage.getItem('isGridMode') !== 'false';
+let currentLayout = true;
+localStorage.setItem('isGridMode', 'true');
 if(currentTheme==='light') document.body.classList.add('light-mode');
 else document.body.classList.remove('light-mode');
 
