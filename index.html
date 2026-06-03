@@ -210,7 +210,7 @@ let currentRates = { ...sampleRates };
 
 async function load() {
     try {
-        const res = await fetch('rates.json?v=' + Date.now());
+        const res = await fetch('last_rates.json?v=' + Date.now());
         const data = await res.json();
         if (data && data.rates) currentRates = data.rates;
         else currentRates = { ...sampleRates };
