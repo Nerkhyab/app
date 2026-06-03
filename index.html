@@ -190,6 +190,10 @@
         .status-badge {
     gap: 2px;
         }
+        .circle-arrow i {
+    transform: scale(0.85);
+    display: inline-block;
+        }
     </style>
 </head>
 <body><div id="splashScreen" class="splash-overlay"><div class="splash-logo"><div class="main">BeChand<span>?!</span></div><div class="sub">مرجع رسمی بازار ارز هرات</div></div></div>
@@ -302,7 +306,7 @@ function createCardHTML(item, r) {
         <div class="card-main-row">
             <div class="list-left">
                 <div class="status-badge ${isUp ? 'text-up' : 'text-down'}">
-    <span class="circle-arrow">${isUp ? '↑' : '↓'}</span>
+    <span class="circle-arrow"><i class="fas ${isUp ? 'fa-arrow-up' : 'fa-arrow-down'}"></i></span>
     <span>${r.percent}</span>
 </div>
                 <div class="price-val">${r.current}</div>
