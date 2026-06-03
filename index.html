@@ -268,10 +268,13 @@ async function load() {
     renderCards();
 }
 
-// ==================== کارت‌ها ====================
 let currentTheme = localStorage.getItem('theme') || 'light';
-let currentLayout = true; // جدولی پیش‌فرض
-localStorage.setItem('isGridMode', 'true');
+// خواندن وضعیت ذخیره شده، پیش‌فرض true (جدولی) در اولین بازدید
+let currentLayout = localStorage.getItem('isGridMode') === 'true';
+if (localStorage.getItem('isGridMode') === null) {
+    currentLayout = true; // اولین بار جدولی
+    localStorage.setItem('isGridMode', 'true');
+                                                                                                 }
 if(currentTheme==='light') document.body.classList.add('light-mode');
 else document.body.classList.remove('light-mode');
 
