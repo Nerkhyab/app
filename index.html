@@ -200,7 +200,19 @@ function copyLink() {
     const link = document.getElementById('appLink').innerText;
     navigator.clipboard.writeText(link).then(()=>alert('✅ لینک کپی شد!')).catch(()=>{const ta=document.createElement('textarea'); ta.value=link; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('✅ لینک کپی شد!');});
 }
-
+// ==================== بارگذاری داده از سرور ====================
+async function load() {
+    try {
+        const res = await fetch('rates.json?v=' + Date.now());
+        const data = await res.json();
+        window.lastData = data;
+        renderManual();  // تابع موجود در کد شما
+    } catch (e) {
+        console.error("خطا در دریافت داده:", e);
+        window.lastData = { rates: sampleRates };
+        load();
+    }
+    
 // ==================== کارت‌ها ====================
 let currentTheme = localStorage.getItem('theme') || 'light';
 let currentLayout = true;
