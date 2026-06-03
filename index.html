@@ -183,6 +183,13 @@
         .container:not(.grid-mode) .status-badge {
     margin-bottom: -6px;  /* مقدار دلخواه: -4px یا -6px */
         }
+        /* کاهش فاصله فلش و درصد از عدد نرخ در حالت جدولی */
+.grid-mode .status-badge {
+    margin-bottom: -4px;  /* همان مقدار منفی که در حالت لیست استفاده کردی */
+}
+        .status-badge {
+    gap: 2px;
+        }
     </style>
 </head>
 <body><div id="splashScreen" class="splash-overlay"><div class="splash-logo"><div class="main">BeChand<span>?!</span></div><div class="sub">مرجع رسمی بازار ارز هرات</div></div></div>
@@ -296,7 +303,7 @@ function createCardHTML(item, r) {
             <div class="list-left">
                 <div class="status-badge ${isUp ? 'text-up' : 'text-down'}">
                     <span>${r.percent}</span>
-                    <span class="circle-arrow"><i class="fas ${isUp ? 'fa-arrow-up' : 'fa-arrow-down'}"></i></span>
+                    <span class="circle-arrow"><i class="far ${isUp ? 'fa-arrow-up' : 'fa-arrow-down'}"></i></span>
                 </div>
                 <div class="price-val">${r.current}</div>
             </div>
