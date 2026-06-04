@@ -208,6 +208,22 @@
         .status-badge span {
     font-size: 0.90rem;  /* مقدار دلخواه: 0.8rem یا 0.75rem */
         }
+        /* هماهنگ‌سازی رنگ دکمه‌ها با دکمه لغزنده */
+.guide-btn,
+#installModal button,
+.dual-btn {
+    background: #228B22 !important;
+    border: none;
+    color: white;
+    transition: 0.2s;
+}
+
+.guide-btn:hover,
+#installModal button:hover,
+.dual-btn:hover {
+    background: #1a6e1a !important; /* کمی تیره‌تر برای هاور */
+    cursor: pointer;
+}
     </style>
 </head>
 <body><div id="splashScreen" class="splash-overlay"><div class="splash-logo"><div class="main">BeChand<span>?!</span></div><div class="sub">مرجع رسمی بازار ارز هرات</div></div></div>
@@ -222,11 +238,11 @@
 
 <div id="aboutModal" class="full-modal"><div class="about-modal-content"><div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><b style="font-size: 1.1rem;">درباره برنامه</b><i class="fas fa-times close-icon" onclick="closeModal('aboutModal')"></i></div>
     <p><b style="color:#d4af37;">منبع قیمت:</b><br>قیمت‌های نمایش داده‌شده در اپلیکیشن به چند؟! از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند</p>
-    <p>این برنامه نیاز به هیچ ثبت نام و دریافت اطلاعاتی ندارد، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.</p>
-    <p>جهت ارتباط، انتقاد و یا پیشنهاد همکاری با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.</p>
+    <p>این برنامه نیاز به هیچ ثبت نام و دریافت اطلاعاتی ندارد، تنها عملکرد برنامه این است که پس از بازشدنِ برنامه قیمت ها به طور خودکار نمایش داده می‌شوند.</p>
+    <p>جهت ارتباط انتقادویاپیشنهاد همکاری بابرنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) در ارتباط باشید.</p>
     <p><b style="color:#d4af37;">DEVELOPER :</b> Safiullah Bahadori Ghouryani</p>
 </div></div><div id="installModal" class="full-modal"><div class="install-modal-content"><div style="display: flex; justify-content: space-between;"><b style="color:#ffd966;">📱 نصب برنامه</b><i class="fas fa-times close-icon" onclick="closeModal('installModal')"></i></div>
-    <p>برای نصب برنامه ، از منوی سه نقطه ⋮  گوشه بالای مرورگر، گزینه «افزودن به صفحه اصلی» را انتخاب کنید.</p>
+    <p>برای نصب برنامه ، از منوی سه نقطه ⋮  گوشه بالای مرورگر، گزینه «افزودن به صفحه اصلی» را انتخاب کنید.لینک برنامه جهت ارسال به دوستان</p>
     <div style="background: rgba(255,255,255,0.1); border-radius: 20px; padding: 8px; margin: 12px 0; display: flex; justify-content: space-between;"><span id="appLink">https://nerkhyab.github.io/app</span><button class="dual-btn" style="padding: 4px 12px; background: #00c853;" onclick="copyLink()">کپی لینک</button></div>
     <button onclick="closeModal('installModal')">متوجه شدم</button>
 </div></div>
