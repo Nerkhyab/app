@@ -132,6 +132,27 @@
         .grid-mode .status-badge { margin-bottom: -9px; }
         .status-badge { gap: 1px; }
         .circle-arrow i { transform: scale(0.85); display: inline-block; }
+        
+        /* تنظیم پس‌زمینه مودال نمودار متناسب با تم */
+body.light-mode .chart-panel {
+    background: rgba(245, 245, 247, 0.96) !important; /* سفید مایل به خاکستری */
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .chart-panel .range-btn {
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
+}
+
+body.light-mode .chart-panel .range-btn.active {
+    background: #00c853;
+    color: white;
+}
+
+body.light-mode .chart-panel #chartChange .text-up,
+body.light-mode .chart-panel #chartChange .text-down {
+    color: #000; /* یا هر رنگ مناسب برای متن تغییرات */
+}
         .status-badge span { font-size: 0.90rem; }
     </style>
 </head>
