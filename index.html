@@ -224,6 +224,28 @@
     background: #1a6e1a !important; /* کمی تیره‌تر برای هاور */
     cursor: pointer;
 }
+        /* بهبود ظاهر مودال نمودار شبیه نچا */
+.chart-panel {
+    background: rgba(28,28,30,0.96);
+    border-radius: 32px;
+    padding: 16px;
+}
+.range-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    margin-left: 6px;
+}
+.range-btn.active {
+    background: #00c853;
+}
+#chartChange {
+    font-size: 0.9rem;
+    margin-top: 4px;
+        }
     </style>
 </head>
 <body><div id="splashScreen" class="splash-overlay"><div class="splash-logo"><div class="main">BeChand<span>?!</span></div><div class="sub">مرجع رسمی بازار ارز هرات</div></div></div>
@@ -255,10 +277,7 @@
         <button class="calc-btn" data-type="number" data-value="0">0</button><button class="calc-btn" data-type="number" data-value="00">00</button><button class="calc-btn" data-type="dot" data-value=".">.</button><button class="calc-btn operator" data-type="operator" data-value="+">+</button>
         <button class="calc-btn" data-type="clear" data-value="all">AC</button><button class="calc-btn" data-type="clear" data-value="last">C</button><button class="calc-btn equal" data-type="equal">=</button>
     </div>
-</div></div><div id="chartModal" class="full-modal"><div class="chart-panel"><div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><div><img id="chartIcon" src="" style="width:32px;height:32px;border-radius:8px;"><b id="chartTitle"></b><div id="chartChange"></div></div><div><button class="range-btn" data-range="week">هفته</button><button class="range-btn" data-range="month">ماه</button><button class="range-btn" data-range="quarter">سه ماهه</button><i class="fas fa-times close-icon" style="margin-right:8px;" onclick="closeModal('chartModal')"></i></div></div>
-    <div id="chartStats" style="display:flex; justify-content:space-between; margin-bottom:12px;"><span>کف: <strong id="minPrice">---</strong></span><span>سقف: <strong id="maxPrice">---</strong></span></div>
-    <canvas id="priceChart" style="width:100%; height:200px;"></canvas><div id="chartLabels" style="display:flex; justify-content:space-between; font-size:0.6rem; margin-top:8px;"></div>
-</div></div>
+<div id="chartModal" class="full-modal"><div class="chart-panel"><div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><div><img id="chartIcon" src="" style="width:32px;height:32px;border-radius:8px;"><b id="chartTitle"></b><div id="chartChange"></div></div><div><button class="range-btn active" data-range="day">روز</button><button class="range-btn" data-range="week">هفته</button><i class="fas fa-times close-icon" style="margin-right:8px;" onclick="closeModal('chartModal')"></i></div></div><div id="chartStats" style="display:flex; justify-content:space-between; margin-bottom:12px;"><span>کف: <strong id="minPrice">---</strong></span><span>سقف: <strong id="maxPrice">---</strong></span></div><canvas id="priceChart" style="width:100%; height:200px;"></canvas><div id="chartLabels" style="display:flex; justify-content:space-between; font-size:0.6rem; margin-top:8px;"></div></div></div>
 
 <script>
     // ==================== داده‌های نمونه (پشتیبان) ====================
@@ -376,38 +395,77 @@ function initSortable() {
 
 // ==================== نمودار ====================
 let chartInstance = null;
-let currentChartRange = 'week';
+let currentChartRange = 'day';
+
 function showChart(title, history, iconHtml, status, percent) {
     document.getElementById('chartTitle').innerText = title;
     document.getElementById('chartChange').innerHTML = `<span class="${status==='up'?'text-up':'text-down'}">${percent} <i class="fas ${status==='up'?'fa-arrow-up':'fa-arrow-down'}"></i></span>`;
     document.getElementById('chartIcon').src = iconHtml.match(/src="([^"]+)"/)?.[1] || '';
     window.currentChart = { title, fullHistory: history, status, percent };
     openModal('chartModal');
-    currentChartRange = 'week';
+    currentChartRange = 'day';
     document.querySelectorAll('#chartModal .range-btn').forEach(btn=>btn.classList.remove('active'));
-    document.querySelector('#chartModal .range-btn[data-range="week"]').classList.add('active');
-    renderChart('week');
-    }function renderChart(range) {
-    let points = range==='week'?7 : range==='month'?30 : 90;
-    let hist = [...window.currentChart.fullHistory];
-    while(hist.length < points) hist.unshift(hist[0]);
-    if(hist.length > points) hist = hist.slice(-points);
-    const minP = Math.min(...hist), maxP = Math.max(...hist);
-    document.getElementById('minPrice').innerText = minP.toLocaleString();
-    document.getElementById('maxPrice').innerText = maxP.toLocaleString();
-    const today = new Date();
+    document.querySelector('#chartModal .range-btn[data-range="day"]').classList.add('active');
+    renderChart('day');
+}
+
+function renderChart(range) {
+    let dataPoints = [];
     let labels = [];
-    for(let i=0;i<points;i++){
-        if(range==='week'){
-            const d = new Date(today); d.setDate(today.getDate()-i);
-            const days = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
+    
+    if (range === 'day') {
+        // داده‌های ساعتی از 8 صبح تا 6 عصر (6 نقطه، 5 بازه)
+        const hours = [8,10,12,14,16,18];
+        // اگر تاریخچه موجود است از آن استفاده کن، وگرنه داده نمونه
+        let dayHistory = window.currentChart.fullHistory || [];
+        if (dayHistory.length < 6) {
+            dayHistory = [63.80, 63.82, 63.85, 63.83, 63.81, 63.80];
+        }
+        dataPoints = dayHistory.slice(0,6);
+        labels = hours.map(h => `${h}:00`);
+    } 
+    else if (range === 'week') {
+        let weekHistory = window.currentChart.fullHistory || [];
+        if (weekHistory.length < 7) {
+            weekHistory = [63.8, 63.9, 63.7, 63.8, 63.9, 63.85, 63.8];
+        }
+        dataPoints = weekHistory.slice(0,7);
+        const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
+        const today = new Date();
+        labels = [];
+        for(let i=6; i>=0; i--) {
+            let d = new Date(today);
+            d.setDate(today.getDate() - i);
             labels.push(days[d.getDay()]);
-        } else {
-            const d = new Date(today); d.setDate(today.getDate()-i);
-            const j = jalaali.toJalaali(d);
-            labels.push(`${j.jm}/${j.jd}`);
         }
     }
+    
+    const minVal = Math.min(...dataPoints);
+    const maxVal = Math.max(...dataPoints);
+    document.getElementById('minPrice').innerText = minVal.toLocaleString();
+    document.getElementById('maxPrice').innerText = maxVal.toLocaleString();
+    
+    const ctx = document.getElementById('priceChart').getContext('2d');
+    if(chartInstance) chartInstance.destroy();
+    const grad = ctx.createLinearGradient(0,0,0,200);
+    grad.addColorStop(0, '#00c853aa');
+    grad.addColorStop(1, '#00c85300');
+    chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: { labels: labels, datasets: [{ data: dataPoints, borderColor: '#00c853', borderWidth: 2.5, fill: true, backgroundColor: grad, tension: 0.3, pointRadius: 0 }] },
+        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { position: 'right' } } }
+    });
+}
+
+// اتصال دکمه‌های نمودار
+document.querySelectorAll('#chartModal .range-btn').forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll('#chartModal .range-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        currentChartRange = btn.getAttribute('data-range');
+        renderChart(currentChartRange);
+    };
+});
     const labelsRev = [...labels].reverse();
     const pricesRev = [...hist].reverse();
     document.getElementById('chartLabels').innerHTML = labelsRev.map(l=>`<span>${l}</span>`).join('');
