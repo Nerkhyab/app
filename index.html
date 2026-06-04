@@ -193,7 +193,7 @@ body.light-mode .chart-panel #chartChange .text-down {
 </div></div>
     <div id="chartModal" class="full-modal"><div class="chart-panel"><div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><div><img id="chartIcon" src="" style="width:32px;height:32px;border-radius:8px;"><b id="chartTitle"></b><div id="chartChange"></div></div><div><button class="range-btn active" data-range="day">روز</button><button class="range-btn" data-range="week">هفته</button><i class="fas fa-times close-icon" style="margin-right:8px;" onclick="closeModal('chartModal')"></i></div></div><div id="chartStats" style="display:flex; justify-content:space-between; margin-bottom:12px;"><span>کف: <strong id="minPrice">---</strong></span><span>سقف: <strong id="maxPrice">---</strong></span></div><canvas id="priceChart" style="width:100%; height:200px;"></canvas><div id="chartLabels" style="display:flex; justify-content:space-between; font-size:0.6rem; margin-top:8px;"></div></div></div>
 
-<script>
+        <script>
     // ==================== داده‌های نمونه ====================
     const sampleRates = {
         "دالر هرات": { current: "63.80", status: "down", percent: "-0.08%", history: [63.85,63.8,63.75,63.8,63.85,63.8,63.75] },
@@ -280,8 +280,8 @@ body.light-mode .chart-panel #chartChange .text-down {
         cardDiv.onclick = (e) => { e.stopPropagation(); showChart(item.key, r.history, iconHtml, r.status, r.percent); };
         return cardDiv;
     }
-                                                                         
-        function renderCards() {
+
+    function renderCards() {
         const container = document.getElementById('main-container');
         container.innerHTML = '';
         let order = JSON.parse(localStorage.getItem('cards-order'));
@@ -312,7 +312,7 @@ body.light-mode .chart-panel #chartChange .text-down {
     const HOURLY_VALUES = [8, 10, 12, 14, 16, 18];
 
     function getCurrentHour() {
-        return new Date().getHours(); // ساعت واقعی مرورگر بدون تغییر
+        return new Date().getHours();
     }
 
     function getHourlyPriceData(historyArray) {
@@ -326,18 +326,14 @@ body.light-mode .chart-panel #chartChange .text-down {
         const currentHour = getCurrentHour();
         let validIndices = [];
 
-        // منطق جدید: بعد از ساعت 18 (یا قبل از 8) تمام 6 نقطه را نشان بده
         if (currentHour >= 18 || currentHour < 8) {
-            // نمایش کامل 6 نقطه (قفل شده)
             validIndices = [0,1,2,3,4,5];
         } else {
-            // بین 8 تا 17: نمایش نقاطی که ساعتشان <= currentHour
             for (let i = 0; i < HOURLY_VALUES.length; i++) {
                 if (HOURLY_VALUES[i] <= currentHour) {
                     validIndices.push(i);
                 }
             }
-            // اگر هیچ نقطه‌ای نبود (مثلاً قبل از 8 که در شرط بالا رفت، اینجا نمی‌رسد)
             if (validIndices.length === 0) validIndices = [0];
         }
 
@@ -355,10 +351,23 @@ body.light-mode .chart-panel #chartChange .text-down {
         const grad = ctx.createLinearGradient(0,0,0,200);
         grad.addColorStop(0, '#00c853aa');
         grad.addColorStop(1, '#00c85300');
+        
+        const isDark = !document.body.classList.contains('light-mode');
+        const tickColor = isDark ? '#fff' : '#000';
+        const gridColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
+        
         chartInstance = new Chart(ctx, {
             type: 'line',
             data: { labels: selectedLabels, datasets: [{ data: selectedPrices, borderColor: '#00c853', borderWidth: 2.5, fill: true, backgroundColor: grad, tension: 0.3, pointRadius: 0 }] },
-            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { position: 'right' } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { position: 'right', ticks: { color: tickColor }, grid: { color: gridColor } },
+                    x: { ticks: { color: tickColor }, grid: { color: gridColor } }
+                }
+            }
         });
         document.getElementById('chartLabels').innerHTML = selectedLabels.map(l => `<span>${l}</span>`).join('');
     }
@@ -386,15 +395,27 @@ body.light-mode .chart-panel #chartChange .text-down {
         const grad = ctx.createLinearGradient(0,0,0,200);
         grad.addColorStop(0, '#00c853aa');
         grad.addColorStop(1, '#00c85300');
+        
+        const isDark = !document.body.classList.contains('light-mode');
+        const tickColor = isDark ? '#fff' : '#000';
+        const gridColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
+        
         chartInstance = new Chart(ctx, {
             type: 'line',
             data: { labels: labels, datasets: [{ data: dataPoints, borderColor: '#00c853', borderWidth: 2.5, fill: true, backgroundColor: grad, tension: 0.3, pointRadius: 0 }] },
-            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { position: 'right' } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { position: 'right', ticks: { color: tickColor }, grid: { color: gridColor } },
+                    x: { ticks: { color: tickColor }, grid: { color: gridColor } }
+                }
+            }
         });
         document.getElementById('chartLabels').innerHTML = labels.map(l => `<span>${l}</span>`).join('');
     }
-
-    function showChart(title, history, iconHtml, status, percent) {
+                function showChart(title, history, iconHtml, status, percent) {
         document.getElementById('chartTitle').innerText = title;
         document.getElementById('chartChange').innerHTML = `<span class="${status==='up'?'text-up':'text-down'}">${percent} <i class="fas ${status==='up'?'fa-arrow-up':'fa-arrow-down'}"></i></span>`;
         let src = '';
@@ -423,7 +444,8 @@ body.light-mode .chart-panel #chartChange .text-down {
                 renderChart('day');
             }
         }, 60000);
-    }       
+    }
+
     function renderChart(range) {
         if (!window.currentChart) return;
         const history = window.currentChart.fullHistory || [];
