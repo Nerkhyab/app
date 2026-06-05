@@ -154,6 +154,17 @@ body.light-mode .chart-panel #chartChange .text-down {
     color: #000; /* یا هر رنگ مناسب برای متن تغییرات */
 }
         .status-badge span { font-size: 0.90rem; }
+/* سفید کردن اعداد نمودار در حالت تاریک */
+body:not(.light-mode) .chartjs-render-monitor text {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+body:not(.light-mode) .chartjs-render-monitor .y-axis-label,
+body:not(.light-mode) .chartjs-render-monitor .x-axis-label {
+    fill: #ffffff !important;
+                                          }
+        
     </style>
 </head>
 <body>
