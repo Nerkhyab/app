@@ -207,6 +207,24 @@ body:not(.light-mode) #chartTitle {
 #priceChart {
     margin-top: auto;
 }
+        /* تبدیل مودال نمودار به bottom sheet با انیمیشن آهسته */
+#chartModal {
+    align-items: flex-end !important;
+    background: rgba(0,0,0,0.5) !important;
+}
+
+#chartModal .chart-panel {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 28px 28px 0 0 !important;
+    transform: translateY(100%);
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#chartModal.active .chart-panel {
+    transform: translateY(0);
+        }
     </style>
 </head>
 <body>
