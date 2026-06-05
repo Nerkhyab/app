@@ -244,6 +244,35 @@ body:not(.light-mode) #chartTitle {
     margin-top: 4px;
     margin-right: 0; /* برای راست‌چین بودن */
 }
+        /* چیدمان ستونی برای اطلاعات ارز در مودال نمودار */
+#chartModal .chart-panel > div:first-child > div:first-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+/* آیکون و عنوان را در یک ردیف نگه دار */
+#chartModal .chart-panel > div:first-child > div:first-child {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+#chartModal #chartIcon,
+#chartModal #chartTitle {
+    display: inline-block;
+    vertical-align: middle;
+}
+#chartModal #chartChange {
+    width: 100%;
+    order: 2;
+}
+#chartModal #chartCurrentPrice {
+    width: 100%;
+    order: 3;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 4px;
+        }
     </style>
 </head>
 <body>
