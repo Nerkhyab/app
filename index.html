@@ -178,34 +178,36 @@ body:not(.light-mode) #chartTitle {
     margin-left: 12px;
 }
 
-/* تنظیم چیدمان کنار آیکون و عنوان */
-.chart-panel > div:first-child > div:first-child {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-/* فاصله عنوان و درصد از آیکون */
-#chartTitle, #chartChange {
-    margin: 0;
-}
-        /* حذف بخش کف و سقف از مودال نمودار */
-#chartStats {
-    display: none !important;
-        }
-        /* تنظیم ارتفاع پنل نمودار در هر دو حالت */
-.chart-panel {
-    min-height: 400px !important;
-        }
-        /* چسباندن نمودار به پایین پنل */
-.chart-panel {
+/* بازنشانی چیدمان wrapper اطلاعات ارز */
+#chartModal .chart-panel > div:first-child > div:first-child {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: 420px;
+    align-items: flex-start;
+    gap: 6px;
 }
-#priceChart {
-    margin-top: auto;
+
+/* آیکون و عنوان را در یک ردیف نگه دار */
+#chartModal .chart-panel > div:first-child > div:first-child {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+/* درصد و قیمت را تمام‌عرض و در ردیف‌های مجزا قرار بده */
+#chartModal #chartChange {
+    width: 100%;
+    order: 2; /* حتماً بعد از آیکون/عنوان */
+    margin-top: 0;
+}
+#chartModal #chartCurrentPrice {
+    width: 100%;
+    order: 3;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 2px;
+    direction: ltr;
+    }
 }
         /* تبدیل مودال نمودار به bottom sheet با انیمیشن آهسته */
 #chartModal {
