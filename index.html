@@ -322,7 +322,7 @@ body.light-mode .chart-panel #chartChange .text-down {
         return prices.slice(0,6);
     }
 
-    function renderDayChart(historyArray) {
+                function renderDayChart(historyArray) {
         const currentHour = getCurrentHour();
         let validIndices = [];
 
@@ -337,8 +337,26 @@ body.light-mode .chart-panel #chartChange .text-down {
             if (validIndices.length === 0) validIndices = [0];
         }
 
-        const hourlyPrices = getHourlyPriceData(historyArray);
-        const selectedPrices = validIndices.map(idx => hourlyPrices[idx]);
+        // قیمت فعلی
+        let currentPriceNum = 0;
+        if (window.currentChart && window.currentChart.currentPrice) {
+            currentPriceNum = parseFloat(String(window.currentChart.currentPrice).replace(/,/g, ''));
+        }
+        if (isNaN(currentPriceNum)) currentPriceNum = 0;
+        
+        // قیمت شروع (اولین نقطه از تاریخچه)
+        let startPrice = (historyArray && historyArray.length > 0) ? historyArray[0] : currentPriceNum;
+        if (startPrice === 0) startPrice = currentPriceNum;
+        
+        // ساخت ۶ نقطه خطی بین startPrice و currentPriceNum
+        const totalPoints = 6;
+        let generatedPrices = [];
+        for (let i = 0; i < totalPoints; i++) {
+            let ratio = i / (totalPoints - 1);
+            generatedPrices.push(startPrice + (currentPriceNum - startPrice) * ratio);
+        }
+        
+        const selectedPrices = validIndices.map(idx => generatedPrices[idx]);
         const selectedLabels = validIndices.map(idx => HOURLY_LABELS[idx]);
 
         const minVal = Math.min(...selectedPrices);
@@ -370,7 +388,7 @@ body.light-mode .chart-panel #chartChange .text-down {
             }
         });
         document.getElementById('chartLabels').innerHTML = selectedLabels.map(l => `<span>${l}</span>`).join('');
-    }
+                }
 
     function renderWeekChart(historyArray) {
         let weekHistory = historyArray || [];
