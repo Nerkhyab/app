@@ -118,58 +118,51 @@
         .grid-mode .price-area { margin-bottom: 0 !important; padding-bottom: 0 !important; }
         .container.grid-mode .card { padding-bottom: 4px !important; }
         .container.grid-mode .list-left { justify-content: flex-end !important; display: flex !important; flex-direction: column !important; height: 100% !important; }
-        /* حالت لیستی - چیدمان جدید */
+/* حالت لیستی - چیدمان جدید */
 .container:not(.grid-mode) .card {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    padding: 12px;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 12px !important;
 }
 .container:not(.grid-mode) .card-main-row {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    justify-content: space-between !important;
 }
 .container:not(.grid-mode) .list-left {
-    order: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 4px;
+    order: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
 }
 .container:not(.grid-mode) .list-right {
-    order: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-start;
-    gap: 6px;
+    order: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 6px !important;
 }
 .container:not(.grid-mode) .status-badge {
-    order: 1;
-    margin: 0;
-    justify-content: flex-start;
+    order: 1 !important;
+    justify-content: flex-start !important;
 }
 .container:not(.grid-mode) .price-val {
-    order: 2;
-    font-size: 1.8rem;
-    text-align: left;
+    order: 2 !important;
+    font-size: 1.8rem !important;
+    text-align: left !important;
 }
 .container:not(.grid-mode) .card-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 4px !important;
 }
 .container:not(.grid-mode) .card-info div {
-    text-align: right;
-}
-.container:not(.grid-mode) .icon-img,
-.container:not(.grid-mode) .custom-mix-icon {
-    order: 0;
-}
+    text-align: right !important;
+            }
         .grid-mode .status-badge { margin-bottom: -9px; }
         .status-badge { gap: 1px; }
         .circle-arrow i { transform: scale(0.85); display: inline-block; }
