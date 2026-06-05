@@ -120,7 +120,7 @@
         .container.grid-mode .list-left { justify-content: flex-end !important; display: flex !important; flex-direction: column !important; height: 100% !important; }
         .container:not(.grid-mode) .card { display: flex; flex-direction: column; padding: 14px; }
         .container:not(.grid-mode) .card-main-row { flex-direction: column; gap: 12px; }
-        .container:not(.grid-mode) .list-right { order: 1; width: 100%; }
+        .:not(.grid-mode) .list-right { order: 1; width: 100%; }
         .container:not(.grid-mode) .list-left { order: 2; width: 100%; align-items: flex-end; text-align: left; }
         .container:not(.grid-mode) .card-info { flex-direction: row; justify-content: space-between; width: 100%; }
         .container:not(.grid-mode) .card-info div { order: 1; text-align: right; }
@@ -133,88 +133,11 @@
         .status-badge { gap: 1px; }
         .circle-arrow i { transform: scale(0.85); display: inline-block; }
         
-        /* تنظیم پس‌زمینه مودال نمودار متناسب با تم */
-body.light-mode .chart-panel {
-    background: rgba(245, 245, 247, 0.96) !important; /* سفید مایل به خاکستری */
-   
-    border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-body.light-mode .chart-panel .range-btn {
-    background: rgba(0, 0, 0, 0.1);
-    color: #000;
-}
-
-body.light-mode .chart-panel .range-btn.active {
-    background: #00c853;
-    color: white;
-}
-
-body.light-mode .chart-panel #chartChange .text-up,
-body.light-mode .chart-panel #chartChange .text-down {
-    color: #000; /* یا هر رنگ مناسب برای متن تغییرات */
-}
-        .status-badge span { font-size: 0.90rem; }
-/* سفید کردن اعداد نمودار در حالت تاریک */
-body:not(.light-mode) .chartjs-render-monitor text {
-    fill: #ffffff !important;
-    color: #ffffff !important;
-}
-
-body:not(.light-mode) .chartjs-render-monitor .y-axis-label,
-body:not(.light-mode) .chartjs-render-monitor .x-axis-label {
-    fill: #ffffff !important;
-                                          }
-        /* سفید کردن نام ارز در مودال نمودار هنگام حالت تاریک */
-body:not(.light-mode) #chartTitle {
-    color: #ffffff !important;
-        }
-        /* آیکون بزرگ و گرد در مودال نمودار */
-#chartIcon {
-    width: 48px !important;
-    height: 48px !important;
-    border-radius: 50% !important;
-    object-fit: cover;
-    margin-left: 12px;
-}
-
-/* بازنشانی چیدمان wrapper اطلاعات ارز */
-#chartModal .chart-panel > div:first-child > div:first-child {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-}
-
-/* آیکون و عنوان را در یک ردیف نگه دار */
-#chartModal .chart-panel > div:first-child > div:first-child {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-}
-
-/* درصد و قیمت را تمام‌عرض و در ردیف‌های مجزا قرار بده */
-#chartModal #chartChange {
-    width: 100%;
-    order: 2; /* حتماً بعد از آیکون/عنوان */
-    margin-top: 0;
-}
-#chartModal #chartCurrentPrice {
-    width: 100%;
-    order: 3;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-top: 2px;
-    direction: ltr;
-    }
-}
-        /* تبدیل مودال نمودار به bottom sheet با انیمیشن آهسته */
+          /* ====== مودال نمودار - bottom sheet ====== */
 #chartModal {
     align-items: flex-end !important;
     background: rgba(0,0,0,0.5) !important;
 }
-
 #chartModal .chart-panel {
     margin: 0 !important;
     width: 100% !important;
@@ -223,58 +146,38 @@ body:not(.light-mode) #chartTitle {
     transform: translateY(100%);
     transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-
 #chartModal.active .chart-panel {
     transform: translateY(0);
-        }
-        /* چیدمان جدید در هدر مودال نمودار: آیکون و عنوان در یک ردیف، درصد نوسان زیر آن‌ها */
+}
+body.light-mode #chartModal .chart-panel {
+    background: rgba(245,245,247,0.98) !important;
+}
+#chartIcon {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 50% !important;
+    margin-left: 12px;
+}
 #chartModal .chart-panel > div:first-child > div:first-child {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
-}
-#chartModal #chartIcon {
-    order: 0;
-}
-#chartModal #chartTitle {
-    order: 1;
-}
-#chartModal #chartChange {
-    order: 2;
-    width: 100%;
-    margin-top: 4px;
-    margin-right: 0; /* برای راست‌چین بودن */
-}
-        /* چیدمان ستونی برای اطلاعات ارز در مودال نمودار */
-#chartModal .chart-panel > div:first-child > div:first-child {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     gap: 6px;
 }
-
-/* آیکون و عنوان را در یک ردیف نگه دار */
-#chartModal .chart-panel > div:first-child > div:first-child {
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-#chartModal #chartIcon,
-#chartModal #chartTitle {
-    display: inline-block;
-    vertical-align: middle;
-}
 #chartModal #chartChange {
     width: 100%;
-    order: 2;
+    margin-top: 4px;
 }
 #chartModal #chartCurrentPrice {
     width: 100%;
-    order: 3;
     font-size: 2rem;
     font-weight: bold;
-    margin-top: 4px;
-        }
+    margin-top: 6px;
+    direction: ltr;
+}
+#chartStats {
+    display: none;
+    }  
     </style>
 </head>
 <body>
@@ -553,7 +456,7 @@ body:not(.light-mode) #chartTitle {
         });
         document.getElementById('chartLabels').innerHTML = labels.map(l => `<span>${l}</span>`).join('');
     }
-                function showChart(title, history, iconHtml, status, percent) {
+                function showChart window.currentChart = { title, fullHistory: history, status, percent, currentPrice: currentRates[title]?.current };
         document.getElementById('chartTitle').innerText = title;
         document.getElementById('chartChange').innerHTML = `<span class="${status==='up'?'text-up':'text-down'}">${percent} <i class="fas ${status==='up'?'fa-arrow-up':'fa-arrow-down'}"></i></span>`;
         let src = '';
