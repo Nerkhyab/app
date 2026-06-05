@@ -118,17 +118,58 @@
         .grid-mode .price-area { margin-bottom: 0 !important; padding-bottom: 0 !important; }
         .container.grid-mode .card { padding-bottom: 4px !important; }
         .container.grid-mode .list-left { justify-content: flex-end !important; display: flex !important; flex-direction: column !important; height: 100% !important; }
-        .container:not(.grid-mode) .card { display: flex; flex-direction: column; padding: 14px; }
-        .container:not(.grid-mode) .card-main-row { flex-direction: column; gap: 12px; }
-        .:not(.grid-mode) .list-right { order: 1; width: 100%; }
-        .container:not(.grid-mode) .list-left { order: 2; width: 100%; align-items: flex-end; text-align: left; }
-        .container:not(.grid-mode) .card-info { flex-direction: row; justify-content: space-between; width: 100%; }
-        .container:not(.grid-mode) .card-info div { order: 1; text-align: right; }
-        .container:not(.grid-mode) .custom-mix-icon, .container:not(.grid-mode) .icon-img { order: 2; }
-        .container:not(.grid-mode) .status-badge { justify-content: flex-end; }
-        .container:not(.grid-mode) .price-val { font-size: 1.8rem; }
-        .container:not(.grid-mode) .list-left { gap: 4px; }
-        .container:not(.grid-mode) .status-badge { margin-bottom: -6px; }
+        /* حالت لیستی - چیدمان جدید */
+.container:not(.grid-mode) .card {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    padding: 12px;
+}
+.container:not(.grid-mode) .card-main-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+.container:not(.grid-mode) .list-left {
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+}
+.container:not(.grid-mode) .list-right {
+    order: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 6px;
+}
+.container:not(.grid-mode) .status-badge {
+    order: 1;
+    margin: 0;
+    justify-content: flex-start;
+}
+.container:not(.grid-mode) .price-val {
+    order: 2;
+    font-size: 1.8rem;
+    text-align: left;
+}
+.container:not(.grid-mode) .card-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+.container:not(.grid-mode) .card-info div {
+    text-align: right;
+}
+.container:not(.grid-mode) .icon-img,
+.container:not(.grid-mode) .custom-mix-icon {
+    order: 0;
+}
         .grid-mode .status-badge { margin-bottom: -9px; }
         .status-badge { gap: 1px; }
         .circle-arrow i { transform: scale(0.85); display: inline-block; }
