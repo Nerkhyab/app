@@ -197,6 +197,16 @@ body:not(.light-mode) #chartTitle {
 .chart-panel {
     min-height: 400px !important;
         }
+        /* چسباندن نمودار به پایین پنل */
+.chart-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 420px;
+}
+#priceChart {
+    margin-top: auto;
+}
     </style>
 </head>
 <body>
