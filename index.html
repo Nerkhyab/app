@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">را
     <title>BeChand?! - نسخه نهایی</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
@@ -181,13 +181,17 @@ body:not(.light-mode) #chartTitle {
 .chart-panel > div:first-child > div:first-child {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 }
 
 /* فاصله عنوان و درصد از آیکون */
 #chartTitle, #chartChange {
     margin: 0;
 }
+        /* حذف بخش کف و سقف از مودال نمودار */
+#chartStats {
+    display: none !important;
+        }
     </style>
 </head>
 <body>
