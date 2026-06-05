@@ -178,6 +178,48 @@ body.light-mode #chartModal .chart-panel {
 #chartStats {
     display: none;
     }  
+       /* اصلاح چیدمان حالت لیستی (غیر جدولی) */
+.container:not(.grid-mode) .card {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px;
+}
+.container:not(.grid-mode) .card-main-row {
+    display: flex;
+    flex-direction: row !important;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+.container:not(.grid-mode) .list-left {
+    order: 1 !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    flex: 1;
+}
+.container:not(.grid-mode) .list-right {
+    order: 0 !important;
+    width: auto !important;
+    flex-shrink: 0;
+}
+.container:not(.grid-mode) .card-info {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 10px;
+}
+.container:not(.grid-mode) .card-info div {
+    text-align: right !important;
+}
+.container:not(.grid-mode) .status-badge {
+    justify-content: flex-start !important;
+}
+.container:not(.grid-mode) .price-val {
+    font-size: 1.8rem;
+    text-align: left;
+        } 
     </style>
 </head>
 <body>
