@@ -168,6 +168,26 @@ body:not(.light-mode) .chartjs-render-monitor .x-axis-label {
 body:not(.light-mode) #chartTitle {
     color: #ffffff !important;
         }
+        /* آیکون بزرگ و گرد در مودال نمودار */
+#chartIcon {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 50% !important;
+    object-fit: cover;
+    margin-left: 12px;
+}
+
+/* تنظیم چیدمان کنار آیکون و عنوان */
+.chart-panel > div:first-child > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* فاصله عنوان و درصد از آیکون */
+#chartTitle, #chartChange {
+    margin: 0;
+}
     </style>
 </head>
 <body>
