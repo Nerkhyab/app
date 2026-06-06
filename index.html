@@ -118,62 +118,57 @@
         .grid-mode .price-area { margin-bottom: 0 !important; padding-bottom: 0 !important; }
         .container.grid-mode .card { padding-bottom: 4px !important; }
         .container.grid-mode .list-left { justify-content: flex-end !important; display: flex !important; flex-direction: column !important; height: 100% !important; }
-/* حالت لیستی - چیدمان جدید */
-.container:not(.grid-mode) .card {
-    display: flex !important;
-    flex-direction: row !important;
-    padding: 30px !important;
-}
-.container:not(.grid-mode) .card-main-row {
-    display: flex !important;
-    flex-direction: row !important;
-    width: 100% !important;
-    justify-content: space-between !important;
-}
-.container:not(.grid-mode) .list-left {
-    order: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 4px !important;
-}
-.container:not(.grid-mode) .list-right {
-    order: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-end !important;
-    gap: 6px !important;
-}
-.container:not(.grid-mode) .status-badge {
-    order: 1 !important;
-    justify-content: flex-start !important;
-}
-.container:not(.grid-mode) .price-val {
-    order: 2 !important;
-    font-size: 1.8rem !important;
-    text-align: left !important;
-}
-.container:not(.grid-mode) .card-info {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-end !important;
-    gap: 4px !important;
-}
-.container:not(.grid-mode) .card-info div {
-    text-align: right !important;
-            }
-        .container:not(.grid-mode) .card {
-    padding: 30px 12px;  /* ارتفاع کم */
-        }
 
-        .container:not(.grid-mode) .list-right {
-    justify-content: flex-start !important;
-    align-self: flex-start !important;
-        }
         .grid-mode .status-badge { margin-bottom: -9px; }
         .status-badge { gap: 1px; }
         .circle-arrow i { transform: scale(0.85); display: inline-block; }
-        
+
+       /* حالت لیستی شبیه نچا (بدون تغییر در گرید) */
+.container:not(.grid-mode) .card {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px 16px;
+}
+.container:not(.grid-mode) .card-main-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+.container:not(.grid-mode) .list-left {
+    order: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.container:not(.grid-mode) .list-right {
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+.container:not(.grid-mode) .price-val {
+    font-size: 1.8rem;
+    font-weight: 700;
+    order: 0;
+}
+.container:not(.grid-mode) .status-badge {
+    order: 1;
+    margin: 0;
+}
+.container:not(.grid-mode) .card-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+.container:not(.grid-mode) .card-info div {
+    text-align: right;
+                                } 
           /* ====== مودال نمودار - bottom sheet ====== */
 #chartModal {
     align-items: flex-end !important;
