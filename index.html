@@ -177,53 +177,65 @@
     align-items: flex-start;
     gap: 4px;
 }
-#chartModal #chartChange,
-#chartModal #chartCurrentPrice {
-    width: 100%;
+/* ====== مودال نمودار - bottom sheet (تمیز) ====== */
+#chartModal {
+    align-items: flex-end !important;
+    background: rgba(0,0,0,0.5) !important;
 }
-#chartModal #chartCurrentPrice {
-    font-size: 4rem;
-    font-weight: bold;
-    margin-top: 4px;
+#chartModal .chart-panel {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 28px 28px 0 0 !important;
+    transform: translateY(100%);
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    background: rgba(28,28,30,0.96);
+    backdrop-filter: blur(20px);
+    padding: 20px;
 }
-        /* تم روشن برای مودال نمودار */
+#chartModal.active .chart-panel {
+    transform: translateY(0);
+}
 body.light-mode #chartModal .chart-panel {
     background: #ffffff !important;
     border: 1px solid rgba(0,0,0,0.1);
 }
-body.light-mode #chartModal .chart-panel,
-body.light-mode #chartModal .chart-panel * {
-    color: #000000 !important;
-}
-body.light-mode #chartModal .chart-panel .text-up {
-    color: #00c853 !important;
-}
-body.light-mode #chartModal .chart-panel .text-down {
-    color: #ff5252 !important;
-}
-/* اعداد نمودار (محورها) در حالت روشن */
-body.light-mode .chartjs-render-monitor text {
-    fill: #000000 !important;
-            }
-
-        /* حالت تاریک: سفید کردن نام ارز، قیمت و درصد در مودال نمودار */
-body:not(.light-mode) #chartTitle,
-body:not(.light-mode) #chartCurrentPrice,
-body:not(.light-mode) #chartChange {
-    color: #ffffff !important;
-    }
-        /* چیدمان ستونی برای اطلاعات ارز در مودال نمودار */
+/* چیدمان ستونی اطلاعات ارز (آیکون، عنوان، درصد، قیمت) */
 #chartModal .chart-panel > div:first-child > div:first-child {
     display: flex;
     flex-direction: column !important;
     align-items: flex-start !important;
     gap: 6px;
 }
+/* ردیف اول: آیکون و عنوان در کنار هم */
+#chartModal .chart-panel > div:first-child > div:first-child > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* درصد و قیمت هر دو تمام عرض و در ردیف‌های جدا */
 #chartModal #chartChange,
 #chartModal #chartCurrentPrice {
     width: 100%;
-    order: unset;
-        }
+}
+#chartModal #chartCurrentPrice {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 2px;
+    direction: ltr;
+}
+/* رنگ‌ها در حالت تاریک */
+body:not(.light-mode) #chartTitle,
+body:not(.light-mode) #chartCurrentPrice,
+body:not(.light-mode) #chartChange {
+    color: #ffffff !important;
+}
+body:not(.light-mode) #chartChange .text-up { color: #00c853 !important; }
+body:not(.light-mode) #chartChange .text-down { color: #ff5252 !important; }
+/* مخفی کردن chartStats */
+#chartStats { display: none; }
+/* اعداد محور نمودار در حالت روشن */
+body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
     </style>
 </head>
 <body>
