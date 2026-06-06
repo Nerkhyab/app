@@ -181,9 +181,9 @@
     width: 100%;
 }
 #chartModal #chartCurrentPrice {
-    font-size: 2rem;
+    font-size: 4rem;
     font-weight: bold;
-    margin-top: 2px;
+    margin-top: 4px;
 }
         /* تم روشن برای مودال نمودار */
 body.light-mode #chartModal .chart-panel {
@@ -204,7 +204,13 @@ body.light-mode #chartModal .chart-panel .text-down {
 body.light-mode .chartjs-render-monitor text {
     fill: #000000 !important;
             }
-        
+
+        /* حالت تاریک: سفید کردن نام ارز، قیمت و درصد در مودال نمودار */
+body:not(.light-mode) #chartTitle,
+body:not(.light-mode) #chartCurrentPrice,
+body:not(.light-mode) #chartChange {
+    color: #ffffff !important;
+    }
     </style>
 </head>
 <body>
