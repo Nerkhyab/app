@@ -211,6 +211,18 @@ body:not(.light-mode) #chartCurrentPrice,
 body:not(.light-mode) #chartChange {
     color: #ffffff !important;
     }
+        /* چیدمان ستونی برای اطلاعات ارز در مودال نمودار */
+#chartModal .chart-panel > div:first-child > div:first-child {
+    display: flex;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px;
+}
+#chartModal #chartChange,
+#chartModal #chartCurrentPrice {
+    width: 100%;
+    order: unset;
+        }
     </style>
 </head>
 <body>
