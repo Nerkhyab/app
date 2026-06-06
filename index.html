@@ -536,7 +536,7 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
         });
         document.getElementById('chartLabels').innerHTML = labels.map(l => `<span>${l}</span>`).join('');
     }
-                function showChart(title, history, iconHtml, status, percent) {
+             function showChart(title, history, iconHtml, status, percent) {
     document.getElementById('chartTitle').innerText = title;
     document.getElementById('chartChange').innerHTML = `<span class="${status==='up'?'text-up':'text-down'}">${percent} <i class="fas ${status==='up'?'fa-arrow-up':'fa-arrow-down'}"></i></span>`;
     let src = '';
@@ -568,7 +568,7 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
             renderChart('week');
         }
     }, 60000);
-           }
+                                                                                                                                        }   
 
     function renderChart(range) {
         if (!window.currentChart) return;
