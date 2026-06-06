@@ -122,7 +122,6 @@
 .container:not(.grid-mode) .card {
     display: flex !important;
     flex-direction: row !important;
-    align-items: center !important;
     padding: 30px !important;
 }
 .container:not(.grid-mode) .card-main-row {
@@ -166,7 +165,11 @@
         .container:not(.grid-mode) .card {
     padding: 30px 12px;  /* ارتفاع کم */
         }
-    
+
+        .container:not(.grid-mode) .list-right {
+    justify-content: flex-start !important;
+    align-self: flex-start !important;
+        }
         .grid-mode .status-badge { margin-bottom: -9px; }
         .status-badge { gap: 1px; }
         .circle-arrow i { transform: scale(0.85); display: inline-block; }
