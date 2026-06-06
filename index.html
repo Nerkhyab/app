@@ -545,16 +545,16 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
         if (match) src = match[1];
     }
     document.getElementById('chartIcon').src = src;
-    // نمایش قیمت فعلی در مودال
     const currentPrice = currentRates[title]?.current || '---';
     document.getElementById('chartCurrentPrice').innerText = currentPrice;
     window.currentChart = { title, fullHistory: history, status, percent, currentPrice: currentRates[title]?.current };
     openModal('chartModal');
-    currentChartRange = 'day';
-    document.querySelectorAll('#chartModal .range-btn').forEach(btn=>btn.classList.remove('active'));
-    const dayBtn = document.querySelector('#chartModal .range-btn[data-range="day"]');
-    if (dayBtn) dayBtn.classList.add('active');
-    renderChart('day');
+    // تنظیم پیش‌فرض به هفته
+    currentChartRange = 'week';
+    // فعال کردن دکمه هفته (تنها دکمه موجود)
+    const weekBtn = document.querySelector('#chartModal .range-btn[data-range="week"]');
+    if (weekBtn) weekBtn.classList.add('active');
+    renderChart('week');  // نمایش نمودار هفتگی
     
     if (dynamicUpdateInterval) clearInterval(dynamicUpdateInterval);
     dynamicUpdateInterval = setInterval(() => {
@@ -564,11 +564,11 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
             dynamicUpdateInterval = null;
             return;
         }
-        if (currentChartRange === 'day') {
-            renderChart('day');
+        if (currentChartRange === 'week') {
+            renderChart('week');
         }
     }, 60000);
-}
+           }
 
     function renderChart(range) {
         if (!window.currentChart) return;
