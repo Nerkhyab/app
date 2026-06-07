@@ -3,602 +3,756 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>BeChand?! - نسخه نهایی</title>
+    <title>BECHAND?!</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-
-    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --bg:#343030; --card:#1d1d1f; --text:#fff; --border:rgba(255,255,255,0.06); --nav:rgba(35,35,35,0.92); --green:#00c853; --red:#ff5252; }
-        .segment-slider {
-    position: absolute;
-    top: 3px;
-    bottom: 3px;
-    width: calc(50% - 3px);
-    background: #1e5f4e;   /* اصلاح شد */
-    border-radius: 10px;
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        :root {
+            --bg:#343030;
+            --card:#1d1d1f;
+            --text:#fff;
+            --border:rgba(255,255,255,0.06);
+            --nav:rgba(35,35,35,0.92);
+            --green:#00c853;
+            --red:#ff5252;
         }
-        body.light-mode { --bg: #efebe5; --card: #ffffff !important; --text: #000; --border: rgba(0,0,0,0.1); --nav: rgba(255,255,255,0.9); }
-        body { background: var(--bg); font-family: 'Vazirmatn', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
-        .header { display: flex; justify-content: space-between; align-items: stretch; gap: 12px; padding: 16px; max-width: 600px; margin: 0 auto; direction: ltr; }
-        .header-box { flex: 1; background: linear-gradient(135deg, #00c85320, #00c85305); border-radius: 20px; padding: 10px 16px; border-left: 3px solid #00c853; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; text-align: center; }
-        .brand-name { font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800; color: white; letter-spacing: -0.3px; }
-        .brand-name span { color: #ffd966; }
-        .datetime-box { flex-direction: column; gap: 4px; padding: 8px 12px; }
-        .time { font-family: 'Inter', monospace; font-size: 0.95rem; font-weight: 600; color: white; letter-spacing: 0.5px; }
-        
-        .date { font-family: 'Inter', monospace; font-size: 0.90rem; font-weight: 500; color: rgba(255,255,255,0.8); }
-        body.light-mode .brand-name, body.light-mode .time, body.light-mode .date { color: #000; }
-        body.light-mode .date { color: rgba(0,0,0,0.7); }
-        .container { padding: 10px 7px 80px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-        .card { background: var(--card) !important; color: var(--text) !important; border: 1px solid var(--border); box-shadow: 0 8px 20px rgba(0,0,0,0.3); border-radius: 20px; padding: 14px; cursor: pointer; transition: 0.2s; user-select: none; }
-        .card-main-row { display: flex; justify-content: space-between; align-items: center; }
-        .card.active-up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
-        .card.active-down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
-        .list-left { display: flex; flex-direction: column; gap: 8px; flex: 1; }
-        .list-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-        .status-badge { display: flex; align-items: center; gap: 4px; font-size: 1.1rem; font-weight: 350; direction: ltr; }
-        .circle-arrow { display: inline-flex; align-items: center; justify-content: center; width: auto; height: auto; background: transparent; }
-        .text-up .circle-arrow { border-color: #00c853; color: #00c853; }
-        .text-down .circle-arrow { border-color: #ff5252; color: #ff5252; }
-        .text-up { color: #00c853; }
-        .text-down { color: #ff5252; }
-        .price-val { font-family: 'Inter', monospace; font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; direction: ltr; }
-        .card-info { display: flex; align-items: center; gap: 10px; text-align: right; }
-        .icon-img { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; }
-        .custom-mix-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
-        .custom-mix-icon img { width: 50%; height: 100%; object-fit: cover; }
-        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .container.grid-mode .card { aspect-ratio: 1 / 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .grid-mode .card-main-row { flex-direction: column-reverse; justify-content: space-between; height: 100%; padding: 0; }
-        .grid-mode .list-left { width: 100%; }
-        .grid-mode .list-right { width: 100%; flex-direction: row; justify-content: space-between; align-items: center; }
-        .grid-mode .price-val { font-size: 2.3rem; }
-        .grid-mode .price-area { margin-top: auto; }
-        .grid-mode .card-info { justify-content: space-between; width: 100%; }
-        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 500px; background: var(--nav); backdrop-filter: blur(20px); border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; direction: rtl; }
-        .nav-icon { font-size: 1.4rem; color: var(--text); cursor: pointer; opacity: 0.8; }
-        .nav-text { font-size: 0.85rem; font-weight: 500; color: var(--text); text-align: center; }
-        .full-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s; z-index: 2000; }
-        .full-modal.active { visibility: visible; opacity: 1; }
-        .settings-panel { background: rgba(28,28,30,0.4); backdrop-filter: blur(20px); border-radius: 32px; width: 90%; max-width: 360px; padding: 20px; border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
-        .header-settings { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; font-size: 1.2rem; color: white; }
-        .setting-group { margin-bottom: 20px; }
-        .group-title { font-size: 0.75rem; opacity: 0.7; margin-bottom: 8px; color: rgba(255,255,255,0.8); }
-        .segmented-control { position: relative; display: flex; background: rgba(0,0,0,0.3); border-radius: 60px; padding: 4px; height: 44px; align-items: center; }
-        .segment-option { flex: 1; text-align: center; font-size: 0.85rem; color: rgba(255,255,255,0.7); z-index: 2; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; height: 100%; transition: color 0.2s; }
-        .segment-option.active { color: white; font-weight: 500; }
-        .menu-list { margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 10px; }
-        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; cursor: pointer; font-size: 0.9rem; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .double-buttons { display: flex; gap: 12px; margin-top: 16px; }
-        .guide-btn { flex: 1; border-radius: 60px; padding: 10px 0; display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; background: #00c853; color: white; border: none; }
-        .insta-btn { flex: 1; border-radius: 60px; padding: 10px 0; display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 500; text-decoration: none; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
-        .close-icon { cursor: pointer; opacity: 0.7; color: white; }
-        .about-modal-content, .install-modal-content { background: rgba(28,28,30,0.96); backdrop-filter: blur(20px); border-radius: 32px; padding: 20px; max-width: 340px; width: 90%; color: white; direction: rtl; }
-        .about-modal-content p { margin: 12px 0; line-height: 1.6; font-size: 0.85rem; text-align: justify; }
-        .about-modal-content b { color: #ffd966; }
-        .install-modal-content { text-align: center; }
-        .install-modal-content p { margin: 12px 0; font-size: 0.9rem; }
-        .install-modal-content button { background: #00c853; border: none; border-radius: 30px; padding: 8px 20px; color: white; cursor: pointer; }
-        .calc-panel { background: rgba(28,28,30,0.96); backdrop-filter: blur(20px); border-radius: 32px; width: 90%; max-width: 400px; padding: 20px; }
-        .calc-display { background: rgba(0,0,0,0.3); border-radius: 24px; padding: 16px; text-align: left; font-size: 1.8rem; font-family: 'Inter', monospace; font-weight: 600; color: white; margin-bottom: 16px; direction: ltr; }
-        .calc-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-         .calc-btn { background: rgba(255,255,255,0.08); border: none; padding: 14px 0; border-radius: 24px; font-size: 1.2rem; color: white; cursor: pointer; }
-        .calc-btn.operator { background: #00c85320; color: #00c853; }
-        .calc-btn.equal { background: #00c853; color: white; }
-        .chart-panel { background: rgba(28,28,30,0.96); backdrop-filter: blur(20px); border-radius: 32px; width: 90%; max-width: 500px; padding: 20px; }
-        .range-btn { background: rgba(255,255,255,0.2); border: none; padding: 6px 12px; border-radius: 20px; color: white; cursor: pointer; margin-left: 5px; }
-        .range-btn.active { background: #00c853; }
-        .splash-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(145deg, #1e5f4e, #0f3d32); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s; opacity: 1; visibility: visible; flex-direction: column; }
-        .splash-overlay.hide { opacity: 0; visibility: hidden; }
-        .splash-logo { text-align: center; color: white; animation: fadeScale 0.6s; }
-        .splash-logo .main { font-size: 2.5rem; font-weight: 900; font-family: 'Sora', sans-serif; }
-        .splash-logo .main span { color: #ffd966; }
-        .splash-logo .sub { font-size: 0.9rem; margin-top: 10px; opacity: 0.9; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 8px; display: inline-block; }
-        @keyframes fadeScale { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        @media (max-width: 500px) {
-            .price-val { font-size: 1.8rem; }
-            .grid-mode .price-val { font-size: 2rem; }
-            .icon-img, .custom-mix-icon { width: 36px; height: 36px; }
-            .brand-name { font-size: 1.4rem; }
-            .time { font-size: 0.8rem; }
-            .date { font-size: 0.7rem; }
-            .container.grid-mode .card { padding: 14px 14px 0px 14px; }
-            .container.grid-mode .price-area { margin-top: auto; padding-bottom: 0; }
-            .nav-text { font-size: 0.7rem; }
+        #update-text { color: #ffffff !important; font-weight: 300 !important; letter-spacing: 0.5px; opacity: 0.8; }
+        body.light-mode {
+            --bg: #efebe5;
+            --card: #ffffff !important;
+            --text: #000;
+            --border: rgba(0,0,0,0.1);
+            --nav: rgba(255,255,255,0.9);
         }
-        .container.grid-mode .card { padding-bottom: 0 !important; }
-        .grid-mode .price-area { margin-bottom: 0 !important; padding-bottom: 0 !important; }
-        .container.grid-mode .card { padding-bottom: 4px !important; }
-        .container.grid-mode .list-left { justify-content: flex-end !important; display: flex !important; flex-direction: column !important; height: 100% !important; }
-
-        /* ====== حالت لیستی جدید (شبیه نچا) ====== */
-        .container:not(.grid-mode) .card {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            padding: 12px 16px;
+        body, .full-modal, .full-modal * { color: var(--text); }
+        #installGuideBar { display: none !important; }
+        .bottom-nav i, .bottom-nav span { color: var(--text); }
+        body {
+            background: var(--bg);
+            font-family: 'Vazirmatn', sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
-        .container:not(.grid-mode) .card-main-row {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-            justify-content: space-between;
-        }
-        .container:not(.grid-mode) .list-left {
-            order: 0;
-            display: flex;
-            flex-direction: row;
-            align-items: baseline;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .container:not(.grid-mode) .list-right {
-            order: 1;
+        body.light-mode .full-modal { background: rgba(255, 255, 255, 0.95) !important; }
+        body.light-mode .full-modal, body.light-mode .full-modal * { color: #000 !important; }
+        .header {
+            padding: 16px 16px 10px;
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
-            justify-content: flex-start;
+            align-items: flex-start;
+            background: var(--bg);
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+            border-bottom: none;
+            gap: 4px;
+            direction: ltr;
         }
-        .container:not(.grid-mode) .price-val {
-            font-size: 1.8rem;
-            font-weight: 700;
-            order: 0;
-        }
-        .container:not(.grid-mode) .status-badge {
-            order: 1;
+        .header-left { display: flex; align-items: center; }
+        .main-logo { display: none; }
+        .brand-name {
+            font-weight: 990;
+            line-height: 1;
+            font-size: 2rem;
+            letter-spacing: -0.4px;
+            text-align: left;
             margin: 0;
+            color: var(--text);
         }
-        .container:not(.grid-mode) .card-info {
+        .date-time {
             display: flex;
             flex-direction: row;
             align-items: center;
             gap: 12px;
+            white-space: nowrap;
         }
-        .container:not(.grid-mode) .card-info div {
-            text-align: right;
+        .date-time b, .date-time span {
+            font-size: 0.900rem;
+            font-weight: 300;
+            color: var(--text);
         }
-
-        
-        .grid-mode .status-badge { margin-bottom: -9px; }
-        .status-badge { gap: 1px; }
-        .circle-arrow i { transform: scale(0.85); display: inline-block; }        /* ====== مودال نمودار - bottom sheet ====== */
-        #chartModal .chart-panel > div:first-child > div:first-child {
-    display: flex;
-    flex-direction: column;   /* مهم: ستونی */
-    align-items: flex-start;
-    gap: 4px;
-}
-/* ====== مودال نمودار - bottom sheet (تمیز) ====== */
-#chartModal {
-    align-items: flex-end !important;
-    background: rgba(0,0,0,0.5) !important;
-}
-#chartModal .chart-panel {
-    margin: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    border-radius: 28px 28px 0 0 !important;
-    transform: translateY(100%);
-    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    background: rgba(28,28,30,0.96);
-    backdrop-filter: blur(20px);
-    padding: 20px;
-}
-#chartModal.active .chart-panel {
-    transform: translateY(0);
-}
-body.light-mode #chartModal .chart-panel {
-    background: #ffffff !important;
-    border: 1px solid rgba(0,0,0,0.1);
-}
-/* چیدمان ستونی اطلاعات ارز (آیکون، عنوان، درصد، قیمت) */
-#chartModal .chart-panel > div:first-child > div:first-child {
-    display: flex;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 6px;
-}
-/* ردیف اول: آیکون و عنوان در کنار هم */
-#chartModal .chart-panel > div:first-child > div:first-child > div:first-child {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-/* درصد و قیمت هر دو تمام عرض و در ردیف‌های جدا */
-#chartModal #chartChange,
-#chartModal #chartCurrentPrice {
-    width: 100%;
-}
-#chartModal #chartCurrentPrice {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-top: 2px;
-    direction: ltr;
-}
-/* رنگ‌ها در حالت تاریک */
-body:not(.light-mode) #chartTitle,
-body:not(.light-mode) #chartCurrentPrice,
-body:not(.light-mode) #chartChange {
-    color: #ffffff !important;
-}
-body:not(.light-mode) #chartChange .text-up { color: #00c853 !important; }
-body:not(.light-mode) #chartChange .text-down { color: #ff5252 !important; }
-/* مخفی کردن chartStats */
-#chartStats { display: none; }
-/* اعداد محور نمودار در حالت روشن */
-body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
+        .container {
+            padding: 10px 7px 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+        .card {
+            background: var(--card) !important;
+            color: var(--text) !important;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.30);
+            border-radius: 20px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+        .card-main-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        /* 丕乇鬲賮丕毓 亘蹖卮鬲乇 丿乇 丨丕賱鬲 賱蹖爻鬲蹖 */
+        .container:not(.grid-mode) .card-main-row {
+            padding: 18px 14px;
+        }
+        .card.active-up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
+        .card.active-up .price-val { color: var(--green); }
+        .card.active-down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
+        .card.active-down .price-val { color: var(--red); }
+        .status-badge { display: flex; align-items: center; gap: 4px; font-size: 0.5rem; direction: ltr; font-weight: bold; }
+        .text-up { color: var(--green) !important; }
+        .text-down { color: var(--red) !important; }
+        .price-val { font-size: 1.8rem; font-weight: 700; transition: color 0.3s; }
+        .card-info { display: flex; align-items: center; gap: 10px; text-align: right; }
+        .bottom-nav {
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 85%; background: var(--nav); backdrop-filter: blur(20px);
+            border-radius: 30px; padding: 12px 20px; display: flex;
+            justify-content: space-between; align-items: center;
+            border: 1px solid var(--border); z-index: 1000;
+        }
+        .full-modal.bottom-sheet {
+            justify-content: flex-end;
+            background: transparent !important;
+            backdrop-filter: none !important;
+            padding: 0;
+            transform: translateY(100%);
+        }
+        .full-modal.bottom-sheet.active { transform: translateY(0); }
+        .sheet-content {
+            background: var(--bg);
+            border-radius: 28px 28px 0 0;
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+            border-top: 1px solid var(--border);
+        }
+        body.light-mode .sheet-content { background: #ffffff; }
+        .full-modal:not(.bottom-sheet) {
+            background: rgba(28, 28, 30, 0.95);
+            backdrop-filter: blur(25px);
+            padding: 25px;
+        }
+        .full-modal {
+            position: fixed; inset: 0; display: flex; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000; flex-direction: column;
+        }
+        .full-modal.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .container.grid-mode { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 8px; 
+        }
+        /* 賲乇亘毓 讴丕賲賱 丿乇 丨丕賱鬲 噩丿賵賱蹖 */
+        .container.grid-mode .card {
+            aspect-ratio: 1 / 1;
+            min-height: 0;
+        }
+        .grid-mode .card-main-row { 
+            flex-direction: column-reverse; 
+            text-align: center; 
+            padding: 20px 8px; 
+            gap: 15px;
+            height: 100%;
+            justify-content: center;
+        }
+        .setting-group {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 12px;
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            direction: rtl !important;
+        }
+        .group-title { font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); margin-bottom: 2px; padding-right: 4px; }
+        .segmented-control {
+            position: relative;
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 3px;
+            height: 44px;
+            align-items: center;
+            isolation: isolate;
+        }
+        .segment-option {
+            flex: 1;
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 2;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            height: 100%;
+            transition: color 0.25s ease;
+        }
+        .segment-slider {
+            position: absolute;
+            top: 3px;
+            bottom: 3px;
+            width: calc(50% - 3px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+        .segment-option.active { color: #ffffff; font-weight: bold; }
+        .single-action-row {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .single-action-row:active { background: rgba(255, 255, 255, 0.08); }
+        .splash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #1e5f4e, #0f3d32);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+            opacity: 1;
+            visibility: visible;
+            flex-direction: column;
+            font-family: 'Vazirmatn', 'Segoe UI', sans-serif;
+        }
+        .splash-overlay.hide { opacity: 0; visibility: hidden; }
+        .splash-logo {
+            text-align: center;
+            color: white;
+            animation: fadeScale 0.6s ease-out;
+        }
+        .splash-logo .main { font-size: 3rem; font-weight: 900; letter-spacing: 1px; }
+        .splash-logo .main span { color: #ffd966; }
+        .splash-logo .sub {
+            font-size: 1rem;
+            margin-top: 15px;
+            opacity: 0.9;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            padding-top: 10px;
+            display: inline-block;
+        }
+        @keyframes fadeScale { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .range-buttons { display: flex; gap: 6px; margin-right: 6px; }
+        .range-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; transition: 0.2s; }
+        .range-btn.active { background: #00c853; }
+        #chartLabels {
+            display: flex;
+            justify-content: space-between;
+            direction: ltr;
+            font-size: 0.5rem;
+            opacity: 0.8;
+            padding: 8px 4px 0;
+            flex-wrap: wrap;
+            color: var(--text);
+        }
+        body.light-mode #chartLabels { color: #000; }
+        body.light-mode .range-btn { color: #000; background: rgba(0,0,0,0.1); }
+        body.light-mode .range-btn.active { background: #00c853; color: white; }
+        canvas { background: transparent; }
     </style>
 </head>
-<body>
-    <div id="splashScreen" class="splash-overlay"><div class="splash-logo"><div class="main">BeChand<span>?!</span></div><div class="sub">مرجع رسمی بازار ارز هرات</div></div></div>
-<div class="header"><div class="header-box"><div class="brand-name">BeChand<span>?!</span></div></div><div class="header-box datetime-box"><div class="time" id="timeDisplay">--:--:-- --</div><div class="date" id="dateDisplay">----/--/--</div></div></div>
+<body><div id="splashScreen" class="splash-overlay">
+    <div class="splash-logo">
+        <div class="main">BeChand<span>?!</span></div>
+        <div class="sub">賲乇噩毓 乇爻賲蹖 亘丕夭丕乇 丕乇夭 賴乇丕鬲</div>
+    </div>
+</div>
+<div class="header">
+    <div class="header-left">
+        <img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">
+        <div class="brand-name">BeChand?! </div>
+    </div>
+    <div class="date-time" id="dt"></div>
+</div>
+<div id="newInstallGuideBar" style="background: linear-gradient(135deg, #2a7f6e, #1a5f52); margin: 0 10px 12px 10px; padding: 12px 16px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); direction: rtl; cursor: pointer;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-info-circle" style="font-size: 1.3rem; color: #ffd966;"></i>
+        <span style="font-size: 0.85rem; font-weight: bold; color: #fff;">馃摫 乇丕賴賳賲丕蹖 賳氐亘 亘乇賳丕賲賴</span>
+    </div>
+    <i class="fas fa-chevron-left" style="color: #ffd966; font-size: 0.8rem;"></i>
+</div>
 <div id="main-container" class="container"></div>
-<div class="bottom-nav"><i class="fas fa-cog nav-icon" onclick="openModal('settingsModal')"></i><div class="nav-text">مرجع رسمی نرخ ارز در بازار هرات</div><i class="fas fa-calculator nav-icon" onclick="openModal('calcModal')"></i></div>
-
-<div id="settingsModal" class="full-modal"><div class="settings-panel"><div class="header-settings"><span>تنظیمات</span><i class="fas fa-times close-icon" onclick="closeModal('settingsModal')"></i></div>
-    <div class="setting-group"><div class="group-title">حالت نمایش</div><div class="segmented-control" id="layoutSegmented"><div class="segment-slider" id="layoutSlider"></div><div class="segment-option" id="layoutList"><i class="fas fa-bars"></i> لیست</div><div class="segment-option" id="layoutGrid"><i class="fas fa-th-large"></i> کنار هم</div></div></div>
-    <div class="setting-group"><div class="group-title">تم</div><div class="segmented-control" id="themeSegmented"><div class="segment-slider" id="themeSlider"></div><div class="segment-option" id="themeLight"><i class="fas fa-sun"></i> روشن</div><div class="segment-option" id="themeDark"><i class="fas fa-moon"></i> تیره</div></div></div>
-    <div class="menu-list"><div class="menu-item" id="aboutBtn"><span>درباره برنامه</span><i class="fas fa-chevron-left"></i></div><div class="menu-item" id="updateBtn"><span>بروزرسانی قیمت‌ها</span><i class="fas fa-sync-alt"></i></div><div class="menu-item" id="shareBtn"><span>پیشنهاد به دوستان</span><i class="fas fa-share-nodes"></i></div></div>
-    <div class="double-buttons"><button class="guide-btn" id="installGuideBtn"><i class="fas fa-mobile-alt"></i> راهنمای نصب</button><a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="insta-btn"><i class="fab fa-instagram"></i> اینستاگرام سازنده</a></div>
-</div></div>
-
-<div id="aboutModal" class="full-modal"><div class="about-modal-content"><div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><b style="font-size: 1.1rem;">درباره برنامه</b><i class="fas fa-times close-icon" onclick="closeModal('aboutModal')"></i></div>
-    <p><b style="color:#d4af37;">منبع قیمت:</b><br>قیمت‌های نمایش داده‌شده در اپلیکیشن به چند؟! از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند</p>
-    <p>این برنامه نیاز به هیچ ثبت نام و دریافت اطلاعاتی ندارد، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.</p>
-    <p>جهت ارتباط، انتقاد و یا پیشنهاد همکاری با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.</p>
-    <p><b style="color:#d4af37;">DEVELOPER :</b> Safiullah Bahadori Ghouryani</p>
-</div></div>
-
-<div id="installModal" class="full-modal"><div class="install-modal-content"><div style="display: flex; justify-content: space-between;"><b style="color:#ffd966;">📱 نصب برنامه</b><i class="fas fa-times close-icon" onclick="closeModal('installModal')"></i></div>
-    <p>برای نصب برنامه ، از منوی سه نقطه ⋮  گوشه بالای مرورگر، گزینه «افزودن به صفحه اصلی» را انتخاب کنید.</p>
-    <div style="background: rgba(255,255,255,0.1); border-radius: 20px; padding: 8px; margin: 12px 0; display: flex; justify-content: space-between;"><span id="appLink">https://nerkhyab.github.io/app</span><button class="dual-btn" style="padding: 4px 12px; background: #00c853;" onclick="copyLink()">کپی لینک</button></div>
-    <button onclick="closeModal('installModal')">متوجه شدم</button>
-</div></div>
-
-<div id="calcModal" class="full-modal"><div class="calc-panel"><div style="display: flex; justify-content: space-between; margin-bottom: 16px;"><h3>ماشین حساب</h3><i class="fas fa-times close-icon" onclick="closeModal('calcModal')"></i></div>
-    <div class="calc-display" id="calcDisplay">0</div><div class="calc-buttons" id="calcButtons">
-        <button class="calc-btn" data-type="number" data-value="7">7</button><button class="calc-btn" data-type="number" data-value="8">8</button><button class="calc-btn" data-type="number" data-value="9">9</button><button class="calc-btn operator" data-type="operator" data-value="/">÷</button>
-        <button class="calc-btn" data-type="number" data-value="4">4</button><button class="calc-btn" data-type="number" data-value="5">5</button><button class="calc-btn" data-type="number" data-value="6">6</button><button class="calc-btn operator" data-type="operator" data-value="*">×</button>
-        <button class="calc-btn" data-type="number" data-value="1">1</button><button class="calc-btn" data-type="number" data-value="2">2</button><button class="calc-btn" data-type="number" data-value="3">3</button><button class="calc-btn operator" data-type="operator" data-value="-">-</button>
-        <button class="calc-btn" data-type="number" data-value="0">0</button><button class="calc-btn" data-type="number" data-value="00">00</button><button class="calc-btn" data-type="dot" data-value=".">.</button><button class="calc-btn operator" data-type="operator" data-value="+">+</button>
-        <button class="calc-btn" data-type="clear" data-value="all">AC</button><button class="calc-btn" data-type="clear" data-value="last">C</button><button class="calc-btn equal" data-type="equal">=</button>
+<div class="bottom-nav">
+    <i class="fas fa-cog" style="cursor:pointer;" onclick="openModal('sMod')"></i>
+    <span id="update-text" style="font-weight: 800; color: #d4af37;">賱丨馗丕鬲蹖 倬蹖卮</span>
+    <i class="fas fa-calculator" style="cursor:pointer;" onclick="openModal('calcMod')"></i>
+</div>
+    <!-- 賲賵丿丕賱鈥屬囏� -->
+<div id="newInstallModal" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.98); backdrop-filter: blur(25px); direction: rtl;">
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <b style="font-size: 1.2rem; color: #ffd966;">馃摫 乇丕賴賳賲丕蹖 賳氐亘 亘乇賳丕賲賴</b>
+            <i class="fas fa-times" style="font-size: 1.3rem; cursor: pointer; opacity: 0.6;" onclick="closeModal('newInstallModal')"></i>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; text-align: center;">
+            <i class="fas fa-arrow-down" style="font-size: 2rem; color: #ffd966; margin-bottom: 10px; display: block;"></i>
+            <p style="font-size: 0.95rem; line-height: 1.8; text-align: justify; margin-bottom: 20px;">
+                噩賴鬲 丕爻鬲賮丕丿賴 賵 鬲噩乇亘賴 亘賴鬲乇 丕夭 亘乇賳丕賲賴貙 亘丕 丕爻鬲賮丕丿賴 丕夭 <strong style="color: #ffd966;">爻賴 賳賯胤賴 鈰� 亘丕賱丕蹖 賲乇賵乇诏乇鬲丕賳</strong>貙
+                诏夭蹖賳賴 <strong style="color: #ffd966;">芦丕賮夭賵丿賳 亘賴 氐賮丨賴 丕氐賱蹖禄</strong> 乇丕 丕賳鬲禺丕亘 讴賳蹖丿.
+            </p>
+            <p style="font-size: 0.85rem; line-height: 1.8; text-align: justify; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px;">
+                鉁� 亘丕 丕賮夭賵丿賳 亘乇賳丕賲賴 亘賴 氐賮丨賴 诏賵卮蹖鬲丕賳貙 丿蹖诏乇 賳蹖丕夭蹖 賳蹖爻鬲 賴乇 亘丕乇 賵丕乇丿 爻丕蹖鬲 卮賵蹖丿<br>
+                鉁� 賮賯胤 亘丕 讴賱蹖讴 亘乇 乇賵蹖 毓賱丕賲鬲 亘乇賳丕賲賴 丿乇 氐賮丨賴 丕氐賱蹖 诏賵卮蹖鬲丕賳貙 賲爻鬲賯蹖賲丕賸 賵丕乇丿 亘乇賳丕賲賴 禺賵丕賴蹖丿 卮丿
+            </p>
+        </div>
+        <button id="newInstallConfirmBtn" style="background: #ffd966; border: none; border-radius: 30px; padding: 12px; font-size: 1rem; font-weight: bold; color: #1a3a33; cursor: pointer; font-family: Vazirmatn; margin-top: 10px;">
+            鉁� 賳氐亘 讴乇丿賲貙 丿蹖诏乇 賳賲丕蹖卮 賳丿賴
+        </button>
     </div>
-</div></div>
-    <div id="chartModal" class="full-modal">
-    <div class="chart-panel">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-            <div style="flex:1;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <img id="chartIcon" src="" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
-                    <b id="chartTitle" style="font-size:1.2rem;"></b>
+</div>
+
+<div id="sMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px);">
+    <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
+        <b style="font-size: 1.2rem;">鬲賳馗蹖賲丕鬲</b>
+        <i class="fas fa-times" style="font-size: 1.3rem; cursor:pointer; opacity: 0.6;" onclick="closeModal('sMod')"></i>
+    </div>
+    <div class="setting-group">
+        <div class="group-title">丨丕賱鬲 賳賲丕蹖卮</div>
+        <div class="segmented-control" id="layout-control">
+            <div class="segment-slider" id="layout-slider"></div>
+            <div class="segment-option" id="opt-list" onclick="setControlLayout(false)"><i class="fas fa-bars"></i> 賱蹖爻鬲</div>
+            <div class="segment-option" id="opt-grid" onclick="setControlLayout(true)"><i class="fas fa-th-large"></i> 讴賳丕乇 賴賲</div>
+        </div>
+    </div>
+    <div class="setting-group">
+        <div class="group-title">鬲賲</div>
+        <div class="segmented-control" id="theme-control">
+            <div class="segment-slider" id="theme-slider"></div>
+            <div class="segment-option" id="opt-light" onclick="setControlTheme(true)"><i class="fas fa-sun"></i> 乇賵卮賳</div>
+            <div class="segment-option" id="opt-dark" onclick="setControlTheme(false)"><i class="fas fa-moon"></i> 鬲蹖乇賴</div>
+        </div>
+    </div>
+    <!-- 亘禺卮 夭亘丕賳 丨匕賮 卮丿 -->
+    <div class="single-action-row" onclick="openAbout()"><span>丿乇亘丕乇賴 亘乇賳丕賲賴</span><i class="fas fa-chevron-left" style="font-size: 0.8rem; opacity: 0.3;"></i></div>
+    <div class="single-action-row" onclick="location.reload()"><span>亘乇賵夭乇爻丕賳蹖 賯蹖賲鬲鈥屬囏�</span><i class="fas fa-sync-alt" style="font-size: 0.85rem; opacity: 0.5;"></i></div>
+    <div class="single-action-row" onclick="shareApp()"><span>倬蹖卮賳賴丕丿 亘賴 丿賵爻鬲丕賳</span><i class="fas fa-share-nodes" style="font-size: 0.85rem; opacity: 0.5;"></i></div>
+    <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="single-action-row" style="text-decoration: none; color: #fff; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;">
+        <span><i class="fab fa-instagram" style="margin-left: 6px;"></i> 丕蹖賳爻鬲丕诏乇丕賲 爻丕夭賳丿賴</span>
+    </a>
+        </div><div id="aboutMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px);">
+    <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
+        <b style="font-size: 1.2rem;">丿乇亘丕乇賴 亘乇賳丕賲賴</b>
+        <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
+    </div>
+    <div style="line-height: 2; text-align: justify; font-size: 0.95rem; font-weight: 300;">
+        <b style="color: #d4af37;">賲賳亘毓 賯蹖賲鬲:</b><br>
+        賲丕 丿乇 丕蹖賳 亘乇賳丕賲賴 賴蹖趩 丕胤賱丕毓丕鬲蹖 丕夭 卮賲丕 噩賲毓鈥屫①堌臂� 賳賲蹖鈥屭┵嗃屬呚� 鬲賳賴丕 毓賲賱讴乇丿 亘乇賳丕賲賴 丕蹖賳 丕爻鬲 讴賴 倬爻 丕夭 亘丕夭卮丿賳 賯蹖賲鬲 賴丕 亘賴 胤賵乇 禺賵丿讴丕乇 賳賲丕蹖卮 丿丕丿賴 賲蹖鈥屫促堎嗀�. 賯蹖賲鬲鈥屬囏й� 賳賲丕蹖卮 丿丕丿賴鈥屫簇� 丿乇 丕倬賱蹖讴蹖卮賳 丕夭 賲賳丕亘毓 賲毓鬲亘乇 丕鬲丨丕丿蹖賴 氐乇丕賮丕賳 賴乇丕鬲 丿乇蹖丕賮鬲 賵 賴賲賴 乇賵夭賴 丕夭 爻丕毓鬲 鄹 氐亘丨 鬲丕 鄱 毓氐乇 亘氐賵乇鬲 賲乇鬲亘 亘賴鈥屫辟堌藏必池з嗃� 賲蹖鈥屫促堎嗀�.<br><br>
+        <b style="color: #d4af37;"> 亘乇賳丕賲賴鈥屬嗁堐屫�:</b><br>
+        氐賮蹖 丕賱賱賴 亘賴丕丿乇蹖 睾賵乇蹖丕賳蹖.<br><br>
+        噩賴鬲 丕乇鬲亘丕胤 亘丕 亘乇賳丕賲賴鈥屬嗁堐屫� 倬乇賵跇賴 丿乇 賲賳賵蹖 鬲賳馗蹖賲丕鬲 亘丕 讴賱蹖讴 亘乇 乇賵蹖 丿讴賲賴 (丕蹖賳爻鬲丕诏乇丕賲 爻丕夭賳丿賴) 倬蹖丕賲 亘诏匕丕乇蹖丿.
+    </div>
+    </div>
+    <div id="calcMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px);">
+    <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
+        <b style="font-size: 1.2rem;">賲丕卮蹖賳 丨爻丕亘</b>
+        <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('calcMod')"></i>
+    </div>
+    <div style="text-align: center; margin-top: 60px; opacity: 0.7;">
+        <i class="fas fa-calculator" style="font-size: 3.5rem; margin-bottom: 15px; color: #d4af37;"></i>
+        <p style="font-size: 1.1rem; font-weight: 300;">丕蹖賳 亘禺卮 亘賴鈥屫操堌� 賮毓丕賱 賲蹖鈥屫促堌�!</p>
+    </div>
+</div>
+
+<div id="chartModal" class="full-modal bottom-sheet">
+    <div class="sheet-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <img id="modalCurrencyIcon" src="" style="width: 36px; height: 36px; border-radius: 10px; object-fit: cover;">
+                <div>
+                    <div id="modalCurrencyName" style="font-weight: bold; font-size: 1rem;"></div>
+                    <div id="modalChangeStatus" class="status-badge" style="font-size: 0.7rem;"></div>
                 </div>
-                <div id="chartChange" style="margin-top: 6px;"></div>
-                <div id="chartCurrentPrice" style="font-size: 2rem; font-weight: bold; margin-top: 4px; direction: ltr;"></div>
             </div>
-            <i class="fas fa-times close-icon" style="font-size:1.5rem; cursor:pointer;" onclick="closeModal('chartModal')"></i>
+            <div class="range-buttons">
+                <button class="range-btn" data-range="week">賴賮鬲賴</button>
+                <button class="range-btn" data-range="month">賲丕賴</button>
+                <button class="range-btn" data-range="quarter">爻賴 賲丕賴賴</button>
+                <i class="fas fa-times" style="font-size: 1.2rem; cursor: pointer; opacity: 0.6;" onclick="closeModal('chartModal')"></i>
+            </div>
         </div>
-        <div id="chartStats" style="display:none;">
-                  </div>
-        <canvas id="priceChart" style="width:100%; height:200px; margin-top: 16px;"></canvas>
-        <div style="display: flex; justify-content: center; gap: 16px; margin: 12px 0 8px;">
-            
-            <button class="range-btn" data-range="week">هفت روز گذشته</button>
+        <div style="text-align: center; font-size: 1.6rem; font-weight: 700; margin: 5px 0;" id="modalCurrentPrice"></div>
+        <div style="display: flex; justify-content: space-between; background: rgba(255,255,255,0.08); padding: 8px 12px; border-radius: 16px; margin-bottom: 16px;">
+            <span>讴賮: <strong id="modalMinPrice">---</strong></span>
+            <span>爻賯賮: <strong id="modalMaxPrice">---</strong></span>
         </div>
-        <div id="chartLabels" style="display:flex; justify-content:space-between; font-size:0.6rem; margin-top:8px;"></div>
+        <div style="width: 100%; height: 200px; position: relative;">
+            <canvas id="weeklyChartCanvas"></canvas>
+        </div>
+        <div id="chartLabels" style="display: flex; justify-content: space-between; direction: ltr; font-size: 0.5rem; opacity: 0.8; padding: 8px 4px 0; flex-wrap: wrap;"></div>
     </div>
-    </div>
-       <script>
-                   // ==================== داده‌های نمونه ====================
-    const sampleRates = {
-        "دالر هرات": { current: "63.80", status: "down", percent: "-0.08%", history: [63.85,63.8,63.75,63.8,63.85,63.8,63.75] },
-        "یورو هرات": { current: "73.00", status: "down", percent: "-0.95%", history: [73.5,73.3,73.2,73.0,72.8,73.0,73.0] },
-        "تومان بانکی": { current: "0.36", status: "down", percent: "-5.26%", history: [0.38,0.37,0.36,0.36,0.35,0.36,0.36] },
-        "تومان چک": { current: "0.48", status: "down", percent: "-11.11%", history: [0.54,0.53,0.52,0.51,0.49,0.48,0.48] },
-        "دلار تهران": { current: "173,900", status: "up", percent: "+0.06%", history: [173000,173500,173800,173900,173900,173900,173900] },
-        "کلدار هرات": { current: "221.00", status: "up", percent: "+4.25%", history: [212,215,218,220,221,221,221] }
-    };
+            </div><script>
+    (function() {
+        const splash = document.getElementById('splashScreen');
+        const hasSeenSplash = localStorage.getItem('bechand_splash_shown');
+        if (!hasSeenSplash) {
+            setTimeout(() => {
+                splash.classList.add('hide');
+                setTimeout(() => { splash.style.display = 'none'; }, 500);
+                localStorage.setItem('bechand_splash_shown', 'true');
+            }, 2000);
+            splash.addEventListener('click', () => {
+                if (!splash.classList.contains('hide')) {
+                    splash.classList.add('hide');
+                    setTimeout(() => { splash.style.display = 'none'; }, 500);
+                    localStorage.setItem('bechand_splash_shown', 'true');
+                }
+            });
+        } else {
+            splash.style.display = 'none';
+        }
+    })();
 
+    let weeklyChartInstance = null;
+    let currentChartRange = 'week';
+    let currentChartData = { title: "", fullHistory: [], iconHtml: "", status: "", percent: "", currentPrice: "" };
     const itemsList = [
-        {id:"usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
-        {id:"eur-herat", key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
-        {id:"toman-bank", key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-        {id:"toman-check", key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
-        {id:"tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"},
-        {id:"kaldar", key:"کلدار هرات", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"}
+        {id: "usd-herat", key:"丿丕賱乇 賴乇丕鬲", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
+        {id: "eur-herat", key:"蹖賵乇賵 賴乇丕鬲", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
+        {id: "toman-bank", key:"鬲賵賲丕賳 亘丕賳讴蹖", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+        {id: "toman-check", key:"鬲賵賲丕賳 趩讴", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
+        {id: "tehran-dollar", key:"丿賱丕乇 鬲賴乇丕賳", sub:"USD/IRT", icon:"custom-mix"},
+        {id: "kaldar", key:"讴賱丿丕乇", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"}
     ];
+
+    function updateDT() {
+        const now = new Date();
+        now.setHours(now.getHours() + 1);
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        const hh = String(hours).padStart(2, '0');
+        const j = jalaali.toJalaali(now);
+        const dtEl = document.getElementById('dt');
+        if(dtEl) dtEl.innerHTML = `<b>${hh}:${minutes} ${ampm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
+    }
+    updateDT(); setInterval(updateDT, 1000);
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function openAbout() { closeModal('sMod'); openModal('aboutMod'); }
 
-    function updateDateTime() {
-        const now = new Date(); now.setHours(now.getHours()+1);
-        let h = now.getHours(); const m = String(now.getMinutes()).padStart(2,'0'); const s = String(now.getSeconds()).padStart(2,'0');
-        const ap = h>=12?'PM':'AM'; h = h%12||12;
-        document.getElementById('timeDisplay').innerText = `${String(h).padStart(2,'0')}:${m}:${s} ${ap}`;
-        const j = jalaali.toJalaali(now);
-        document.getElementById('dateDisplay').innerText = `${j.jy}/${j.jm}/${j.jd}`;
-    }
-    setInterval(updateDateTime,1000); updateDateTime();
-
-    function copyLink() {
-        const link = document.getElementById('appLink').innerText;
-        navigator.clipboard.writeText(link).then(()=>alert('✅ لینک کپی شد!')).catch(()=>{const ta=document.createElement('textarea'); ta.value=link; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('✅ لینک کپی شد!');});
+    function shareApp() {
+        if (navigator.share) {
+            navigator.share({ title: 'BeChand?!', text: '賯蹖賲鬲鈥屬囏й� 賱丨馗賴鈥屫й� 亘丕夭丕乇 丕乇夭 乇丕 亘丕 丕倬賱蹖讴蹖卮賳 BeChand 丿賳亘丕賱 讴賳蹖丿!', url: window.location.href }).catch(console.error);
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("賱蹖賳讴 亘乇賳丕賲賴 讴倬蹖 卮丿!");
+        }
     }
 
-    let currentRates = { ...sampleRates };
     async function load() {
         try {
             const res = await fetch('last_rates.json?v=' + Date.now());
             const data = await res.json();
-            if (data && data.rates) currentRates = data.rates;
-            else currentRates = { ...sampleRates };
+            render(data);
         } catch (e) {
-            console.error("خطا در دریافت داده:", e);
-            currentRates = { ...sampleRates };
+            console.error("Load Error");
+            render({
+                rates: {
+                    "丿丕賱乇 賴乇丕鬲": {current: "85.20", history: [84.5, 84.8, 85.0, 85.2], status: "up", percent: "+0.45%"},
+                    "蹖賵乇賵 賴乇丕鬲": {current: "92.50", history: [91.0, 91.5, 92.0, 92.5], status: "down", percent: "-0.95%"},
+                    "鬲賵賲丕賳 亘丕賳讴蹖": {current: "1,250", history: [1240, 1245, 1248, 1250], status: "down", percent: "-2.19%"},
+                    "鬲賵賲丕賳 趩讴": {current: "1,230", history: [1220, 1225, 1228, 1230], status: "down", percent: "-3.37%"},
+                    "丿賱丕乇 鬲賴乇丕賳": {current: "61,200", history: [61000, 61100, 61150, 61200], status: "up", percent: "+3.08%"},
+                    "讴賱丿丕乇": {current: "18.50", history: [18.2, 18.3, 18.4, 18.5], status: "down", percent: "-0.42%"}
+                }
+            });
         }
-        renderCards();
     }
 
-    let currentTheme = localStorage.getItem('theme') || 'light';
-    let currentLayout = localStorage.getItem('isGridMode') === 'true';
-    if (localStorage.getItem('isGridMode') === null) {
-        currentLayout = true;
-        localStorage.setItem('isGridMode', 'true');
-    }
-    if(currentTheme==='light') document.body.classList.add('light-mode');
-    else document.body.classList.remove('light-mode');
-
-    function createCardHTML(item, r) {
-        const isUp = r.status === 'up';
-        const cardDiv = document.createElement('div');
-        cardDiv.className = `card ${isUp ? 'active-up' : 'active-down'}`;
-        cardDiv.setAttribute('data-id', item.id);
-        let iconHtml = `<img class="icon-img" src="${item.icon}" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">`;
-        if(item.icon === "custom-mix") iconHtml = `<div class="custom-mix-icon"><img src="https://flagcdn.com/w160/us.png"><img src="https://flagcdn.com/w160/ir.png"></div>`;
-        cardDiv.innerHTML = `
-            <div class="card-main-row">
-                <div class="list-left">
-                    <div class="status-badge ${isUp ? 'text-up' : 'text-down'}">
-                        <span class="circle-arrow"><i class="fas ${isUp ? 'fa-arrow-up' : 'fa-arrow-down'}"></i></span>
-                        <span>${r.percent}</span>
-                    </div>
-                    <div class="price-val">${r.current}</div>
-                </div>
-                <div class="list-right">
-                    <div class="card-info">
-                        <div><b>${item.key}</b><div style="font-size:0.7rem;opacity:0.6;">${item.sub}</div></div>
-                        ${iconHtml}
-                    </div>
-                </div>
-            </div>`;
-        cardDiv.onclick = (e) => { e.stopPropagation(); showChart(item.key, r.history, iconHtml, r.status, r.percent); };
-        return cardDiv;
+    function render(data) {
+        window.lastData = data;
+        renderManual();
     }
 
-    function renderCards() {
+    function renderManual() {
+        const data = window.lastData;
+        if (!data) return;
         const container = document.getElementById('main-container');
         container.innerHTML = '';
+        const now = new Date();
+        const hour = now.getHours();
+        const isMarketOpen = (hour >= 7 && hour < 18);
         let order = JSON.parse(localStorage.getItem('cards-order'));
-        let list = [...itemsList];
-        if(order) list.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
-        list.forEach(item => {
-            const r = currentRates[item.key] || sampleRates[item.key] || { current:"---", status:"up", percent:"0%", history:[] };
-            container.appendChild(createCardHTML(item, r));
+        let sortedList = [...itemsList];
+        if (order) sortedList.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+        sortedList.forEach(item => {
+            const raw = (data.rates && data.rates[item.key]) ? data.rates[item.key] : { current: "---", history: [], status: "up", percent: "0.00%" };
+            const r = {
+                current: raw.current,
+                status: raw.status || (Math.random() < 0.5 ? 'up' : 'down'),
+                percent: raw.percent || (Math.random() * 5).toFixed(2) + "%",
+                history: raw.history || []
+            };
+            container.appendChild(createCardHTML(item, r, isMarketOpen));
         });
         initSortable();
-        if(currentLayout) container.classList.add('grid-mode');
-        else container.classList.remove('grid-mode');
-    }
-
-    function initSortable() {
-        const container = document.getElementById('main-container');
-        new Sortable(container, { handle: '.card', delay: 1000, delayOnTouchOnly: true, animation: 150,
-            onEnd: () => { const order = Array.from(container.children).map(c=>c.dataset.id); localStorage.setItem('cards-order', JSON.stringify(order)); }
+        syncUIWithStorage();
+    }    function initSortable() {
+        const grid = document.getElementById('main-container');
+        if (!grid) return;
+        new Sortable(grid, {
+            handle: '.card',
+            delay: 1000,
+            delayOnTouchOnly: true,
+            animation: 150,
+            onStart: () => { if (window.navigator.vibrate) window.navigator.vibrate(20); },
+            onEnd: () => {
+                const newOrder = Array.from(grid.children).map(card => card.dataset.id);
+                localStorage.setItem('cards-order', JSON.stringify(newOrder));
+            }
+        });
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('contextmenu', (e) => e.preventDefault());
         });
     }
 
-    // ==================== نمودار (فقط هفته) ====================
-    let chartInstance = null;
-    let dynamicUpdateInterval = null;
-
-    
-function renderWeekChart(historyArray) {
-    console.log("renderWeekChart فراخوانی شد با داده:", historyArray);
-    let weekHistory = (historyArray && historyArray.length) ? historyArray : [63.8, 63.9, 63.7, 63.8, 63.9, 63.85, 63.8];
-    const dataPoints = weekHistory.slice(0, 7);
-    const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
-    const today = new Date();
-    const labels = [];
-    for (let i = 6; i >= 0; i--) {
-        let d = new Date(today);
-        d.setDate(today.getDate() - i);
-        labels.push(days[d.getDay()]);
-    }
-    const minVal = Math.min(...dataPoints);
-    const maxVal = Math.max(...dataPoints);
-    document.getElementById('minPrice').innerText = minVal.toLocaleString();
-    document.getElementById('maxPrice').innerText = maxVal.toLocaleString();
-    const ctx = document.getElementById('priceChart').getContext('2d');
-    if (chartInstance) chartInstance.destroy();
-    const grad = ctx.createLinearGradient(0,0,0,200);
-    grad.addColorStop(0, '#00c853aa');
-    grad.addColorStop(1, '#00c85300');
-    
-    const isDark = !document.body.classList.contains('light-mode');
-    const tickColor = isDark ? '#fff' : '#000';
-    const gridColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
-    
-    chartInstance = new Chart(ctx, {
-        type: 'line',
-        data: { labels: labels, datasets: [{ data: dataPoints, borderColor: '#00c853', borderWidth: 2.5, fill: true, backgroundColor: grad, tension: 0.3, pointRadius: 0 }] },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { position: 'right', ticks: { color: tickColor }, grid: { color: gridColor } },
-                x: { ticks: { color: tickColor }, grid: { color: gridColor } }
-            }
+    function createCardHTML(item, r, isMarketOpen) {
+        const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
+        const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
+        const cardEffect = isMarketOpen ? (r.status === 'down' ? 'active-down' : 'active-up') : '';
+        let iconHtml = `<img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover; border: 1px solid var(--border)">`;
+        if (item.icon === "custom-mix") {
+            iconHtml = `<div style="position:relative; width:40px; height:40px; border-radius:10px; overflow:hidden; border: 1px solid var(--border); display:flex;">
+                <img src="https://flagcdn.com/w160/us.png" style="width:20px; height:40px; object-fit:cover;"><img src="https://flagcdn.com/w160/ir.png" style="width:20px; height:40px; object-fit:cover;">
+            </div>`;
         }
-    });
-    document.getElementById('chartLabels').innerHTML = labels.map(l => `<span>${l}</span>`).join('');
-                    }
-    function showChart(title, history, iconHtml, status, percent) {
-        document.getElementById('chartTitle').innerText = title;
-        document.getElementById('chartChange').innerHTML = `<span class="${status==='up'?'text-up':'text-down'}">${percent} <i class="fas ${status==='up'?'fa-arrow-up':'fa-arrow-down'}"></i></span>`;
-        let src = '';
-        if (typeof iconHtml === 'string') {
-            let match = iconHtml.match(/src="([^"]+)"/);
-            if (match) src = match[1];
-        }
-        document.getElementById('chartIcon').src = src;
-        const currentPrice = currentRates[title]?.current || '---';
-        document.getElementById('chartCurrentPrice').innerText = currentPrice;
-        window.currentChart = { title, fullHistory: history, status, percent, currentPrice: currentRates[title]?.current };
-        openModal('chartModal');
-        // رسم نمودار هفتگی با تاخیر کوتاه
-        setTimeout(() => {
-    console.log("در حال رسم نمودار...");
-    renderWeekChart(history);
-}, 200);
-
+        const card = document.createElement('div');
+        card.className = `card ${cardEffect}`;
+        card.setAttribute('data-id', item.id);
+        card.onclick = (e) => {
+            e.stopPropagation();
+            let history = r.history;
+            if (!history || history.length === 0) history = [parseFloat(r.current.replace(/,/g, ''))];
+            currentChartData = { 
+                title: item.key, 
+                fullHistory: history, 
+                iconHtml: iconHtml, 
+                status: r.status, 
+                percent: r.percent, 
+                currentPrice: r.current 
+            };
+            document.getElementById('modalCurrencyName').innerText = item.key;
+            document.getElementById('modalCurrencyIcon').src = iconHtml.match(/src="([^"]+)"/)?.[1] || '';
+            const arrowIconLocal = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
+            const colorClassLocal = r.status === 'down' ? 'text-down' : 'text-up';
+            document.getElementById('modalChangeStatus').innerHTML = `<span class="${colorClassLocal}"><span>${r.percent}</span> <i class="fas ${arrowIconLocal}" style="font-size: 0.6rem;"></i></span>`;
+            document.getElementById('modalCurrentPrice').innerText = r.current;
+            currentChartRange = 'week';
+            document.querySelectorAll('.range-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-range') === 'week');
+            });
+            renderChart(currentChartRange);
             openModal('chartModal');
-    // افزایش تاخیر و اطمینان از رسم
-    setTimeout(() => {
-        console.log("شروع رسم نمودار");
-        if (typeof renderWeekChart === 'function') {
-            renderWeekChart(history);
-        } else {
-            console.error("renderWeekChart تعریف نشده است");
-        }
-    }, 400);
-        if (dynamicUpdateInterval) clearInterval(dynamicUpdateInterval);
-        dynamicUpdateInterval = setInterval(() => {
-            const modal = document.getElementById('chartModal');
-            if (!modal.classList.contains('active')) {
-                if (dynamicUpdateInterval) clearInterval(dynamicUpdateInterval);
-                dynamicUpdateInterval = null;
-                return;
-            }
-            if (window.currentChart && window.currentChart.fullHistory) {
-                renderWeekChart(window.currentChart.fullHistory);
-            }
-        }, 60000);
+        };
+        card.innerHTML = `
+            <div class="card-main-row">
+                <div style="display: flex; flex-direction: column; align-items: flex-start; flex-grow: 1;">
+                    <div class="status-badge ${colorClass}" style="margin-bottom: -2px;">
+                        <span>${r.percent}</span><i class="fas ${arrowIcon}" style="font-size: 0.6rem;"></i>
+                    </div>
+                    <div class="price-val" style="line-height: 1;">${r.current}</div>
+                </div>
+                <div class="card-info">
+                    <div style="text-align:right;">
+                        <b>${item.key}</b>
+                        <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
+    </div>
+    ${iconHtml}
+                </div>
+            </div>`;
+        return card;
+                }    function getSolarDateFromIndex(index, baseDate) {
+        const d = new Date(baseDate);
+        d.setDate(baseDate.getDate() - index);
+        const j = jalaali.toJalaali(d);
+        return `${j.jm}/${j.jd}`;
     }
 
-    // ==================== تنظیمات ====================
-    function setLayout(isGrid) {
-        currentLayout = isGrid;
-        localStorage.setItem('isGridMode', isGrid);
-        const container = document.getElementById('main-container');
-        if(isGrid) container.classList.add('grid-mode');
-        else container.classList.remove('grid-mode');
-        const layoutSlider = document.getElementById('layoutSlider');
-        layoutSlider.style.transform = isGrid ? 'translateX(-100%)' : 'translateX(0)';
-        document.getElementById('layoutList').classList.toggle('active', !isGrid);
-        document.getElementById('layoutGrid').classList.toggle('active', isGrid);
+    function getWeekdayName(dayIndex) {
+        const days = ['蹖讴卮賳亘賴', '丿賵卮賳亘賴', '爻賴鈥屫促嗀ㄙ�', '趩賴丕乇卮賳亘賴', '倬賳噩卮賳亘賴', '噩賲毓賴', '卮賳亘賴'];
+        return days[dayIndex];
     }
-    function setTheme(isLight) {
-        currentTheme = isLight ? 'light' : 'dark';
-        localStorage.setItem('theme', currentTheme);
-        if(isLight) document.body.classList.add('light-mode');
+
+    function renderChart(range) {
+        let pointsCount;
+        if (range === 'week') pointsCount = 7;
+        else if (range === 'month') pointsCount = 30;
+        else pointsCount = 90;
+
+        let fullHistory = [...currentChartData.fullHistory];
+        while (fullHistory.length < pointsCount) fullHistory.unshift(fullHistory[0]);
+        if (fullHistory.length > pointsCount) fullHistory = fullHistory.slice(-pointsCount);
+        const minPrice = Math.min(...fullHistory);
+        const maxPrice = Math.max(...fullHistory);
+        document.getElementById('modalMinPrice').innerText = minPrice.toLocaleString();
+        document.getElementById('modalMaxPrice').innerText = maxPrice.toLocaleString();
+
+        const today = new Date();
+        let labels = [];
+        for (let i = 0; i < pointsCount; i++) {
+            if (range === 'week') {
+                const d = new Date(today);
+                d.setDate(today.getDate() - i);
+                labels.push(getWeekdayName(d.getDay()));
+            } else {
+                labels.push(getSolarDateFromIndex(i, today));
+            }
+        }
+        const labelsForChart = [...labels].reverse();
+        const pricesForChart = [...fullHistory].reverse();
+        const labelsDiv = document.getElementById('chartLabels');
+        labelsDiv.innerHTML = labelsForChart.map(l => `<span style="font-size:0.5rem; margin:0 2px;">${l}</span>`).join('');
+
+        const canvas = document.getElementById('weeklyChartCanvas');
+        const ctx = canvas.getContext('2d');
+        if (weeklyChartInstance) weeklyChartInstance.destroy();
+        const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+        gradient.addColorStop(0, '#00c853aa');
+        gradient.addColorStop(1, '#00c85300');
+        const isLight = document.body.classList.contains('light-mode');
+        const textColor = isLight ? '#000' : '#fff';
+        weeklyChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labelsForChart,
+                datasets: [{
+                    data: pricesForChart,
+                    borderColor: '#00c853',
+                    borderWidth: 2.5,
+                    fill: true,
+                    backgroundColor: gradient,
+                    tension: 0.3,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { display: false }, tooltip: { enabled: true } },
+                scales: {
+                    x: { 
+                        ticks: { color: textColor, font: { size: 8 } },
+                        grid: { color: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' }
+                    },
+                    y: { 
+                        position: 'right', 
+                        grid: { color: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' },
+                        ticks: { color: textColor, font: { size: 9 } }
+                    }
+                }
+            }
+        });
+                }    function initInstallGuide() { }
+    function initNewInstallGuide() {
+        const guideBar = document.getElementById('newInstallGuideBar');
+        const installModal = document.getElementById('newInstallModal');
+        const confirmBtn = document.getElementById('newInstallConfirmBtn');
+        const isInstalled = localStorage.getItem('appInstalledConfirmedNew') === 'true';
+        if (isInstalled && guideBar) { guideBar.style.display = 'none'; return; }
+        if (guideBar) guideBar.onclick = () => installModal.classList.add('active');
+        if (confirmBtn) confirmBtn.onclick = () => {
+            localStorage.setItem('appInstalledConfirmedNew', 'true');
+            installModal.classList.remove('active');
+            if (guideBar) guideBar.style.display = 'none';
+        };
+    }
+
+    function syncUIWithStorage() {
+        const isGrid = localStorage.getItem('isGridMode') === 'true';
+        const isLight = document.body.classList.contains('light-mode');
+        const layoutSlider = document.getElementById('layout-slider');
+        if(layoutSlider) {
+            document.getElementById('opt-list').classList.toggle('active', !isGrid);
+            document.getElementById('opt-grid').classList.toggle('active', isGrid);
+            layoutSlider.style.transform = isGrid ? 'translateX(-100%)' : 'translateX(0)';
+        }
+        const themeSlider = document.getElementById('theme-slider');
+        if(themeSlider) {
+            document.getElementById('opt-light').classList.toggle('active', isLight);
+            document.getElementById('opt-dark').classList.toggle('active', !isLight);
+            themeSlider.style.transform = !isLight ? 'translateX(-100%)' : 'translateX(0)';
+        }
+                }
+                window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('theme') === null) localStorage.setItem('theme', 'light');
+        if (localStorage.getItem('isGridMode') === null) localStorage.setItem('isGridMode', 'true');
+        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
         else document.body.classList.remove('light-mode');
-        const themeSlider = document.getElementById('themeSlider');
-        themeSlider.style.transform = !isLight ? 'translateX(-100%)' : 'translateX(0)';
-        document.getElementById('themeLight').classList.toggle('active', isLight);
-        document.getElementById('themeDark').classList.toggle('active', !isLight);
-        if(chartInstance && document.getElementById('chartModal').classList.contains('active')) {
-            if (window.currentChart && window.currentChart.fullHistory) {
-                renderWeekChart(window.currentChart.fullHistory);
-            }
-        }
+        const container = document.getElementById('main-container');
+        if (localStorage.getItem('isGridMode') === 'true') container.classList.add('grid-mode');
+        else container.classList.remove('grid-mode');
+        syncUIWithStorage();
+        initInstallGuide();
+        initNewInstallGuide();
+        load();
+
+        document.querySelectorAll('.range-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const range = btn.getAttribute('data-range');
+                if (currentChartRange === range) return;
+                currentChartRange = range;
+                document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderChart(range);
+            });
+        });
+    });
+    setInterval(load, 30000);
+
+    function setControlLayout(isGrid) {
+        const container = document.getElementById('main-container');
+        if (container) { if (isGrid) container.classList.add('grid-mode'); else container.classList.remove('grid-mode'); }
+        localStorage.setItem('isGridMode', isGrid);
+        syncUIWithStorage();
     }
-    document.getElementById('layoutList').onclick = () => { if(currentLayout) setLayout(false); };
-    document.getElementById('layoutGrid').onclick = () => { if(!currentLayout) setLayout(true); };
-    document.getElementById('themeLight').onclick = () => { if(!(currentTheme==='light')) setTheme(true); };
-    document.getElementById('themeDark').onclick = () => { if(!(currentTheme==='dark')) setTheme(false); };
-    setLayout(currentLayout);
-    setTheme(currentTheme === 'light');
-
-    document.getElementById('aboutBtn').onclick = () => openModal('aboutModal');
-    document.getElementById('updateBtn').onclick = () => { alert('قیمت‌ها به‌روزرسانی شدند!'); location.reload(); };
-    document.getElementById('shareBtn').onclick = () => {
-        if (navigator.share) {
-            navigator.share({ title: 'BeChand?!', text: 'قیمت‌های لحظه‌ای بازار ارز', url: window.location.href }).catch(console.error);
-        } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert('✅ لینک برنامه کپی شد!');
-        }
-    };
-    document.getElementById('installGuideBtn').onclick = () => openModal('installModal');
-
-    // ماشین حساب
-    let calcExpression = '';
-    const calcDisplay = document.getElementById('calcDisplay');
-    function updateCalcDisplay() { calcDisplay.innerText = calcExpression || '0'; }
-    function handleCalcButton(value) {
-        if (value === 'clear_all') { calcExpression = ''; }
-        else if (value === 'clear_last') { calcExpression = calcExpression.slice(0, -1); }
-        else if (value === 'equal') {
-            try {
-                let expr = calcExpression.replace(/×/g, '*').replace(/÷/g, '/');
-                let result = eval(expr);
-                calcExpression = String(result);
-            } catch(e) { calcExpression = 'Error'; }
-        } else {
-            calcExpression += value;
-        }
-        updateCalcDisplay();
+    function setControlTheme(isLight) {
+        if (isLight) document.body.classList.add('light-mode');
+        else document.body.classList.remove('light-mode');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        syncUIWithStorage();
+        if (weeklyChartInstance) renderChart(currentChartRange);
     }
-    document.querySelectorAll('#calcButtons .calc-btn').forEach(btn => {
-        btn.onclick = () => {
-            const type = btn.getAttribute('data-type');
-            const val = btn.getAttribute('data-value');
-            if (type === 'number') handleCalcButton(val);
-            else if (type === 'dot') handleCalcButton('.');
-            else if (type === 'operator') handleCalcButton(val);
-            else if (type === 'clear') handleCalcButton(val === 'all' ? 'clear_all' : 'clear_last');
-            else if (type === 'equal') handleCalcButton('equal');
-        };
-    });
-
-    // دکمه‌های نمودار (فقط هفته)
-    document.querySelectorAll('#chartModal .range-btn').forEach(btn => {
-        btn.onclick = () => {
-            // فقط هفته موجود است، در صورت نیاز دوباره رسم کن
-            if (window.currentChart && window.currentChart.fullHistory) {
-                renderWeekChart(window.currentChart.fullHistory);
-            }
-        };
-    });
-    document.getElementById('chartModal').addEventListener('click', (e)=>{ 
-        if(e.target===document.getElementById('chartModal')) {
-            closeModal('chartModal');
-            if (dynamicUpdateInterval) clearInterval(dynamicUpdateInterval);
-            dynamicUpdateInterval = null;
-        }
-    });
-
-    // اسپلش
-    if(!localStorage.getItem('splashShown')){
-        setTimeout(()=>{ document.getElementById('splashScreen').classList.add('hide'); setTimeout(()=>document.getElementById('splashScreen').style.display='none',500); },2000);
-        localStorage.setItem('splashShown','true');
-    } else document.getElementById('splashScreen').style.display='none';
-
-    load();
-    setInterval(load, 30000);    
-           
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initNewInstallGuide);
+    else initNewInstallGuide();
 </script>
 </body>
 </html>
+
+        
