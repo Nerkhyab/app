@@ -472,7 +472,17 @@ function renderWeekChart(historyArray) {
     console.log("در حال رسم نمودار...");
     renderWeekChart(history);
 }, 200);
-        
+
+            openModal('chartModal');
+    // افزایش تاخیر و اطمینان از رسم
+    setTimeout(() => {
+        console.log("شروع رسم نمودار");
+        if (typeof renderWeekChart === 'function') {
+            renderWeekChart(history);
+        } else {
+            console.error("renderWeekChart تعریف نشده است");
+        }
+    }, 400);
         if (dynamicUpdateInterval) clearInterval(dynamicUpdateInterval);
         dynamicUpdateInterval = setInterval(() => {
             const modal = document.getElementById('chartModal');
