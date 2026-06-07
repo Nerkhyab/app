@@ -299,7 +299,7 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
     </div>
     </div>
        <script>
-    // ==================== داده‌های نمونه ====================
+                   // ==================== داده‌های نمونه ====================
     const sampleRates = {
         "دالر هرات": { current: "63.80", status: "down", percent: "-0.08%", history: [63.85,63.8,63.75,63.8,63.85,63.8,63.75] },
         "یورو هرات": { current: "73.00", status: "down", percent: "-0.95%", history: [73.5,73.3,73.2,73.0,72.8,73.0,73.0] },
@@ -408,98 +408,12 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
         });
     }
 
-    // ==================== نمودار با منطق قفل شدن بعد از 18 ====================
+    // ==================== نمودار (فقط هفته) ====================
     let chartInstance = null;
-    let currentChartRange = 'day';
     let dynamicUpdateInterval = null;
 
-    const HOURLY_LABELS = ['8:00', '10:00', '12:00', '14:00', '16:00', '18:00'];
-    const HOURLY_VALUES = [8, 10, 12, 14, 16, 18];
-
-    function getCurrentHour() {
-        return new Date().getHours();
-    }
-
-    function getHourlyPriceData(historyArray) {
-        if (!historyArray || historyArray.length === 0) return [0,0,0,0,0,0];
-        let prices = [...historyArray];
-        while (prices.length < 6) prices.push(prices[prices.length-1]);
-        return prices.slice(0,6);
-    }
-
-                function renderDayChart(historyArray) {
-        const currentHour = getCurrentHour();
-        let validIndices = [];
-
-        if (currentHour >= 18 || currentHour < 8) {
-            validIndices = [0,1,2,3,4,5];
-        } else {
-            for (let i = 0; i < HOURLY_VALUES.length; i++) {
-                if (HOURLY_VALUES[i] <= currentHour) {
-                    validIndices.push(i);
-                }
-            }
-            if (validIndices.length === 0) validIndices = [0];
-        }
-
-        // قیمت فعلی
-        let currentPriceNum = 0;
-        if (window.currentChart && window.currentChart.currentPrice) {
-            currentPriceNum = parseFloat(String(window.currentChart.currentPrice).replace(/,/g, ''));
-        }
-        if (isNaN(currentPriceNum)) currentPriceNum = 0;
-        
-        // قیمت شروع (اولین نقطه از تاریخچه)
-        let startPrice = (historyArray && historyArray.length > 0) ? historyArray[0] : currentPriceNum;
-        if (startPrice === 0) startPrice = currentPriceNum;
-        
-        // ساخت ۶ نقطه خطی بین startPrice و currentPriceNum
-        const totalPoints = 6;
-        let generatedPrices = [];
-        for (let i = 0; i < totalPoints; i++) {
-            let ratio = i / (totalPoints - 1);
-            generatedPrices.push(startPrice + (currentPriceNum - startPrice) * ratio);
-        }
-        
-        const selectedPrices = validIndices.map(idx => generatedPrices[idx]);
-        const selectedLabels = validIndices.map(idx => HOURLY_LABELS[idx]);
-
-        const minVal = Math.min(...selectedPrices);
-        const maxVal = Math.max(...selectedPrices);
-        document.getElementById('minPrice').innerText = minVal.toLocaleString();
-        document.getElementById('maxPrice').innerText = maxVal.toLocaleString();
-
-        const ctx = document.getElementById('priceChart').getContext('2d');
-        if (chartInstance) chartInstance.destroy();
-        const grad = ctx.createLinearGradient(0,0,0,200);
-        grad.addColorStop(0, '#00c853aa');
-        grad.addColorStop(1, '#00c85300');
-        
-        const isDark = !document.body.classList.contains('light-mode');
-        const tickColor = isDark ? '#fff' : '#000';
-        const gridColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
-        
-        chartInstance = new Chart(ctx, {
-            type: 'line',
-            data: { labels: selectedLabels, datasets: [{ data: selectedPrices, borderColor: '#00c853', borderWidth: 2.5, fill: true, backgroundColor: grad, tension: 0.3, pointRadius: 0 }] },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { position: 'right', ticks: { color: tickColor }, grid: { color: gridColor } },
-                    x: { ticks: { color: tickColor }, grid: { color: gridColor } }
-                }
-            }
-        });
-        document.getElementById('chartLabels').innerHTML = selectedLabels.map(l => `<span>${l}</span>`).join('');
-                }
-
     function renderWeekChart(historyArray) {
-        let weekHistory = historyArray || [];
-        if (weekHistory.length < 7) {
-            weekHistory = [63.8, 63.9, 63.7, 63.8, 63.9, 63.85, 63.8];
-        }
+        let weekHistory = (historyArray && historyArray.length) ? historyArray : [63.8, 63.9, 63.7, 63.8, 63.9, 63.85, 63.8];
         const dataPoints = weekHistory.slice(0, 7);
         const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
         const today = new Date();
@@ -538,48 +452,37 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
         });
         document.getElementById('chartLabels').innerHTML = labels.map(l => `<span>${l}</span>`).join('');
     }
-             function showChart(title, history, iconHtml, status, percent) {
-    document.getElementById('chartTitle').innerText = title;
-    document.getElementById('chartChange').innerHTML = `<span class="${status==='up'?'text-up':'text-down'}">${percent} <i class="fas ${status==='up'?'fa-arrow-up':'fa-arrow-down'}"></i></span>`;
-    let src = '';
-    if (typeof iconHtml === 'string') {
-        let match = iconHtml.match(/src="([^"]+)"/);
-        if (match) src = match[1];
-    }
-    document.getElementById('chartIcon').src = src;
-    const currentPrice = currentRates[title]?.current || '---';
-    document.getElementById('chartCurrentPrice').innerText = currentPrice;
-    window.currentChart = { title, fullHistory: history, status, percent, currentPrice: currentRates[title]?.current };
-    openModal('chartModal');
-    // تنظیم پیش‌فرض به هفته
-    currentChartRange = 'week';
-    // فعال کردن دکمه هفته (تنها دکمه موجود)
-    const weekBtn = document.querySelector('#chartModal .range-btn[data-range="week"]');
-    if (weekBtn) weekBtn.classList.add('active');
-    renderChart('week');  // نمایش نمودار هفتگی
-    
-    if (dynamicUpdateInterval) clearInterval(dynamicUpdateInterval);
-    dynamicUpdateInterval = setInterval(() => {
-        const modal = document.getElementById('chartModal');
-        if (!modal.classList.contains('active')) {
-            if (dynamicUpdateInterval) clearInterval(dynamicUpdateInterval);
-            dynamicUpdateInterval = null;
-            return;
-        }
-        if (currentChartRange === 'week') {
-            renderChart('week');
-        }
-    }, 60000);
-                                                                                                                                        }   
 
-    function renderChart(range) {
-        if (!window.currentChart) return;
-        const history = window.currentChart.fullHistory || [];
-        if (range === 'day') {
-            renderDayChart(history);
-        } else if (range === 'week') {
-            renderWeekChart(history);
+    // تابع showChart د    function showChart(title, history, iconHtml, status, percent) {
+        document.getElementById('chartTitle').innerText = title;
+        document.getElementById('chartChange').innerHTML = `<span class="${status==='up'?'text-up':'text-down'}">${percent} <i class="fas ${status==='up'?'fa-arrow-up':'fa-arrow-down'}"></i></span>`;
+        let src = '';
+        if (typeof iconHtml === 'string') {
+            let match = iconHtml.match(/src="([^"]+)"/);
+            if (match) src = match[1];
         }
+        document.getElementById('chartIcon').src = src;
+        const currentPrice = currentRates[title]?.current || '---';
+        document.getElementById('chartCurrentPrice').innerText = currentPrice;
+        window.currentChart = { title, fullHistory: history, status, percent, currentPrice: currentRates[title]?.current };
+        openModal('chartModal');
+        // رسم نمودار هفتگی با تاخیر کوتاه
+        setTimeout(() => {
+            renderWeekChart(history);
+        }, 100);
+        
+        if (dynamicUpdateInterval) clearInterval(dynamicUpdateInterval);
+        dynamicUpdateInterval = setInterval(() => {
+            const modal = document.getElementById('chartModal');
+            if (!modal.classList.contains('active')) {
+                if (dynamicUpdateInterval) clearInterval(dynamicUpdateInterval);
+                dynamicUpdateInterval = null;
+                return;
+            }
+            if (window.currentChart && window.currentChart.fullHistory) {
+                renderWeekChart(window.currentChart.fullHistory);
+            }
+        }, 60000);
     }
 
     // ==================== تنظیمات ====================
@@ -603,7 +506,11 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
         themeSlider.style.transform = !isLight ? 'translateX(-100%)' : 'translateX(0)';
         document.getElementById('themeLight').classList.toggle('active', isLight);
         document.getElementById('themeDark').classList.toggle('active', !isLight);
-        if(chartInstance && document.getElementById('chartModal').classList.contains('active')) renderChart(currentChartRange);
+        if(chartInstance && document.getElementById('chartModal').classList.contains('active')) {
+            if (window.currentChart && window.currentChart.fullHistory) {
+                renderWeekChart(window.currentChart.fullHistory);
+            }
+        }
     }
     document.getElementById('layoutList').onclick = () => { if(currentLayout) setLayout(false); };
     document.getElementById('layoutGrid').onclick = () => { if(!currentLayout) setLayout(true); };
@@ -654,13 +561,13 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
         };
     });
 
-    // دکمه‌های نمودار
+    // دکمه‌های نمودار (فقط هفته)
     document.querySelectorAll('#chartModal .range-btn').forEach(btn => {
         btn.onclick = () => {
-            document.querySelectorAll('#chartModal .range-btn').forEach(b=>b.classList.remove('active'));
-            btn.classList.add('active');
-            currentChartRange = btn.getAttribute('data-range');
-            renderChart(currentChartRange);
+            // فقط هفته موجود است، در صورت نیاز دوباره رسم کن
+            if (window.currentChart && window.currentChart.fullHistory) {
+                renderWeekChart(window.currentChart.fullHistory);
+            }
         };
     });
     document.getElementById('chartModal').addEventListener('click', (e)=>{ 
@@ -678,7 +585,7 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
     } else document.getElementById('splashScreen').style.display='none';
 
     load();
-    setInterval(load, 30000);
+    setInterval(load, 30000);          
 </script>
 </body>
 </html>
