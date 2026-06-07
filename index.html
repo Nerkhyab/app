@@ -468,8 +468,9 @@ body.light-mode .chartjs-render-monitor text { fill: #000000 !important; }
         openModal('chartModal');
         // رسم نمودار هفتگی با تاخیر کوتاه
         setTimeout(() => {
-            renderWeekChart(history);
-        }, 100);
+    console.log("در حال رسم نمودار...");
+    renderWeekChart(history);
+}, 200);
         
         if (dynamicUpdateInterval) clearInterval(dynamicUpdateInterval);
         dynamicUpdateInterval = setInterval(() => {
