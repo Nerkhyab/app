@@ -675,12 +675,21 @@ body:not(.light-mode) #chartChange {
         }
     });
 
-    // اسپلش
-    if(!localStorage.getItem('splashShown')){
-        setTimeout(()=>{ document.getElementById('splashScreen').classList.add('hide'); setTimeout(()=>document.getElementById('splashScreen').style.display='none',500); },2000);
-        localStorage.setItem('splashShown','true');
-    } else document.getElementById('splashScreen').style.display='none';
+    // اسپلش - همیشه نمایش داده می‌شود
+const splash = document.getElementById('splashScreen');
 
+splash.addEventListener('click', () => {
+    splash.classList.add('hide');
+    setTimeout(() => splash.style.display = 'none', 500);
+});
+
+setTimeout(() => {
+    if (!splash.classList.contains('hide')) {
+        splash.classList.add('hide');
+        setTimeout(() => splash.style.display = 'none', 500);
+    }
+}, 2000);
+          
     load();
     setInterval(load, 30000);
 </script>
