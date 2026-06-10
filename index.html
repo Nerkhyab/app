@@ -397,10 +397,17 @@ body:not(.light-mode) #chartChange {
 
     function initSortable() {
         const container = document.getElementById('main-container');
-        new Sortable(container, { handle: '.card', delay: 1000, delayOnTouchOnly: true, animation: 150,
-            onEnd: () => { const order = Array.from(container.children).map(c=>c.dataset.id); localStorage.setItem('cards-order', JSON.stringify(order)); }
-        });
+        new Sortable(container, { 
+    handle: '.card', 
+    delay: 150,            // کاهش از ۱۰۰۰ به ۱۵۰ میلی‌ثانیه
+    delayOnTouchOnly: true, 
+    animation: 150,
+    touchStartThreshold: 2, // حساسیت کمتر برای شروع جابجایی
+    onEnd: () => { 
+        const order = Array.from(container.children).map(c=>c.dataset.id); 
+        localStorage.setItem('cards-order', JSON.stringify(order)); 
     }
+});
 
     // ==================== نمودار با منطق قفل شدن بعد از 18 ====================
     let chartInstance = null;
