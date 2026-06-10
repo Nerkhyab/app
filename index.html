@@ -224,6 +224,12 @@ body:not(.light-mode) #chartChange {
     width: 100%;
     order: unset;
         }
+        /* افکت فوری هنگام لمس کارت برای جابجایی سریع */
+.card:active {
+    transform: scale(0.98);
+    transition: 0.05s;
+    opacity: 0.9;
+        }
     </style>
 </head>
 <body>
