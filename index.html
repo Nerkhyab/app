@@ -671,6 +671,11 @@ body:not(.light-mode) #chartChange {
         }
     });
 
+            const splash = document.getElementById('splashScreen');
+    splash.addEventListener('click', () => {
+        splash.classList.add('hide');
+        setTimeout(() => splash.style.display = 'none', 500);
+    });
     // اسپلش
     if(!localStorage.getItem('splashShown')){
         setTimeout(()=>{ document.getElementById('splashScreen').classList.add('hide'); setTimeout(()=>document.getElementById('splashScreen').style.display='none',500); },2000);
