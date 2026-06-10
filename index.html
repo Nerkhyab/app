@@ -14,7 +14,7 @@
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --bg:#1a3326; --card:#1d1d1f; --text:#fff; --border:rgba(255,255,255,0.06); --nav:rgba(35,35,35,0.92); --green:#00c853; --red:#ff5252; }
+        :root { --bg:#343030; --card:#1d1d1f; --text:#fff; --border:rgba(255,255,255,0.06); --nav:rgba(35,35,35,0.92); --green:#00c853; --red:#ff5252; }
         .segment-slider {
     position: absolute;
     top: 3px;
@@ -27,7 +27,7 @@
     border: 1px solid rgba(255, 255, 255, 0.25);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
-        body.light-mode { --bg: #C9B896; --card: #ffffff !important; --text: #000; --border: rgba(0,0,0,0.1); --nav: rgba(255,255,255,0.9); }
+        body.light-mode { --bg: #efebe5; --card: #ffffff !important; --text: #000; --border: rgba(0,0,0,0.1); --nav: rgba(255,255,255,0.9); }
         body { background: var(--bg); font-family: 'Vazirmatn', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         .header { display: flex; justify-content: space-between; align-items: stretch; gap: 12px; padding: 16px; max-width: 600px; margin: 0 auto; direction: ltr; }
         .header-box { flex: 1; background: linear-gradient(135deg, #00c85320, #00c85305); border-radius: 20px; padding: 10px 16px; border-left: 3px solid #00c853; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; text-align: center; }
@@ -126,7 +126,7 @@
             display: flex;
             flex-direction: row;
             align-items: flex-start;
-            padding: 24px 16px;
+            padding: 12px 16px;
         }
         .container:not(.grid-mode) .card-main-row {
             display: flex;
@@ -224,16 +224,10 @@ body:not(.light-mode) #chartChange {
     width: 100%;
     order: unset;
         }
-        /* افکت فوری هنگام لمس کارت برای جابجایی سریع */
-.card:active {
-    transform: scale(0.98);
-    transition: 0.05s;
-    opacity: 0.9;
-        }
     </style>
 </head>
 <body>
-    <div id="splashScreen" class="splash-overlay"><div class="splash-logo"><div class="main">BeChand<span>?!</span></div><div class="sub">مرجع رسمی بازار ارز هرات</div></div></div>
+        <div id="splashScreen" class="splash-overlay"><div class="splash-logo"><div class="main">BeChand<span>?!</span></div><div class="sub">مرجع رسمی بازار ارز هرات</div></div></div>
 <div class="header"><div class="header-box"><div class="brand-name">BeChand<span>?!</span></div></div><div class="header-box datetime-box"><div class="time" id="timeDisplay">--:--:-- --</div><div class="date" id="dateDisplay">----/--/--</div></div></div>
 <div id="main-container" class="container"></div>
 <div class="bottom-nav"><i class="fas fa-cog nav-icon" onclick="openModal('settingsModal')"></i><div class="nav-text">مرجع رسمی نرخ ارز در بازار هرات</div><i class="fas fa-calculator nav-icon" onclick="openModal('calcModal')"></i></div>
@@ -291,8 +285,9 @@ body:not(.light-mode) #chartChange {
         </div>
         <div id="chartLabels" style="display:flex; justify-content:space-between; font-size:0.6rem; margin-top:8px;"></div>
     </div>
-    </div>
-       <script>
+                                                                                                                       </div>
+                                                                                                                                                                                                                      
+      <script>
     // ==================== داده‌های نمونه ====================
     const sampleRates = {
         "دالر هرات": { current: "63.80", status: "down", percent: "-0.08%", history: [63.85,63.8,63.75,63.8,63.85,63.8,63.75] },
@@ -397,18 +392,12 @@ body:not(.light-mode) #chartChange {
 
     function initSortable() {
         const container = document.getElementById('main-container');
-        new Sortable(container, {  handle: '.card', 
-    delay: 1000,            // کاهش از ۱۰۰۰ به ۱۵۰ میلی‌ثانیه
-    delayOnTouchOnly: true, 
-    animation: 150,
-    touchStartThreshold: 2, // حساسیت کمتر برای شروع جابجایی
-    onEnd: () => { 
-        const order = Array.from(container.children).map(c=>c.dataset.id); 
-        localStorage.setItem('cards-order', JSON.stringify(order)); 
+        new Sortable(container, { handle: '.card', delay: 1000, delayOnTouchOnly: true, animation: 150,
+            onEnd: () => { const order = Array.from(container.children).map(c=>c.dataset.id); localStorage.setItem('cards-order', JSON.stringify(order)); }
+        });
     }
-});
 
-    // ==================== نمودار با منطق قفل شدن بعد از 18 ====================
+              // ==================== نمودار با منطق قفل شدن بعد از 18 ====================
     let chartInstance = null;
     let currentChartRange = 'day';
     let dynamicUpdateInterval = null;
@@ -570,9 +559,9 @@ body:not(.light-mode) #chartChange {
             renderChart('day');
         }
     }, 60000);
-}
+          }
 
-    function renderChart(range) {
+          function renderChart(range) {
         if (!window.currentChart) return;
         const history = window.currentChart.fullHistory || [];
         if (range === 'day') {
@@ -671,11 +660,6 @@ body:not(.light-mode) #chartChange {
         }
     });
 
-            const splash = document.getElementById('splashScreen');
-    splash.addEventListener('click', () => {
-        splash.classList.add('hide');
-        setTimeout(() => splash.style.display = 'none', 500);
-    });
     // اسپلش
     if(!localStorage.getItem('splashShown')){
         setTimeout(()=>{ document.getElementById('splashScreen').classList.add('hide'); setTimeout(()=>document.getElementById('splashScreen').style.display='none',500); },2000);
