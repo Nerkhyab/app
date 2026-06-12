@@ -484,10 +484,20 @@ body:not(.light-mode) #chartChange {
                 }
 
     function renderWeekChart(historyArray) {
-        let weekHistory = historyArray || [];
-        if (weekHistory.length < 7) {
-            weekHistory = [63.8, 63.9, 63.7, 63.8, 63.9, 63.85, 63.8];
-        }
+    // فرض: هر روز ۵ قیمت (ساعت 8, 10, 12, 14, 16, 18) → ۶ قیمت در روز
+    // اگر هر روز ۶ قیمت داشته باشیم، قیمت آخر هر روز (ساعت 18) را برمی‌داریم
+    const pricesPerDay = 6;  // تعداد قیمت‌های ثبت شده در هر روز
+    let dailyCloses = [];
+    for (let i = pricesPerDay - 1; i < historyArray.length; i += pricesPerDay) {
+        dailyCloses.push(historyArray[i]);
+    }
+    // گرفتن آخرین ۷ روز (آخرین ۷ قیمت بسته شدن)
+    const dataPoints = dailyCloses.slice(-7);
+    
+    // بقیه کدهای رسم نمودار (برچسب‌های روزها و ...)
+    // ...
+           }
+           
         const dataPoints = weekHistory.slice(0, 7);
         const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
         const today = new Date();
