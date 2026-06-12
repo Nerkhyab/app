@@ -583,8 +583,7 @@ body:not(.light-mode) #chartChange {
 
           function renderChart(range) {
         if (!window.currentChart) return;
-        const history = window.currentChart.fullHistory || [];
-        if (range === 'day') {
+        
             renderDayChart(history);
         } else if (range === 'week') {
             renderWeekChart(history);
