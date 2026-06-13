@@ -494,7 +494,11 @@ body.light-mode #chartModal .chart-panel {
     function renderWeekChart(historyArray) {
         let weekHistory = historyArray || [];
         if (weekHistory.length < 7) {
-            weekHistory = [63.8, 63.9, 63.7, 63.8, 63.9, 63.85, 63.8];
+    // تکرار آخرین مقدار موجود برای پر کردن روزهای باقی‌مانده
+    while (weekHistory.length < 7) {
+        weekHistory.push(weekHistory[weekHistory.length - 1]);
+    }
+        
         }
         const dataPoints = weekHistory.slice(0, 7);
         const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
