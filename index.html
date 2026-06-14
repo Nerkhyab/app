@@ -510,11 +510,9 @@ body.light-mode #chartModal .chart-panel {
         d.setDate(today.getDate() - i);
         labels.push(days[d.getDay()]);
     }
-    labels.reverse(); // طوری که امروز در راست باشد
-    
-    // رسم نمودار با dataPoints و labels
-    // ... کد Chart.js
-            }
+    labels.reverse(); 
+            
+            
     const minVal = Math.min(...dataPoints);
     const maxVal = Math.max(...dataPoints);
     document.getElementById('minPrice').innerText = minVal.toLocaleString();
