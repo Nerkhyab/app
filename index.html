@@ -492,53 +492,69 @@ body.light-mode #chartModal .chart-panel {
                 }
 
     function renderWeekChart(historyArray) {
-        let weekHistory = historyArray || [];
-        if (weekHistory.length < 7) {
-    // تکرار آخرین مقدار موجود برای پر کردن روزهای باقی‌مانده
+    let weekHistory = historyArray || [];
+    // اطمینان از داشتن حداقل ۷ نقطه (در صورت کمتر، آخرین مقدار تکرار شود)
     while (weekHistory.length < 7) {
         weekHistory.push(weekHistory[weekHistory.length - 1]);
     }
-        
-        }
-        const dataPoints = weekHistory.slice(-7).reverse();  // آخرین ۷ نقطه، معکوس
-const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
-const today = new Date();
-const labels = [];
-for (let i = 6; i >= 0; i--) {
-    let d = new Date(today);
-    d.setDate(today.getDate() - i);
-    labels.push(days[d.getDay()]);
-}
-labels.reverse();  // برعکس کردن برچسب‌ها
-        const minVal = Math.min(...dataPoints);
-        const maxVal = Math.max(...dataPoints);
-        document.getElementById('minPrice').innerText = minVal.toLocaleString();
-        document.getElementById('maxPrice').innerText = maxVal.toLocaleString();
-        const ctx = document.getElementById('priceChart').getContext('2d');
-        if (chartInstance) chartInstance.destroy();
-        const grad = ctx.createLinearGradient(0,0,0,200);
-        grad.addColorStop(0, '#00c853aa');
-        grad.addColorStop(1, '#00c85300');
-        
-        const isDark = !document.body.classList.contains('light-mode');
-        const tickColor = isDark ? '#fff' : '#000';
-        const gridColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
-        
-        chartInstance = new Chart(ctx, {
-            type: 'line',
-            data: { labels: labels, datasets: [{ data: dataPoints, borderColor: '#00c853', borderWidth: 2.5, fill: true, backgroundColor: grad, tension: 0.3, pointRadius: 0 }] },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { position: 'right', ticks: { color: tickColor }, grid: { color: gridColor } },
-                    x: { ticks: { color: tickColor }, grid: { color: gridColor } }
-                }
-            }
-        });
-        document.getElementById('chartLabels').innerHTML = labels.map(l => `<span>${l}</span>`).join('');
+    // ۷ روز آخر را بگیرید (فرض: ایندکس ۰ = قدیمی‌ترین، ایندکس ۶ = امروز)
+    let last7 = weekHistory.slice(-7);
+    // داده‌ها را معکوس کنید تا امروز در ایندکس ۰ قرار گیرد (نزدیک محور Y)
+    const dataPoints = [...last7].reverse();
+
+    // نگاشت صحیح روزها بر اساس getDay (0=یکشنبه, 1=دوشنبه, ..., 6=شنبه)
+    const daysMap = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'];
+    const today = new Date();
+    const labels = [];
+    // ساخت برچسب برای ۷ روز متوالی از امروز به عقب: امروز، دیروز، ...
+    for (let i = 0; i < 7; i++) {
+        let d = new Date(today);
+        d.setDate(today.getDate() - i);
+        labels.push(daysMap[d.getDay()]);
     }
+    // اکنون labels[0]=امروز, labels[1]=دیروز, ... (همراستا با dataPoints)
+
+    const minVal = Math.min(...dataPoints);
+    const maxVal = Math.max(...dataPoints);
+    document.getElementById('minPrice').innerText = minVal.toLocaleString();
+    document.getElementById('maxPrice').innerText = maxVal.toLocaleString();
+
+    const ctx = document.getElementById('priceChart').getContext('2d');
+    if (chartInstance) chartInstance.destroy();
+    const grad = ctx.createLinearGradient(0, 0, 0, 200);
+    grad.addColorStop(0, '#00c853aa');
+    grad.addColorStop(1, '#00c85300');
+
+    const isDark = !document.body.classList.contains('light-mode');
+    const tickColor = isDark ? '#fff' : '#000';
+    const gridColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
+
+    chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: dataPoints,
+                borderColor: '#00c853',
+                borderWidth: 2.5,
+                fill: true,
+                backgroundColor: grad,
+                tension: 0.3,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { position: 'right', ticks: { color: tickColor }, grid: { color: gridColor } },
+                x: { ticks: { color: tickColor }, grid: { color: gridColor } }
+            }
+        }
+    });
+    document.getElementById('chartLabels').innerHTML = labels.map(l => `<span>${l}</span>`).join('');
+                                                        }
                 function showChart(title, history, iconHtml, status, percent) {
     document.getElementById('chartTitle').innerText = title;
     document.getElementById('chartChange').innerHTML = `<span class="${status==='up'?'text-up':'text-down'}">${percent} <i class="fas ${status==='up'?'fa-arrow-up':'fa-arrow-down'}"></i></span>`;
