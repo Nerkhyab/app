@@ -567,7 +567,7 @@ body.light-mode #chartModal .chart-panel {
     const currentPrice = currentRates[title]?.current || '---';
     document.getElementById('chartCurrentPrice').innerText = currentPrice;
     window.currentChart = { title, fullHistory: history, status, percent, currentPrice: currentRates[title]?.current };
-    openModal('chartModal');
+   // openModal('chartModal');
     currentChartRange = 'day';
     document.querySelectorAll('#chartModal .range-btn').forEach(btn=>btn.classList.remove('active'));
     const dayBtn = document.querySelector('#chartModal .range-btn[data-range="day"]');
