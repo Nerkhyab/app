@@ -498,7 +498,7 @@ body.light-mode #chartModal .chart-panel {
         weekHistory.push(weekHistory[weekHistory.length - 1]);
     }
     // ۷ روز آخر را بگیرید (فرض: ایندکس ۰ = قدیمی‌ترین، ایندکس ۶ = امروز)
-    let last7 = weekHistory.slice(-7);
+    const dataPoints = weekHistory.slice(-7).reverse();
     // داده‌ها را معکوس کنید تا امروز در ایندکس ۰ قرار گیرد (نزدیک محور Y)
     const dataPoints = [...last7].reverse();
 
