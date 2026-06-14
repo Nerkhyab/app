@@ -492,30 +492,29 @@ body.light-mode #chartModal .chart-panel {
                 }
 
     function renderWeekChart(historyArray) {
-    let weekHistory = historyArray || [];
-    // اطمینان از داشتن حداقل ۷ نقطه (در صورت کمتر، آخرین مقدار تکرار شود)
-    while (weekHistory.length < 7) {
-        weekHistory.push(weekHistory[weekHistory.length - 1]);
+    // استخراج قیمت ساعت ۱۸ هر روز (نقطه ششم هر روز)
+    const pointsPerDay = 6;
+    let dailyCloses = [];
+    for (let i = pointsPerDay - 1; i < historyArray.length; i += pointsPerDay) {
+        dailyCloses.push(historyArray[i]);
     }
-    // ۷ روز آخر را بگیرید (فرض: ایندکس ۰ = قدیمی‌ترین، ایندکس ۶ = امروز)
-    const dataPoints = weekHistory.slice(-7).reverse();
-    // داده‌ها را معکوس کنید تا امروز در ایندکس ۰ قرار گیرد (نزدیک محور Y)
+    // گرفتن آخرین ۷ روز
+    let dataPoints = dailyCloses.slice(-7);
     
-
-    // نگاشت صحیح روزها بر اساس getDay (0=یکشنبه, 1=دوشنبه, ..., 6=شنبه)
-    const daysMap = ['دوشنبه', 'یکشنبه', 'شنبه', 'جمعه', 'پنجشنبه', 'چهارشنبه', 'سه‌شنبه'];
+    // برچسب‌های روزهای هفته (شنبه تا جمعه)
+    const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
     const today = new Date();
-    const labels = [];
-    // ساخت برچسب برای ۷ روز متوالی از امروز به عقب: امروز، دیروز، ...
-    for (let i = 0; i < 7; i++) {
+    let labels = [];
+    for (let i = 6; i >= 0; i--) {
         let d = new Date(today);
         d.setDate(today.getDate() - i);
-        labels.push(daysMap[d.getDay()]);
+        labels.push(days[d.getDay()]);
     }
-    // اکنون labels[0]=امروز, labels[1]=دیروز, ... (همراستا با dataPoints)
-
-        labels.reverse();
-
+    labels.reverse(); // طوری که امروز در راست باشد
+    
+    // رسم نمودار با dataPoints و labels
+    // ... کد Chart.js
+            }
     const minVal = Math.min(...dataPoints);
     const maxVal = Math.max(...dataPoints);
     document.getElementById('minPrice').innerText = minVal.toLocaleString();
