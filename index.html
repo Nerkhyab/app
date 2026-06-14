@@ -514,6 +514,8 @@ body.light-mode #chartModal .chart-panel {
     }
     // اکنون labels[0]=امروز, labels[1]=دیروز, ... (همراستا با dataPoints)
 
+        labels.reverse();
+
     const minVal = Math.min(...dataPoints);
     const maxVal = Math.max(...dataPoints);
     document.getElementById('minPrice').innerText = minVal.toLocaleString();
