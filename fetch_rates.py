@@ -83,9 +83,9 @@ def get_rates():
             percent = f"{diff:+.2f}%"
 
         # مدیریت تاریخچه برای نمودار
-        history = old_item.get("history", [])
-        if not history or history[-1] != nv:
-            history.append(nv)
+        history = [{"price": h, "ts": ""} if isinstance(h, (int, float)) else h for h in history]
+        if not history or history[-1]["price"] != nv:
+            history.append({"price": nv, "ts": datetime.now().isoformat()})
             if len(history) > 20: history.pop(0)
 
         # فرمت نمایش (تهران با جداکننده هزارگان، بقیه معمولی)
