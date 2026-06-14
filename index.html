@@ -500,15 +500,16 @@ body.light-mode #chartModal .chart-panel {
     }
         
         }
-        const dataPoints = weekHistory.slice(0, 7);
-        const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
-        const today = new Date();
-        const labels = [];
-        for (let i = 6; i >= 0; i--) {
-            let d = new Date(today);
-            d.setDate(today.getDate() - i);
-            labels.push(days[d.getDay()]);
-        }
+        const dataPoints = weekHistory.slice(-7).reverse();  // آخرین ۷ نقطه، معکوس
+const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
+const today = new Date();
+const labels = [];
+for (let i = 6; i >= 0; i--) {
+    let d = new Date(today);
+    d.setDate(today.getDate() - i);
+    labels.push(days[d.getDay()]);
+}
+labels.reverse();  // برعکس کردن برچسب‌ها
         const minVal = Math.min(...dataPoints);
         const maxVal = Math.max(...dataPoints);
         document.getElementById('minPrice').innerText = minVal.toLocaleString();
