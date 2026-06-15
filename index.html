@@ -445,71 +445,52 @@ body.light-mode .calc-btn.equal {
     }
 
                 function renderDayChart(historyArray) {
-        const currentHour = getCurrentHour();
-        let validIndices = [];
-
-        if (currentHour >= 18 || currentHour < 8) {
-            validIndices = [0,1,2,3,4,5];
-        } else {
-            for (let i = 0; i < HOURLY_VALUES.length; i++) {
-                if (HOURLY_VALUES[i] <= currentHour) {
-                    validIndices.push(i);
-                }
+    // گرفتن آخرین ۶ نقطه از تاریخچه (یا هر تعداد که موجود است)
+    let lastPoints = historyArray.slice(-6);
+    let dataPoints = lastPoints.map(p => p.price);
+    let labels = lastPoints.map(p => {
+        if (p && p.time) {
+            let d = new Date(p.time);
+            return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+        }
+        return '';
+    });
+    
+    // اگر تعداد نقاط کمتر از ۶ است، با تکرار آخرین مقدار پر کن (اختیاری)
+    while (dataPoints.length < 6) {
+        dataPoints.unshift(dataPoints[0]);
+        labels.unshift(labels[0] || '');
+    }
+    
+    const minVal = Math.min(...dataPoints);
+    const maxVal = Math.max(...dataPoints);
+    document.getElementById('minPrice').innerText = minVal.toLocaleString();
+    document.getElementById('maxPrice').innerText = maxVal.toLocaleString();
+    
+    const ctx = document.getElementById('priceChart').getContext('2d');
+    if (chartInstance) chartInstance.destroy();
+    const grad = ctx.createLinearGradient(0,0,0,200);
+    grad.addColorStop(0, '#00c853aa');
+    grad.addColorStop(1, '#00c85300');
+    
+    const isDark = !document.body.classList.contains('light-mode');
+    const tickColor = isDark ? '#fff' : '#000';
+    const gridColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
+    
+    chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: { labels: labels, datasets: [{ data: dataPoints, borderColor: '#00c853', borderWidth: 2.5, fill: true, backgroundColor: grad, tension: 0.3, pointRadius: 0 }] },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { position: 'right', ticks: { color: tickColor }, grid: { color: gridColor } },
+                x: { ticks: { color: tickColor }, grid: { color: gridColor } }
             }
-            if (validIndices.length === 0) validIndices = [0];
         }
-
-        // قیمت فعلی
-        let currentPriceNum = 0;
-        if (window.currentChart && window.currentChart.currentPrice) {
-            currentPriceNum = parseFloat(String(window.currentChart.currentPrice).replace(/,/g, ''));
-        }
-        if (isNaN(currentPriceNum)) currentPriceNum = 0;
-        
-        // قیمت شروع (اولین نقطه از تاریخچه)
-        let startPrice = (historyArray && historyArray.length > 0) ? historyArray[0] : currentPriceNum;
-        if (startPrice === 0) startPrice = currentPriceNum;
-        
-        // ساخت ۶ نقطه خطی بین startPrice و currentPriceNum
-        const totalPoints = 6;
-        let generatedPrices = [];
-        for (let i = 0; i < totalPoints; i++) {
-            let ratio = i / (totalPoints - 1);
-            generatedPrices.push(startPrice + (currentPriceNum - startPrice) * ratio);
-        }
-        
-        const selectedPrices = validIndices.map(idx => generatedPrices[idx]);
-        const selectedLabels = validIndices.map(idx => HOURLY_LABELS[idx]);
-
-        const minVal = Math.min(...selectedPrices);
-        const maxVal = Math.max(...selectedPrices);
-        document.getElementById('minPrice').innerText = minVal.toLocaleString();
-        document.getElementById('maxPrice').innerText = maxVal.toLocaleString();
-
-        const ctx = document.getElementById('priceChart').getContext('2d');
-        if (chartInstance) chartInstance.destroy();
-        const grad = ctx.createLinearGradient(0,0,0,200);
-        grad.addColorStop(0, '#00c853aa');
-        grad.addColorStop(1, '#00c85300');
-        
-        const isDark = !document.body.classList.contains('light-mode');
-        const tickColor = isDark ? '#fff' : '#000';
-        const gridColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
-        
-        chartInstance = new Chart(ctx, {
-            type: 'line',
-            data: { labels: selectedLabels, datasets: [{ data: selectedPrices, borderColor: '#00c853', borderWidth: 2.5, fill: true, backgroundColor: grad, tension: 0.3, pointRadius: 0 }] },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { position: 'right', ticks: { color: tickColor }, grid: { color: gridColor } },
-                    x: { ticks: { color: tickColor }, grid: { color: gridColor } }
-                }
-            }
-        });
-        document.getElementById('chartLabels').innerHTML = selectedLabels.map(l => `<span>${l}</span>`).join('');
+    });
+    document.getElementById('chartLabels').innerHTML = labels.map(l => `<span>${l}</span>`).join('');
                 }
 
     function renderWeekChart(historyArray) {
@@ -522,16 +503,15 @@ body.light-mode .calc-btn.equal {
     // گرفتن آخرین ۷ روز
     let dataPoints = dailyCloses.slice(-7);
     
-    // برچسب‌های روزهای هفته (شنبه تا جمعه)
-    const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
-    const today = new Date();
-    let labels = [];
-    for (let i = 6; i >= 0; i--) {
-        let d = new Date(today);
-        d.setDate(today.getDate() - i);
-        labels.push(days[d.getDay()]);
+// ساخت برچسب‌ها از زمان واقعی هر نقطه
+let labels = dataPoints.map((_, idx) => {
+    let item = historyArray[historyArray.length - 7 + idx];
+    if (item && item.time) {
+        let d = new Date(item.time);
+        return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
     }
-    labels.reverse(); 
+    return '';
+});
             
             
     const minVal = Math.min(...dataPoints);
@@ -588,7 +568,7 @@ body.light-mode .calc-btn.equal {
     const currentPrice = currentRates[title]?.current || '---';
     document.getElementById('chartCurrentPrice').innerText = currentPrice;
     window.currentChart = { title, fullHistory: history, status, percent, currentPrice: currentRates[title]?.current };
-   // openModal('chartModal');
+    openModal('chartModal');
     currentChartRange = 'day';
     document.querySelectorAll('#chartModal .range-btn').forEach(btn=>btn.classList.remove('active'));
     const dayBtn = document.querySelector('#chartModal .range-btn[data-range="day"]');
