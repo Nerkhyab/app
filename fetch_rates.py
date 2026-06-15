@@ -30,66 +30,132 @@ def get_rates():
     messages_tehran = get_messages(CHANNEL_TEHRAN)
     
     found_prices = {
-        "دالر هرات": "63.20",
-        "یورو هرات": "73.20",
-        "تومان چک": "0.47",
-        "تومان بانکی": "0.38",
-        "کلدار": "214.00"
+        "دالر هرات": None,
+        "یورو هرات": None,
+        "تومان چک": None,
+        "تومان بانکی": None,
+        "کلدار هرات": None,
+        "دلار تهران": None
     }
 
-    # ۱. استخراج دیتای هرات (طبق روال قبل)
+    # استخراج از کانال هرات
     for msg in reversed(messages_herat):
-        for key in found_prices.keys():
-            search_key = key.split()[0] 
-            if search_key in msg:
-                pattern = rf"{search_key}.*?(\d+[.,]\d+)"
-                match = re.search(pattern, msg)
-                if match:
-                    found_prices[key] = match.group(1).replace(',', '.')
+        # دالر هرات
+        if found_prices["دالر هرات"] is None:
+            m = re.search(r'دالر هرات\s*([\d,.]+)', msg)
+            if m:
+                found_prices["دالر هرات"] = m.group(1).replace(',', '')
+        # یورو هرات
+        if found_prices["یورو هرات"] is None:
+            m = re.search(r'یورو هرات\s*([\d,.]+)', msg)
+            if m:
+                found_prices["یورو هرات"] = m.group(1).replace(',', '')
+        # تومان چک
+        if found_prices["تومان چک"] is None:
+            m = re.search(r'تومان چک\s*([\d,.]+)', msg)
+            if m:
+                found_prices["تومان چک"] = m.group(1).replace(',', '')
+        # تومان بانکی
+        if found_prices["تومان بانکی"] is None:
+            m = re.search(r'تومان بانکی\s*([\d,.]+)', msg)
+            if m:
+                found_prices["تومان بانکی"] = m.group(1).replace(',', '')
+        # کلدار هرات
+        if found_prices["کلدار هرات"] is None:
+            m = re.search(r'کلدار\s*([\d,.]+)', msg)
+            if m:
+                found_prices["کلدار هرات"] = m.group(1).replace(',', '')
 
-    # ۲. استخراج هوشمند دلار تهران (اصلاح شده)
-    # این الگو هم عدد را می‌گیرد و هم کلمات بعد از آن را مدیریت می‌کند
-    tehran_pattern = r"دلار تهران ⛳️\s*:\s*([\d,]+)"
-    
+    # استخراج دلار تهران
+    tehran_pattern = r'دلار تهران\s*[:]*\s*([\d,]+)'
     for msg in reversed(messages_tehran):
-        match = re.search(tehran_pattern, msg)
-        if match:
-            raw_val = match.group(1).replace(',', '')
+        m = re.search(tehran_pattern, msg)
+        if m:
+            raw_val = m.group(1).replace(',', '')
             if raw_val.isdigit():
                 found_prices["دلار تهران"] = raw_val
                 break
 
+    # بارگذاری داده قدیمی
     old_data = load_old()
-    new_rates = {}
+    old_rates = old_data.get("rates", {})
 
+    # مقداردهی پیش‌فرض برای مواردی که پیدا نشد
+    defaults = {
+        "دالر هرات": "63.20",
+        "یورو هرات": "73.20",
+        "تومان چک": "0.47",
+        "تومان بانکی": "0.38",
+        "کلدار هرات": "214.00",
+        "دلار تهران": "174000"
+    }
+    for key in found_prices:
+        if found_prices[key] is None:
+            old_val = old_rates.get(key, {}).get("current", "0")
+            if old_val != "---":
+                found_prices[key] = str(old_val).replace(',', '')
+            else:
+                found_prices[key] = defaults.get(key, "0")
+
+    new_rates = {}
     for key, current_price in found_prices.items():
-        # دریافت مقدار قبلی
-        old_item = old_data.get("rates", {}).get(key, {})
-        old_val_str = str(old_item.get("current", "0")).replace(',', '')
-        
         try:
             nv = float(current_price)
+        except:
+            nv = 0.0
+
+        old_item = old_rates.get(key, {})
+        old_val_str = str(old_item.get("current", "0")).replace(',', '')
+        try:
             ov = float(old_val_str) if old_val_str != "---" else nv
         except:
-            continue
-        
-        # تعیین وضعیت صعودی/نزولی
-        status = "up" if nv > ov else ("down" if nv < ov else "same")
-        
-        # محاسبه درصد تغییرات
+            ov = nv
+
+        # وضعیت و درصد
+        if nv > ov:
+            status = "up"
+        elif nv < ov:
+            status = "down"
+        else:
+            status = "same"
+
         percent = "0.00%"
-        if ov != 0:
+        if ov != 0 and status != "same":
             diff = ((nv - ov) / ov) * 100
             percent = f"{diff:+.2f}%"
 
-        # مدیریت تاریخچه برای نمودار
-        history = [{"price": h, "ts": ""} if isinstance(h, (int, float)) else h for h in history]
-        if not history or history[-1]["price"] != nv:
-            history.append({"price": nv, "ts": datetime.now().isoformat()})
-            if len(history) > 20: history.pop(0)
+        # مدیریت تاریخچه با زمان
+        history = old_item.get("history", [])
+        # اگر تاریخچه قدیمی به فرمت عددی ساده بود، تبدیل به فرمت جدید
+        if history and isinstance(history[0], (int, float)):
+            new_history = []
+            for p in history:
+                new_history.append({"price": p, "time": ""})
+            history = new_history
+        # همچنین اگر قبلاً با کلید "ts" ذخیره شده بود، به "time" تغییر بده
+        if history and isinstance(history[0], dict) and "ts" in history[0]:
+            for h in history:
+                h["time"] = h.pop("ts")
 
-        # فرمت نمایش (تهران با جداکننده هزارگان، بقیه معمولی)
-        display_price = f"{int(nv):,}" if key == "دلار تهران" else current_price
+        # اضافه کردن نقطه جدید (فقط در صورت تغییر واقعی قیمت)
+        last_price = history[-1]["price"] if history else None
+        if last_price != nv:
+            history.append({
+                "price": nv,
+                "time": datetime.now().isoformat()
+            })
+        # نگهداری حداکثر 30 نقطه
+        if len(history) > 30:
+            history = history[-30:]
+
+        # فرمت نمایش
+        if key == "دلار تهران":
+            display_price = f"{int(nv):,}"
+        else:
+            if nv < 1:
+                display_price = f"{nv:.2f}"
+            else:
+                display_price = f"{nv:.2f}" if nv == int(nv) else str(nv)
 
         new_rates[key] = {
             "current": display_price,
