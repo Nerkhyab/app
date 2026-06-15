@@ -119,11 +119,14 @@ def get_rates():
         else:
             status = "same"
 
-        percent = "0.00%"
-        if ov != 0 and status != "same":
-            diff = ((nv - ov) / ov) * 100
-            percent = f"{diff:+.2f}%"
-
+        # محاسبه درصد بر اساس آخرین قیمت واقعی
+if nv == ov:
+    percent = "0.00%"
+elif ov != 0:
+    diff = ((nv - ov) / ov) * 100
+    percent = f"{diff:+.2f}%"
+else:
+    percent = "0.00%"
         # مدیریت تاریخچه با زمان
         history = old_item.get("history", [])
         # اگر تاریخچه قدیمی به فرمت عددی ساده بود، تبدیل به فرمت جدید
