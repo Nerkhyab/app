@@ -494,67 +494,53 @@ body.light-mode .calc-btn.equal {
                 }
 
     function renderWeekChart(historyArray) {
-    // استخراج قیمت ساعت ۱۸ هر روز (نقطه ششم هر روز)
-    const pointsPerDay = 6;
-    let dailyCloses = [];
-    for (let i = pointsPerDay - 1; i < historyArray.length; i += pointsPerDay) {
-        dailyCloses.push(historyArray[i]);
+    // historyArray: آرایه‌ای از اشیاء {price, time}
+    let points = historyArray.slice(-7); // آخرین ۷ نقطه
+    let dataPoints = points.map(p => p.price);
+    let labels = points.map(p => {
+        if (p && p.time) {
+            let d = new Date(p.time);
+            const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
+            return days[d.getDay()];
+        }
+        return '';
+    });
+    // اگر تعداد نقاط کمتر از ۷ است، تکرار آخرین مقدار
+    while (dataPoints.length < 7) {
+        dataPoints.unshift(dataPoints[0]);
+        labels.unshift(labels[0] || '');
     }
-    // گرفتن آخرین ۷ روز
-    let dataPoints = dailyCloses.slice(-7);
     
-// ساخت برچسب‌ها از زمان واقعی هر نقطه
-let labels = dataPoints.map((_, idx) => {
-    let item = historyArray[historyArray.length - 7 + idx];
-    if (item && item.time) {
-        let d = new Date(item.time);
-        return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-    }
-    return '';
-});
-            
-            
     const minVal = Math.min(...dataPoints);
     const maxVal = Math.max(...dataPoints);
     document.getElementById('minPrice').innerText = minVal.toLocaleString();
     document.getElementById('maxPrice').innerText = maxVal.toLocaleString();
-
+    
     const ctx = document.getElementById('priceChart').getContext('2d');
     if (chartInstance) chartInstance.destroy();
-    const grad = ctx.createLinearGradient(0, 0, 0, 200);
+    const grad = ctx.createLinearGradient(0,0,0,200);
     grad.addColorStop(0, '#00c853aa');
     grad.addColorStop(1, '#00c85300');
-
+    
     const isDark = !document.body.classList.contains('light-mode');
     const tickColor = isDark ? '#fff' : '#000';
     const gridColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
-
+    
     chartInstance = new Chart(ctx, {
         type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: dataPoints,
-                borderColor: '#00c853',
-                borderWidth: 2.5,
-                fill: true,
-                backgroundColor: grad,
-                tension: 0.3,
-                pointRadius: 0
-            }]
-        },
+        data: { labels: labels, datasets: [{ data: dataPoints, borderColor: '#00c853', borderWidth: 2.5, fill: true, backgroundColor: grad, tension: 0.3, pointRadius: 0 }] },
         options: {
             responsive: true,
             maintainAspectRatio: true,
             plugins: { legend: { display: false } },
             scales: {
-                y: { position: 'left', ticks: { color: tickColor }, grid: { color: gridColor } },
+                y: { position: 'right', ticks: { color: tickColor }, grid: { color: gridColor } },
                 x: { ticks: { color: tickColor }, grid: { color: gridColor } }
             }
         }
     });
     document.getElementById('chartLabels').innerHTML = labels.map(l => `<span>${l}</span>`).join('');
-                                                        }
+                      }
                 function showChart(title, history, iconHtml, status, percent) {
     document.getElementById('chartTitle').innerText = title;
     document.getElementById('chartChange').innerHTML = `<span class="${status==='up'?'text-up':'text-down'}">${percent} <i class="fas ${status==='up'?'fa-arrow-up':'fa-arrow-down'}"></i></span>`;
