@@ -587,7 +587,7 @@
 
         function showChart(title, history, iconHtml, status, percent) {
             document.getElementById('rateLabel').innerText = title;
-            openModal('chartModal');
+            // openModal('chartModal');
             setTimeout(() => {
                 renderChart(history, 'week');
             }, 150);
