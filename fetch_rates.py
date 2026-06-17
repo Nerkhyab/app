@@ -82,10 +82,12 @@ def get_rates():
         "کلدار هرات": "214.00",
         "دلار تهران": "174000"
     }
+
+    # ====== ۱. اگر قیمت جدید پیدا نشد، مقدار قبلی را برای همه ارزها نگه دار ======
     for key in found_prices:
         if found_prices[key] is None:
             old_val = old_rates.get(key, {}).get("current", "0")
-            if old_val != "---":
+            if old_val != "---" and old_val != "0":
                 found_prices[key] = str(old_val).replace(',', '')
             else:
                 found_prices[key] = defaults.get(key, "0")
@@ -104,6 +106,16 @@ def get_rates():
         except:
             ov = nv
 
+        # ====== ۲. اگر قیمت جدید صفر بود، قیمت قبلی را برای همه ارزها جایگزین کن ======
+        if nv == 0.0:
+            old_val_str = str(old_item.get("current", "0")).replace(',', '')
+            try:
+                old_val = float(old_val_str) if old_val_str != "---" else None
+                if old_val is not None and old_val != 0.0:
+                    nv = old_val
+            except:
+                pass
+
         # وضعیت
         if nv > ov:
             status = "up"
@@ -121,10 +133,10 @@ def get_rates():
         else:
             percent = "0.00%"
 
-        # ====== مدیریت تاریخچه با زمان (اصلاح شده) ======
+        # ====== مدیریت تاریخچه با زمان ======
         history = old_item.get("history", [])
 
-        # ۱. اگر تاریخچه به فرمت عددی ساده است، تبدیل با زمان تخمینی
+        # تبدیل تاریخچه قدیمی (اگر به فرمت عددی ساده است)
         if history and isinstance(history[0], (int, float)):
             new_history = []
             now = datetime.now()
@@ -134,18 +146,18 @@ def get_rates():
                 new_history.append({"price": p, "time": dt.isoformat()})
             history = new_history
 
-        # ۲. اگر قبلاً با کلید "ts" ذخیره شده بود، به "time" تغییر بده
+        # اگر قبلاً با کلید "ts" ذخیره شده بود، به "time" تغییر بده
         if history and isinstance(history[0], dict) and "ts" in history[0]:
             for h in history:
                 h["time"] = h.pop("ts")
 
-        # ۳. اضافه کردن نقطه جدید (هر بار که اسکریپت اجرا شود، حتی اگر قیمت تغییر نکرده باشد)
+        # اضافه کردن نقطه جدید (هر بار که اسکریپت اجرا شود، حتی اگر قیمت تغییر نکرده باشد)
         history.append({
             "price": nv,
             "time": datetime.now().isoformat()
         })
 
-        # ۴. نگهداری حداکثر ۳۰ نقطه
+        # نگهداری حداکثر ۳۰ نقطه
         if len(history) > 30:
             history = history[-30:]
 
