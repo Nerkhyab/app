@@ -121,7 +121,7 @@ def get_rates():
         else:
             percent = "0.00%"
 
-        # ====== مدیریت تاریخچه با زمان ======
+        # ====== مدیریت تاریخچه با زمان (اصلاح شده) ======
         history = old_item.get("history", [])
 
         # ۱. اگر تاریخچه به فرمت عددی ساده است، تبدیل با زمان تخمینی
@@ -139,13 +139,11 @@ def get_rates():
             for h in history:
                 h["time"] = h.pop("ts")
 
-        # ۳. اضافه کردن نقطه جدید (فقط در صورت تغییر قیمت)
-        last_price = history[-1]["price"] if history else None
-        if last_price != nv:
-            history.append({
-                "price": nv,
-                "time": datetime.now().isoformat()
-            })
+        # ۳. اضافه کردن نقطه جدید (هر بار که اسکریپت اجرا شود، حتی اگر قیمت تغییر نکرده باشد)
+        history.append({
+            "price": nv,
+            "time": datetime.now().isoformat()
+        })
 
         # ۴. نگهداری حداکثر ۳۰ نقطه
         if len(history) > 30:
