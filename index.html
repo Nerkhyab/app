@@ -421,32 +421,91 @@
         if(currentTheme==='light') document.body.classList.add('light-mode');
         else document.body.classList.remove('light-mode');
 
-        function createCardHTML(item, r) {
-            const isUp = r.status === 'up';
-            const cardDiv = document.createElement('div');
-            cardDiv.className = `card ${isUp ? 'active-up' : 'active-down'}`;
-            cardDiv.setAttribute('data-id', item.id);
-            let iconHtml = `<img class="icon-img" src="${item.icon}" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">`;
-            if(item.icon === "custom-mix") iconHtml = `<div class="custom-mix-icon"><img src="https://flagcdn.com/w160/us.png"><img src="https://flagcdn.com/w160/ir.png"></div>`;
-            cardDiv.innerHTML = `
-                <div class="card-main-row">
-                    <div class="list-left">
-                        <div class="status-badge ${isUp ? 'text-up' : 'text-down'}">
-                            <span class="circle-arrow"><i class="fas ${isUp ? 'fa-arrow-up' : 'fa-arrow-down'}"></i></span>
-                            <span>${r.percent}</span>
-                        </div>
-                        <div class="price-val">${r.current}</div>
-                    </div>
-                    <div class="list-right">
-                        <div class="card-info">
-                            <div><b>${item.key}</b><div style="font-size:0.7rem;opacity:0.6;">${item.sub}</div></div>
-                            ${iconHtml}
-                        </div>
-                    </div>
-                </div>`;
-            cardDiv.onclick = (e) => { e.stopPropagation(); showChart(item.key, r.history, iconHtml, r.status, r.percent); };
-            return cardDiv;
+        function getFirstPriceOfDay(historyArray, targetTime) {
+    const dailyMap = {};
+    for (let item of historyArray) {
+        const day = item.time ? item.time.split('T')[0] : '';
+        if (!dailyMap[day]) dailyMap[day] = [];
+        dailyMap[day].push(item);
+    }
+    const targetDay = targetTime.split('T')[0];
+    const dayPoints = dailyMap[targetDay] || [];
+    if (dayPoints.length === 0) return null;
+    return dayPoints[0].price;
         }
+        
+        function createCardHTML(item, r) {
+    // ====== محاسبه اولین قیمت روز ======
+    const now = new Date();
+    const nowISO = now.toISOString();
+    const firstPrice = getFirstPriceOfDay(r.history, nowISO);
+    let displayPercent = r.percent;
+    let displayStatus = r.status;
+    let currentPrice = parseFloat(r.current.replace(/,/g, ''));
+
+    if (firstPrice !== null && firstPrice !== 0) {
+        const diffPercent = ((currentPrice - firstPrice) / firstPrice) * 100;
+        displayPercent = diffPercent.toFixed(2) + '%';
+        if (diffPercent > 0) displayStatus = 'up';
+        else if (diffPercent < 0) displayStatus = 'down';
+        else displayStatus = 'same';
+    }
+
+    const isUp = displayStatus === 'up';
+    const isDown = displayStatus === 'down';
+    const isSame = displayStatus === 'same';
+
+    // ====== ساخت کارت ======
+    const cardDiv = document.createElement('div');
+    
+    // هاله فقط در صورت تغییر قیمت و بازار باز (۸ تا ۱۸)
+    const hour = now.getHours();
+    const isMarketOpen = (hour >= 8 && hour < 18);
+    let cardClass = 'card';
+    if (isMarketOpen && !isSame) {
+        cardClass += isUp ? ' active-up' : ' active-down';
+    }
+    cardDiv.className = cardClass;
+    cardDiv.setAttribute('data-id', item.id);
+
+    // آیکون
+    let iconHtml = `<img class="icon-img" src="${item.icon}" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">`;
+    if(item.icon === "custom-mix") iconHtml = `<div class="custom-mix-icon"><img src="https://flagcdn.com/w160/us.png"><img src="https://flagcdn.com/w160/ir.png"></div>`;
+
+    // فلش و رنگ بر اساس وضعیت جدید
+    let arrowIcon = '';
+    let badgeClass = '';
+    if (isUp) {
+        arrowIcon = 'fa-arrow-up';
+        badgeClass = 'text-up';
+    } else if (isDown) {
+        arrowIcon = 'fa-arrow-down';
+        badgeClass = 'text-down';
+    } else {
+        arrowIcon = 'fa-minus';
+        badgeClass = 'text-neutral';
+    }
+
+    cardDiv.innerHTML = `
+        <div class="card-main-row">
+            <div class="list-left">
+                <div class="status-badge ${badgeClass}">
+                    <span class="circle-arrow"><i class="fas ${arrowIcon}"></i></span>
+                    <span>${displayPercent}</span>
+                </div>
+                <div class="price-val">${r.current}</div>
+            </div>
+            <div class="list-right">
+                <div class="card-info">
+                    <div><b>${item.key}</b><div style="font-size:0.7rem;opacity:0.6;">${item.sub}</div></div>
+                    ${iconHtml}
+                </div>
+            </div>
+        </div>`;
+    cardDiv.onclick = (e) => { e.stopPropagation(); showChart(item.key, r.history, iconHtml, displayStatus, displayPercent); };
+    return cardDiv;
+            }
+        
 
         function renderCards() {
             const container = document.getElementById('main-container');
