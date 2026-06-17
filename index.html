@@ -474,38 +474,38 @@
         let chartInstance = null;
 
         function generateChartData(historyArray, count) {
-            // اگر تاریخچه شامل اعداد ساده است، تبدیل کن
-            let points = historyArray;
-            if (points.length > 0 && typeof points[0] === 'number') {
-                const now = new Date();
-                points = points.map((p, i) => ({
-                    price: p,
-                    time: new Date(now - (points.length - i) * 86400000).toISOString()
-                }));
-            }
+    let points = historyArray;
+    // اگر داده به فرمت قدیمی (اعداد ساده) است، تبدیل کن
+    if (points.length > 0 && typeof points[0] === 'number') {
+        const now = new Date();
+        points = points.map((p, i) => ({
+            price: p,
+            time: new Date(now - (points.length - i) * 86400000).toISOString()
+        }));
+    }
 
-            // ===== گروه‌بندی بر اساس روز و گرفتن آخرین قیمت هر روز =====
-            const dailyMap = {};
-            for (let item of points) {
-                const day = item.time ? item.time.split('T')[0] : '1970-01-01';
-                dailyMap[day] = item.price;
-            }
-            let dailyPoints = Object.entries(dailyMap)
-                .sort((a, b) => a[0].localeCompare(b[0]))
-                .map(([day, price]) => ({ price: price, time: day + 'T00:00:00' }));
+    // گروه‌بندی بر اساس روز و گرفتن آخرین قیمت هر روز
+    const dailyMap = {};
+    for (let item of points) {
+        const day = item.time ? item.time.split('T')[0] : '1970-01-01';
+        dailyMap[day] = item.price; // آخرین قیمت برای هر روز
+    }
+    let dailyPoints = Object.entries(dailyMap)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([day, price]) => ({ price: price, time: day + 'T00:00:00' }));
 
-            let lastDays = dailyPoints.slice(-count);
-            if (lastDays.length < count) {
-                while (lastDays.length < count) lastDays.unshift(lastDays[0]);
-            }
+    let lastDays = dailyPoints.slice(-count);
+    if (lastDays.length < count) {
+        while (lastDays.length < count) lastDays.unshift(lastDays[0]);
+    }
 
-            let labels = lastDays.map(p => {
-                let d = new Date(p.time);
-                return `${d.getMonth()+1}/${d.getDate()}`;
-            });
-            let usdData = lastDays.map(p => p.price);
-            let eurData = usdData.map(v => +(v * 1.05).toFixed(3)); // خط دوم فرضی
-            return { labels, usdData, eurData };
+    let labels = lastDays.map(p => {
+        let d = new Date(p.time);
+        return `${d.getMonth()+1}/${d.getDate()}`;
+    });
+    let usdData = lastDays.map(p => p.price);
+    let eurData = usdData.map(v => +(v * 1.05).toFixed(3));
+    return { labels, usdData, eurData };
         }
 
         
