@@ -2,9 +2,8 @@ import requests
 import re
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
-# منابع دیتا
 CHANNEL_HERAT = "https://t.me/s/NerkhYab_Khorasan"
 CHANNEL_TEHRAN = "https://t.me/s/dollarsbze"
 
@@ -38,7 +37,6 @@ def get_rates():
         "دلار تهران": None
     }
 
-    # استخراج از کانال هرات
     for msg in reversed(messages_herat):
         if found_prices["دالر هرات"] is None:
             m = re.search(r'دالر هرات\s*([\d,.]+)', msg)
@@ -61,7 +59,6 @@ def get_rates():
             if m:
                 found_prices["کلدار هرات"] = m.group(1).replace(',', '')
 
-    # استخراج دلار تهران
     tehran_pattern = r'دلار تهران\s*[:]*\s*([\d,]+)'
     for msg in reversed(messages_tehran):
         m = re.search(tehran_pattern, msg)
@@ -83,7 +80,6 @@ def get_rates():
         "دلار تهران": "174000"
     }
 
-    # ====== ۱. اگر قیمت جدید پیدا نشد، مقدار قبلی را برای همه ارزها نگه دار ======
     for key in found_prices:
         if found_prices[key] is None:
             old_val = old_rates.get(key, {}).get("current", "0")
@@ -106,17 +102,6 @@ def get_rates():
         except:
             ov = nv
 
-        # ====== ۲. اگر قیمت جدید صفر بود، قیمت قبلی را برای همه ارزها جایگزین کن ======
-        if nv == 0.0:
-            old_val_str = str(old_item.get("current", "0")).replace(',', '')
-            try:
-                old_val = float(old_val_str) if old_val_str != "---" else None
-                if old_val is not None and old_val != 0.0:
-                    nv = old_val
-            except:
-                pass
-
-        # وضعیت
         if nv > ov:
             status = "up"
         elif nv < ov:
@@ -124,7 +109,6 @@ def get_rates():
         else:
             status = "same"
 
-        # درصد تغییر
         if nv == ov:
             percent = "0.00%"
         elif ov != 0:
@@ -133,7 +117,7 @@ def get_rates():
         else:
             percent = "0.00%"
 
-        # ====== مدیریت تاریخچه با زمان ======
+        # ====== مدیریت تاریخچه با زمان (هر بار اجرا یک نقطه جدید اضافه می‌شود) ======
         history = old_item.get("history", [])
 
         # تبدیل تاریخچه قدیمی (اگر به فرمت عددی ساده است)
@@ -161,7 +145,6 @@ def get_rates():
         if len(history) > 30:
             history = history[-30:]
 
-        # فرمت نمایش
         if key == "دلار تهران":
             display_price = f"{int(nv):,}"
         else:
