@@ -2,10 +2,11 @@ import requests
 import re
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
+# منابع دیتا
 CHANNEL_HERAT = "https://t.me/s/NerkhYab_Khorasan"
-CHANNEL_TEHRAN = "https://t.me/s/dollarsbze"
+CHANNEL_TEHRAN = "https://t.me/s/dollar3sbze"
 
 def clean_html(raw):
     return re.sub(r'<.*?>', '', raw)
@@ -37,35 +38,35 @@ def get_rates():
         "دلار تهران": None
     }
 
-    # ====== استخراج از کانال هرات (فقط اعداد قبل از کلمات کلیدی) ======
+    # استخراج از کانال هرات
     for msg in reversed(messages_herat):
-        # ۱. دالر هرات
-        if found_prices["دالر هرات"] is None and "دالر" in msg:
-            m = re.search(r'(\d+[.,]\d+)\s*(?:خـرید|فروش|💵)', msg)
+        # دالر هرات
+        if found_prices["دالر هرات"] is None:
+            m = re.search(r'دالر هرات\s*([\d,.]+)', msg)
             if m:
-                found_prices["دالر هرات"] = m.group(1).replace(',', '.')
-        # ۲. یورو هرات
-        if found_prices["یورو هرات"] is None and "یورو" in msg:
-            m = re.search(r'(\d+[.,]\d+)\s*(?:خـرید|فروش|💶)', msg)
+                found_prices["دالر هرات"] = m.group(1).replace(',', '')
+        # یورو هرات
+        if found_prices["یورو هرات"] is None:
+            m = re.search(r'یورو هرات\s*([\d,.]+)', msg)
             if m:
-                found_prices["یورو هرات"] = m.group(1).replace(',', '.')
-        # ۳. تومان چک
-        if found_prices["تومان چک"] is None and "تومان چک" in msg:
-            m = re.search(r'(\d+[.,]\d+)\s*(?:خـرید|فروش|💎)', msg)
+                found_prices["یورو هرات"] = m.group(1).replace(',', '')
+        # تومان چک
+        if found_prices["تومان چک"] is None:
+            m = re.search(r'تومان چک\s*([\d,.]+)', msg)
             if m:
-                found_prices["تومان چک"] = m.group(1).replace(',', '.')
-        # ۴. تومان بانکی
-        if found_prices["تومان بانکی"] is None and "تومان بانکی" in msg:
-            m = re.search(r'(\d+[.,]\d+)\s*(?:خـرید|فروش|💳)', msg)
+                found_prices["تومان چک"] = m.group(1).replace(',', '')
+        # تومان بانکی
+        if found_prices["تومان بانکی"] is None:
+            m = re.search(r'تومان بانکی\s*([\d,.]+)', msg)
             if m:
-                found_prices["تومان بانکی"] = m.group(1).replace(',', '.')
-        # ۵. کلدار هرات
-        if found_prices["کلدار هرات"] is None and "کلدار" in msg:
-            m = re.search(r'(\d+[.,]\d+)\s*(?:خـرید|فروش|🇵🇰)', msg)
+                found_prices["تومان بانکی"] = m.group(1).replace(',', '')
+        # کلدار هرات
+        if found_prices["کلدار هرات"] is None:
+            m = re.search(r'کلدار\s*([\d,.]+)', msg)
             if m:
-                found_prices["کلدار هرات"] = m.group(1).replace(',', '.')
+                found_prices["کلدار هرات"] = m.group(1).replace(',', '')
 
-    # ====== استخراج دلار تهران (کانال جداگانه) ======
+    # استخراج دلار تهران
     tehran_pattern = r'دلار تهران\s*[:]*\s*([\d,]+)'
     for msg in reversed(messages_tehran):
         m = re.search(tehran_pattern, msg)
@@ -75,9 +76,11 @@ def get_rates():
                 found_prices["دلار تهران"] = raw_val
                 break
 
+    # بارگذاری داده قدیمی
     old_data = load_old()
     old_rates = old_data.get("rates", {})
 
+    # مقداردهی پیش‌فرض برای مواردی که پیدا نشد
     defaults = {
         "دالر هرات": "63.20",
         "یورو هرات": "73.20",
@@ -86,12 +89,10 @@ def get_rates():
         "کلدار هرات": "214.00",
         "دلار تهران": "174000"
     }
-
-    # ====== اگر قیمت جدید پیدا نشد، مقدار قبلی را حفظ کن ======
     for key in found_prices:
         if found_prices[key] is None:
             old_val = old_rates.get(key, {}).get("current", "0")
-            if old_val != "---" and old_val != "0":
+            if old_val != "---":
                 found_prices[key] = str(old_val).replace(',', '')
             else:
                 found_prices[key] = defaults.get(key, "0")
@@ -118,39 +119,39 @@ def get_rates():
         else:
             status = "same"
 
-        if nv == ov:
-            percent = "0.00%"
-        elif ov != 0:
-            diff = ((nv - ov) / ov) * 100
-            percent = f"{diff:+.2f}%"
-        else:
-            percent = "0.00%"
-
-        # ====== مدیریت تاریخچه با زمان ======
+        # محاسبه درصد بر اساس آخرین قیمت واقعی
+if nv == ov:
+    percent = "0.00%"
+elif ov != 0:
+    diff = ((nv - ov) / ov) * 100
+    percent = f"{diff:+.2f}%"
+else:
+    percent = "0.00%"
+        # مدیریت تاریخچه با زمان
         history = old_item.get("history", [])
-
+        # اگر تاریخچه قدیمی به فرمت عددی ساده بود، تبدیل به فرمت جدید
         if history and isinstance(history[0], (int, float)):
             new_history = []
-            now = datetime.now()
-            for i, p in enumerate(history):
-                days_ago = len(history) - i
-                dt = now - timedelta(days=days_ago)
-                new_history.append({"price": p, "time": dt.isoformat()})
+            for p in history:
+                new_history.append({"price": p, "time": ""})
             history = new_history
-
+        # همچنین اگر قبلاً با کلید "ts" ذخیره شده بود، به "time" تغییر بده
         if history and isinstance(history[0], dict) and "ts" in history[0]:
             for h in history:
                 h["time"] = h.pop("ts")
 
-        # اضافه کردن نقطه جدید (هر بار که اسکریپت اجرا شود)
-        history.append({
-            "price": nv,
-            "time": datetime.now().isoformat()
-        })
-
+        # اضافه کردن نقطه جدید (فقط در صورت تغییر واقعی قیمت)
+        last_price = history[-1]["price"] if history else None
+        if last_price != nv:
+            history.append({
+                "price": nv,
+                "time": datetime.now().isoformat()
+            })
+        # نگهداری حداکثر 30 نقطه
         if len(history) > 30:
             history = history[-30:]
 
+        # فرمت نمایش
         if key == "دلار تهران":
             display_price = f"{int(nv):,}"
         else:
