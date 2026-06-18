@@ -28,7 +28,7 @@ jobs:
           API_ID: ${{ secrets.API_ID }}
           API_HASH: ${{ secrets.API_HASH }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: python main.py
+        run: python fetch_rates.py
 
       - name: Commit and push changes
         run: |
