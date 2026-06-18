@@ -1,0 +1,21 @@
+name: Update Rates
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip install requests
+      - run: python fetch_rates.py
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add last_rates.json
+          git commit -m "update rates" || echo "no changes"
+          git push
