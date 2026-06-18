@@ -2,8 +2,8 @@ name: Update Currency Rates
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # اجرای خودکار هر 15 دقیقه
-  workflow_dispatch:        # دکمه اجرای دستی
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,13 +21,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests telethon beautifulsoup4 lxml
+          pip install requests beautifulsoup4 lxml
 
       - name: Run fetch script
-        env:
-          API_ID: ${{ secrets.API_ID }}
-          API_HASH: ${{ secrets.API_HASH }}
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: python fetch_rates.py
 
       - name: Commit and push changes
