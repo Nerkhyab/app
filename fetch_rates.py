@@ -2,7 +2,7 @@ import requests
 import re
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 CHANNEL_HERAT = "https://t.me/s/NerkhYab_Khorasan"
 CHANNEL_TEHRAN = "https://t.me/s/dollarsbze"
@@ -37,28 +37,35 @@ def get_rates():
         "دلار تهران": None
     }
 
+    # ====== استخراج از کانال هرات (هر پیام یک ارز) ======
     for msg in reversed(messages_herat):
-        if found_prices["دالر هرات"] is None:
-            m = re.search(r'دالر هرات\s*([\d,.]+)', msg)
+        # ۱. دالر هرات
+        if found_prices["دالر هرات"] is None and "دالر" in msg:
+            m = re.search(r'(\d+[.,]\d+)', msg)
             if m:
-                found_prices["دالر هرات"] = m.group(1).replace(',', '')
-        if found_prices["یورو هرات"] is None:
-            m = re.search(r'یورو هرات\s*([\d,.]+)', msg)
+                found_prices["دالر هرات"] = m.group(1).replace(',', '.')
+        # ۲. یورو هرات
+        if found_prices["یورو هرات"] is None and "یورو" in msg:
+            m = re.search(r'(\d+[.,]\d+)', msg)
             if m:
-                found_prices["یورو هرات"] = m.group(1).replace(',', '')
-        if found_prices["تومان چک"] is None:
-            m = re.search(r'تومان چک\s*([\d,.]+)', msg)
+                found_prices["یورو هرات"] = m.group(1).replace(',', '.')
+        # ۳. تومان چک
+        if found_prices["تومان چک"] is None and "تومان چک" in msg:
+            m = re.search(r'(\d+[.,]\d+)', msg)
             if m:
-                found_prices["تومان چک"] = m.group(1).replace(',', '')
-        if found_prices["تومان بانکی"] is None:
-            m = re.search(r'تومان بانکی\s*([\d,.]+)', msg)
+                found_prices["تومان چک"] = m.group(1).replace(',', '.')
+        # ۴. تومان بانکی
+        if found_prices["تومان بانکی"] is None and "تومان بانکی" in msg:
+            m = re.search(r'(\d+[.,]\d+)', msg)
             if m:
-                found_prices["تومان بانکی"] = m.group(1).replace(',', '')
-        if found_prices["کلدار هرات"] is None:
-            m = re.search(r'کلدار\s*([\d,.]+)', msg)
+                found_prices["تومان بانکی"] = m.group(1).replace(',', '.')
+        # ۵. کلدار هرات
+        if found_prices["کلدار هرات"] is None and "کلدار" in msg:
+            m = re.search(r'(\d+[.,]\d+)', msg)
             if m:
-                found_prices["کلدار هرات"] = m.group(1).replace(',', '')
+                found_prices["کلدار هرات"] = m.group(1).replace(',', '.')
 
+    # ====== استخراج دلار تهران (کانال جداگانه) ======
     tehran_pattern = r'دلار تهران\s*[:]*\s*([\d,]+)'
     for msg in reversed(messages_tehran):
         m = re.search(tehran_pattern, msg)
@@ -80,6 +87,7 @@ def get_rates():
         "دلار تهران": "174000"
     }
 
+    # ====== اگر قیمت جدید پیدا نشد، مقدار قبلی را حفظ کن ======
     for key in found_prices:
         if found_prices[key] is None:
             old_val = old_rates.get(key, {}).get("current", "0")
@@ -102,6 +110,7 @@ def get_rates():
         except:
             ov = nv
 
+        # وضعیت و درصد
         if nv > ov:
             status = "up"
         elif nv < ov:
@@ -117,10 +126,9 @@ def get_rates():
         else:
             percent = "0.00%"
 
-        # ====== مدیریت تاریخچه با زمان (هر بار اجرا یک نقطه جدید اضافه می‌شود) ======
+        # ====== مدیریت تاریخچه با زمان ======
         history = old_item.get("history", [])
 
-        # تبدیل تاریخچه قدیمی (اگر به فرمت عددی ساده است)
         if history and isinstance(history[0], (int, float)):
             new_history = []
             now = datetime.now()
@@ -130,18 +138,16 @@ def get_rates():
                 new_history.append({"price": p, "time": dt.isoformat()})
             history = new_history
 
-        # اگر قبلاً با کلید "ts" ذخیره شده بود، به "time" تغییر بده
         if history and isinstance(history[0], dict) and "ts" in history[0]:
             for h in history:
                 h["time"] = h.pop("ts")
 
-        # اضافه کردن نقطه جدید (هر بار که اسکریپت اجرا شود، حتی اگر قیمت تغییر نکرده باشد)
+        # اضافه کردن نقطه جدید (هر بار که اسکریپت اجرا شود)
         history.append({
             "price": nv,
             "time": datetime.now().isoformat()
         })
 
-        # نگهداری حداکثر ۳۰ نقطه
         if len(history) > 30:
             history = history[-30:]
 
