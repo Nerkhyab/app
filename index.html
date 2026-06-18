@@ -233,23 +233,20 @@
         .price-tag .value span { color: #00c853; }
         #chartStats { display: none; }
 
-        /* نقطه نرخ زنده */
-        #liveStatus {
-            position: fixed;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.6);
-            padding: 6px 16px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            backdrop-filter: blur(10px);
-            z-index: 999;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s ease;
-        }
+        /* کد کامل #liveStatus با برچسب سفید و متن سبز (فقط حالت روشن) */
+body.light-mode #liveStatus {
+    background: #ffffff !important;
+    border: 1px solid #e0e0e0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+}
+
+body.light-mode .live-label {
+    color: #00c853 !important;
+}
+
+body.light-mode .live-dot {
+    background-color: #00c853 !important;
+}
         .live-dot {
             display: inline-block;
             width: 10px;
