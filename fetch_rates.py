@@ -37,31 +37,31 @@ def get_rates():
         "دلار تهران": None
     }
 
-    # ====== استخراج از کانال هرات (هر پیام یک ارز) ======
+    # ====== استخراج از کانال هرات (فقط اعداد قبل از کلمات کلیدی) ======
     for msg in reversed(messages_herat):
         # ۱. دالر هرات
         if found_prices["دالر هرات"] is None and "دالر" in msg:
-            m = re.search(r'(\d+[.,]\d+)', msg)
+            m = re.search(r'(\d+[.,]\d+)\s*(?:خـرید|فروش|💵)', msg)
             if m:
                 found_prices["دالر هرات"] = m.group(1).replace(',', '.')
         # ۲. یورو هرات
         if found_prices["یورو هرات"] is None and "یورو" in msg:
-            m = re.search(r'(\d+[.,]\d+)', msg)
+            m = re.search(r'(\d+[.,]\d+)\s*(?:خـرید|فروش|💶)', msg)
             if m:
                 found_prices["یورو هرات"] = m.group(1).replace(',', '.')
         # ۳. تومان چک
         if found_prices["تومان چک"] is None and "تومان چک" in msg:
-            m = re.search(r'(\d+[.,]\d+)', msg)
+            m = re.search(r'(\d+[.,]\d+)\s*(?:خـرید|فروش|💎)', msg)
             if m:
                 found_prices["تومان چک"] = m.group(1).replace(',', '.')
         # ۴. تومان بانکی
         if found_prices["تومان بانکی"] is None and "تومان بانکی" in msg:
-            m = re.search(r'(\d+[.,]\d+)', msg)
+            m = re.search(r'(\d+[.,]\d+)\s*(?:خـرید|فروش|💳)', msg)
             if m:
                 found_prices["تومان بانکی"] = m.group(1).replace(',', '.')
         # ۵. کلدار هرات
         if found_prices["کلدار هرات"] is None and "کلدار" in msg:
-            m = re.search(r'(\d+[.,]\d+)', msg)
+            m = re.search(r'(\d+[.,]\d+)\s*(?:خـرید|فروش|🇵🇰)', msg)
             if m:
                 found_prices["کلدار هرات"] = m.group(1).replace(',', '.')
 
