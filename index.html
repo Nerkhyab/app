@@ -414,12 +414,13 @@
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
         function updateDateTime() {
-            const now = new Date(); now.setHours(now.getHours()+1);
-            let h = now.getHours(); const m = String(now.getMinutes()).padStart(2,'0'); const s = String(now.getSeconds()).padStart(2,'0');
-            const ap = h>=12?'PM':'AM'; h = h%12||12;
-            document.getElementById('timeDisplay').innerText = `${String(h).padStart(2,'0')}:${m}:${s} ${ap}`;
-            const j = jalaali.toJalaali(now);
-            document.getElementById('dateDisplay').innerText = `${j.jy}/${j.jm}/${j.jd}`;
+    const now = new Date(); now.setHours(now.getHours()+1);
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('timeDisplay').innerText = `${h}:${m}:${s}`;
+    const j = jalaali.toJalaali(now);
+    document.getElementById('dateDisplay').innerText = `${j.jy}/${j.jm}/${j.jd}`;
         }
         setInterval(updateDateTime,1000); updateDateTime();
 
