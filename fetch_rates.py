@@ -4,7 +4,6 @@ import json
 import os
 from datetime import datetime, timedelta
 
-# منابع دیتا
 CHANNEL_HERAT = "https://t.me/s/NerkhYab_Khorasan"
 CHANNEL_TEHRAN = "https://t.me/s/dollar3sbze"
 
@@ -40,26 +39,31 @@ def get_rates():
 
     # استخراج از کانال هرات
     for msg in reversed(messages_herat):
-        if found_prices["دالر هرات"] is None:
-            m = re.search(r'دالر هرات\s*([\d,.]+)', msg)
+        # دالر هرات
+        if "دالر" in msg and found_prices["دالر هرات"] is None:
+            m = re.search(r'(\d+[.,]\d+)\s*خـرید', msg)
             if m:
-                found_prices["دالر هرات"] = m.group(1).replace(',', '')
-        if found_prices["یورو هرات"] is None:
-            m = re.search(r'یورو هرات\s*([\d,.]+)', msg)
+                found_prices["دالر هرات"] = m.group(1).replace(',', '.')
+        # یورو هرات
+        if "یورو" in msg and found_prices["یورو هرات"] is None:
+            m = re.search(r'(\d+[.,]\d+)\s*خـرید', msg)
             if m:
-                found_prices["یورو هرات"] = m.group(1).replace(',', '')
-        if found_prices["تومان چک"] is None:
-            m = re.search(r'تومان چک\s*([\d,.]+)', msg)
+                found_prices["یورو هرات"] = m.group(1).replace(',', '.')
+        # تومان چک
+        if "تومان چک" in msg and found_prices["تومان چک"] is None:
+            m = re.search(r'(\d+[.,]\d+)\s*خـرید', msg)
             if m:
-                found_prices["تومان چک"] = m.group(1).replace(',', '')
-        if found_prices["تومان بانکی"] is None:
-            m = re.search(r'تومان بانکی\s*([\d,.]+)', msg)
+                found_prices["تومان چک"] = m.group(1).replace(',', '.')
+        # تومان بانکی
+        if "تومان بانکی" in msg and found_prices["تومان بانکی"] is None:
+            m = re.search(r'(\d+[.,]\d+)\s*خـرید', msg)
             if m:
-                found_prices["تومان بانکی"] = m.group(1).replace(',', '')
-        if found_prices["کلدار هرات"] is None:
-            m = re.search(r'کلدار\s*([\d,.]+)', msg)
+                found_prices["تومان بانکی"] = m.group(1).replace(',', '.')
+        # کلدار هرات
+        if "کلدار" in msg and found_prices["کلدار هرات"] is None:
+            m = re.search(r'(\d+[.,]\d+)\s*خـرید', msg)
             if m:
-                found_prices["کلدار هرات"] = m.group(1).replace(',', '')
+                found_prices["کلدار هرات"] = m.group(1).replace(',', '.')
 
     # استخراج دلار تهران
     tehran_pattern = r'دلار تهران\s*[:]*\s*([\d,]+)'
@@ -83,7 +87,7 @@ def get_rates():
         "دلار تهران": "174000"
     }
 
-    # ====== ۱. اگر قیمت جدید پیدا نشد، مقدار قبلی را برای همه ارزها نگه دار ======
+    # اگر قیمت جدید پیدا نشد، مقدار قبلی را حفظ کن
     for key in found_prices:
         if found_prices[key] is None:
             old_val = old_rates.get(key, {}).get("current", "0")
@@ -106,17 +110,7 @@ def get_rates():
         except:
             ov = nv
 
-        # ====== ۲. اگر قیمت جدید صفر بود، قیمت قبلی را برای همه ارزها جایگزین کن ======
-        if nv == 0.0:
-            old_val_str = str(old_item.get("current", "0")).replace(',', '')
-            try:
-                old_val = float(old_val_str) if old_val_str != "---" else None
-                if old_val is not None and old_val != 0.0:
-                    nv = old_val
-            except:
-                pass
-
-        # وضعیت
+        # وضعیت و درصد
         if nv > ov:
             status = "up"
         elif nv < ov:
@@ -124,7 +118,6 @@ def get_rates():
         else:
             status = "same"
 
-        # درصد تغییر
         if nv == ov:
             percent = "0.00%"
         elif ov != 0:
@@ -133,7 +126,7 @@ def get_rates():
         else:
             percent = "0.00%"
 
-        # ====== مدیریت تاریخچه با زمان ======
+        # ====== مدیریت تاریخچه با زمان (هر بار اجرا یک نقطه جدید اضافه می‌شود) ======
         history = old_item.get("history", [])
 
         # تبدیل تاریخچه قدیمی (اگر به فرمت عددی ساده است)
@@ -161,7 +154,6 @@ def get_rates():
         if len(history) > 30:
             history = history[-30:]
 
-        # فرمت نمایش
         if key == "دلار تهران":
             display_price = f"{int(nv):,}"
         else:
@@ -184,4 +176,3 @@ if __name__ == "__main__":
     with open("last_rates.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     print("بروزرسانی دیتابیس با موفقیت انجام شد.")
-        
