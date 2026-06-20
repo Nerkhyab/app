@@ -1,7 +1,7 @@
 {
   "rates": {
     "دالر هرات": {
-      "current": "64.60",
+      "current": "64.80",
       "status": "same",
       "percent": "0.00%",
       "history": [
@@ -128,7 +128,7 @@
       ]
     },
     "یورو هرات": {
-      "current": "73.80",
+      "current": "73.90",
       "status": "same",
       "percent": "0.00%",
       "history": [
@@ -255,7 +255,7 @@
       ]
     },
     "تومان چک": {
-      "current": "0.60",
+      "current": "0.63",
       "status": "same",
       "percent": "0.00%",
       "history": [
@@ -382,7 +382,7 @@
       ]
     },
     "تومان بانکی": {
-      "current": "0.42",
+      "current": "0.44",
       "status": "same",
       "percent": "0.00%",
       "history": [
