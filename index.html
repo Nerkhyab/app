@@ -1019,20 +1019,14 @@
             });
         }
 
-        // ==================== تاریخ و زمان ====================
         function updateDateTime() {
-            const now = new Date();
-            now.setHours(now.getHours() + 1);
-            const h = String(now.getHours()).padStart(2, '0');
-            const m = String(now.getMinutes()).padStart(2, '0');
-            const s = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('timeDisplay').innerText = `${h}:${m}:${s}`;
-            const j = jalaali.toJalaali(now);
-            document.getElementById('dateDisplay').innerText = `${j.jy}/${String(j.jm).padStart(2, '0')}/${String(j.jd).padStart(2, '0')}`;
-        }
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
-
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    document.getElementById('timeDisplay').innerText = now.toLocaleTimeString('fa-IR');
+    document.getElementById('dateDisplay').innerText = now.toLocaleDateString('fa-IR');
+}
+setInterval(updateDateTime, 1000);
+updateDateTime();
         // ==================== تبدیل تاریخ به شمسی ====================
         function toJalaaliDate(dateStr) {
             const d = new Date(dateStr);
