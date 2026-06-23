@@ -52,7 +52,9 @@ def get_rates():
         for name, price in matches:
             key = name + " هرات" if name != "تومان چک" else name
             if key in found_prices:
-                found_prices[key] = price.replace(',', '')
+                # تبدیل کاما به نقطه برای همه ارزها
+                price = price.replace(',', '.')
+                found_prices[key] = price
     else:
         # ===== از پیام‌های تکی =====
         for msg in reversed(messages_herat):
