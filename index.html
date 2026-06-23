@@ -1021,8 +1021,8 @@ font-family: Arial, Helvetica, sans-serif;
         function updateDateTime() {
     const now = new Date();
     now.setHours(now.getHours() + 1);
-    document.getElementById('timeDisplay').innerText = now.toLocaleTimeString('fa-IR');
-    document.getElementById('dateDisplay').innerText = now.toLocaleDateString('fa-IR');
+    document.getElementById('timeDisplay').innerText = now.toLocaleTimeString('en-US', { hour12: false });
+    document.getElementById('dateDisplay').innerText = now.toLocaleDateString('en-US');
 }
 setInterval(updateDateTime, 1000);
 updateDateTime();
