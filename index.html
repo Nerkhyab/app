@@ -747,7 +747,7 @@ body.light-mode .live-dot {
 
         // اسپلش
         if(!localStorage.getItem('splashShown')){
-            setTimeout(()=>{ document.getElementById('splashScreen').classList.add('hide'); setTimeout(()=>document.getElementById('splashScreen').style.display='none',500); },2000);
+            setTimeout(()=>{ document.getElementById('splashScreen').classList.add('hide'); setTimeout(()=>document.getElementById('splashScreen').style.display='none';
             localStorage.setItem('splashShown','true');
         } else document.getElementById('splashScreen').style.display='none';
 
