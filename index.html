@@ -233,29 +233,47 @@
         }
 
         function toJalaali(gregorianDate) {
-            const gy = gregorianDate.getFullYear();
-            const gm = gregorianDate.getMonth() + 1;
-            const gd = gregorianDate.getDate();
-            const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-            let days = 0;
-            for (let i = 0; i < gm - 1; i++) {
-                days += daysInMonth[i];
-            }
-            days += gd - 1;
-            let jy = gy - 621;
-            let jm = 1;
-            let jd = 1;
-            const daysInJalali = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
-            for (let i = 0; i < 12; i++) {
-                if (days < daysInJalali[i]) {
-                    jm = i + 1;
-                    jd = days + 1;
-                    break;
-                }
-                days -= daysInJalali[i];
-            }
-            return { jy, jm, jd };
+    const gy = gregorianDate.getFullYear();
+    const gm = gregorianDate.getMonth() + 1;
+    const gd = gregorianDate.getDate();
+
+    // محاسبه روز از ابتدای سال میلادی
+    const daysInMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let dayOfYear = gd;
+    for (let i = 1; i < gm; i++) {
+        dayOfYear += daysInMonth[i];
+    }
+    if ((gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0) {
+        if (gm > 2) dayOfYear++;
+    }
+
+    // سال شمسی
+    let jy = gy - 621;
+    const daysInJalaliYear = 365;
+    const leapJalali = (jy % 33 === 1 || jy % 33 === 5 || jy % 33 === 9 || jy % 33 === 13 || jy % 33 === 17 || jy % 33 === 22 || jy % 33 === 26 || jy % 33 === 30);
+    let jd = dayOfYear - 78;
+    let jm = 1;
+    
+    if (jd < 1) {
+        jy--;
+        jd += leapJalali ? 366 : 365;
+    }
+    
+    const jalaliMonthDays = [0, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+    for (let i = 1; i <= 12; i++) {
+        let daysInMonth = jalaliMonthDays[i];
+        if (i === 12 && leapJalali) daysInMonth = 30;
+        if (jd <= daysInMonth) {
+            jm = i;
+            jd = jd;
+            break;
         }
+        jd -= daysInMonth;
+    }
+
+    return { jy, jm, jd };
+        }
+        
         setInterval(updateDateTime, 1000);
         updateDateTime();
 
