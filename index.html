@@ -384,12 +384,49 @@ body.light-mode .live-dot {
         function updateDateTime() {
     const now = new Date();
     now.setHours(now.getHours() + 1);
+    
+    // ساعت
     const h = String(now.getHours()).padStart(2, '0');
     const m = String(now.getMinutes()).padStart(2, '0');
-    const s = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('timeDisplay').innerText = `${h}:${m}:${s}`;
-    const j = jalaali.toJalaali(now);
-    document.getElementById('dateDisplay').innerText = `${j.jy}/${j.jm}/${j.jd}`;
+    document.getElementById('timeDisplay').innerText = `${h}:${m}`;
+    
+    // تاریخ با محاسبه دستی شمسی
+    const j = toJalaali(now);
+    document.getElementById('dateDisplay').innerText = `${j.jy}/${String(j.jm).padStart(2, '0')}/${String(j.jd).padStart(2, '0')}`;
+}
+
+// تابع تبدیل میلادی به شمسی (بدون نیاز به کتابخانه)
+function toJalaali(gregorianDate) {
+    const gy = gregorianDate.getFullYear();
+    const gm = gregorianDate.getMonth() + 1;
+    const gd = gregorianDate.getDate();
+    
+    // الگوریتم تبدیل میلادی به شمسی
+    const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let days = 0;
+    for (let i = 0; i < gm - 1; i++) {
+        days += daysInMonth[i];
+    }
+    days += gd - 1;
+    
+    // محاسبه سال شمسی
+    let jy = gy - 621;
+    let jm = 1;
+    let jd = 1;
+    
+    // محاسبه روزهای سال شمسی
+    const daysInJalali = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+    for (let i = 0; i < 12; i++) {
+        if (days < daysInJalali[i]) {
+            jm = i + 1;
+            jd = days + 1;
+            break;
+        }
+        days -= daysInJalali[i];
+    }
+    
+    return { jy, jm, jd };
+        }
         }
         setInterval(updateDateTime,1000); updateDateTime();
 
