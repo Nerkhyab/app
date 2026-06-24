@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>BeChand?! - نسخه نهایی</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg:#1e5f4e; --card:#1d1d1f; --text:#fff; --border:rgba(255,255,255,0.06); --nav:rgba(35,35,35,0.92); --green:#00c853; --red:#ff5252; }
+        body.light-mode { --bg: #d4edda; --card: #ffffff !important; --text: #000; --border: rgba(0,0,0,0.1); --nav: rgba(255,255,255,0.9); }
+        body { background: var(--bg); font-family: 'Vazirmatn', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        .header { display: flex; justify-content: space-between; align-items: stretch; gap: 12px; padding: 16px; max-width: 600px; margin: 0 auto; direction: ltr; }
+        .header-box { flex: 1; background: linear-gradient(135deg, #00c85320, #00c85305); border-radius: 20px; padding: 10px 16px; border-left: 3px solid #00c853; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; text-align: center; }
+        .brand-name { font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800; color: white; letter-spacing: -0.3px; }
+        .brand-name span { color: #ffd966; }
+        .datetime-box { flex-direction: column; gap: 4px; padding: 8px 12px; }
+        .time { font-family: 'Inter', monospace; font-size: 0.95rem; font-weight: 600; color: white; letter-spacing: 0.5px; }
+        .date { font-family: 'Inter', monospace; font-size: 0.90rem; font-weight: 500; color: rgba(255,255,255,0.8); }
+        body.light-mode .brand-name, body.light-mode .time, body.light-mode .date { color: #000; }
+        body.light-mode .date { color: rgba(0,0,0,0.7); }
+        .container { padding: 10px 7px 80px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+        .card { background: var(--card) !important; color: var(--text) !important; border: 1px solid var(--border); box-shadow: 0 8px 20px rgba(0,0,0,0.3); border-radius: 20px; padding: 14px; cursor: pointer; transition: 0.2s; user-select: none; }
+        .card-main-row { display: flex; justify-content: space-between; align-items: center; }
+        .card.active-up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
+        .card.active-down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
+        .list-left { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .list-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .status-badge { display: flex; align-items: center; gap: 4px; font-size: 1.1rem; font-weight: 350; direction: ltr; }
+        .circle-arrow { display: inline-flex; align-items: center; justify-content: center; width: auto; height: auto; background: transparent; }
+        .text-up .circle-arrow { border-color: #00c853; color: #00c853; }
+        .text-down .circle-arrow { border-color: #ff5252; color: #ff5252; }
+        .text-up { color: #00c853; }
+        .text-down { color: #ff5252; }
+        
+        /* ===== فونت‌های جدید ===== */
+        .price-val {
+            font-family: 'Inter', 'Tahoma', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            direction: ltr;
+        }
+        .card-info b {
+            font-family: 'Vazirmatn', 'IRANSans', 'Tahoma', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .card-info div div {
+            font-family: 'Vazirmatn', 'IRANSans', 'Tahoma', sans-serif;
+            font-size: 0.7rem;
+            opacity: 0.6;
+        }
+        /* ================================ */
+        
+        .card-info { display: flex; align-items: center; gap: 10px; text-align: right; }
+        .icon-img { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; }
+        .custom-mix-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
+        .custom-mix-icon img { width: 50%; height: 100%; object-fit: cover; }
+        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .container.grid-mode .card { aspect-ratio: 1 / 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .grid-mode .card-main-row { flex-direction: column-reverse; justify-content: space-between; height: 100%; padding: 0; }
+        .grid-mode .list-left { width: 100%; }
+        .grid-mode .list-right { width: 100%; flex-direction: row; justify-content: space-between; align-items: center; }
+        .grid-mode .price-val { font-size: 2.3rem; }
+        .grid-mode .price-area { margin-top: auto; }
+        .grid-mode .card-info { justify-content: space-between; width: 100%; }
+        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 500px; background: var(--nav); backdrop-filter: blur(20px); border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; direction: rtl; }
+        .nav-icon { font-size: 1.4rem; color: var(--text); cursor: pointer; opacity: 0.8; }
+        .nav-text { font-size: 0.85rem; font-weight: 500; color: var(--text); text-align: center; display: flex; align-items: center; gap: 6px; }
+        .full-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s; z-index: 2000; }
+        .full-modal.active { visibility: visible; opacity: 1; }
+        .settings-panel { background: rgba(28,28,30,0.4); backdrop-filter: blur(20px); border-radius: 32px; width: 90%; max-width: 360px; padding: 20px; border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        .header-settings { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; font-size: 1.2rem; color: white; }
+        .setting-group { margin-bottom: 20px; }
+        .group-title { font-size: 0.75rem; opacity: 0.7; margin-bottom: 8px; color: rgba(255,255,255,0.8); }
+        .segmented-control { position: relative; display: flex; background: rgba(0,0,0,0.3); border-radius: 60px; padding: 4px; height: 44px; align-items: center; }
+        .segment-slider { position: absolute; top: 3px; bottom: 3px; width: calc(50% - 3px); background: var(--green); border-radius: 10px; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 2px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3); }
+        .segment-option { flex: 1; text-align: center; font-size: 0.85rem; color: rgba(255,255,255,0.7); z-index: 2; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; height: 100%; transition: color 0.2s; }
+        .segment-option.active { color: white; font-weight: 500; }
+        .menu-list { margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 10px; }
+        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; cursor: pointer; font-size: 0.9rem; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .double-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .guide-btn { flex: 1; border-radius: 60px; padding: 10px 0; display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; background: #00c853; color: white; border: none; }
+        .insta-btn { flex: 1; border-radius: 60px; padding: 10px 0; display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 500; text-decoration: none; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+        .close-icon { cursor: pointer; opacity: 0.7; color: white; }
+        .about-modal-content, .install-modal-content { background: rgba(28,28,30,0.96); backdrop-filter: blur(20px); border-radius: 32px; padding: 20px; max-width: 340px; width: 90%; color: white; direction: rtl; }
+        .about-modal-content p { margin: 12px 0; line-height: 1.6; font-size: 0.85rem; text-align: justify; }
+        .about-modal-content b { color: #ffd966; }
+        .install-modal-content { text-align: center; }
+        .install-modal-content p { margin: 12px 0; font-size: 0.9rem; }
+        .install-modal-content button { background: #00c853; border: none; border-radius: 30px; padding: 8px 20px; color: white; cursor: pointer; }
+        .calc-panel { background: rgba(28,28,30,0.96); backdrop-filter: blur(20px); border-radius: 32px; width: 90%; max-width: 400px; padding: 20px; }
+        .calc-display { background: rgba(0,0,0,0.3); border-radius: 24px; padding: 16px; text-align: left; font-size: 1.8rem; font-family: 'Inter', monospace; font-weight: 600; color: white; margin-bottom: 16px; direction: ltr; }
+        .calc-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .calc-btn { background: rgba(255,255,255,0.08); border: none; padding: 14px 0; border-radius: 24px; font-size: 1.2rem; color: white; cursor: pointer; }
+        .calc-btn.operator { background: #00c85320; color: #00c853; }
+        .calc-btn.equal { background: #00c853; color: white; }
+        .live-dot { display: inline-block; width: 10px; height: 10px; background-color: #00c853; border-radius: 50%; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .live-label { color: #fff; font-size: 0.8rem; opacity: 0.9; font-weight: 500; }
+        #liveStatus { display: flex; align-items: center; gap: 8px; justify-content: center; padding: 8px; max-width: 600px; margin: 0 auto; }
+        #liveStatus.dot-hidden .live-dot { display: none; }
+        #liveStatus.dot-hidden .live-label { opacity: 0.4; }
+        @media (max-width: 500px) {
+            .price-val { font-size: 1.8rem; }
+            .grid-mode .price-val { font-size: 2.2rem; }
+            .icon-img, .custom-mix-icon { width: 36px; height: 36px; }
+            .brand-name { font-size: 1.5rem; }
+            .time { font-size: 0.8rem; }
+            .date { font-size: 0.8rem; }
+        }
+        .container.grid-mode .card { padding-bottom: 4px !important; }
+        .container.grid-mode .list-left { justify-content: flex-end !important; display: flex !important; flex-direction: column !important; height: 100% !important; }
+        .grid-mode .status-badge { margin-bottom: -9px; }
+        .status-badge { gap: 1px; }
+        .circle-arrow i { transform: scale(0.85); display: inline-block; }
+        .container:not(.grid-mode) .card { display: flex; flex-direction: row; align-items: flex-start; padding: 12px 16px; }
+        .container:not(.grid-mode) .card-main-row { display: flex; flex-direction: row; width: 100%; justify-content: space-between; }
+        .container:not(.grid-mode) .list-left { order: 0; display: flex; flex-direction: row; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+        .container:not(.grid-mode) .list-right { order: 1; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; }
+        .container:not(.grid-mode) .price-val { font-size: 2rem; font-weight: 900; order: 0; }
+        .container:not(.grid-mode) .status-badge { order: 1; margin: 0; }
+        .container:not(.grid-mode) .card-info { display: flex; flex-direction: row; align-items: center; gap: 12px; }
+        .container:not(.grid-mode) .card-info div { text-align: right; }
+    </style>
+</head>
+<body>
+
+    <!-- هدر -->
+    <div class="header">
+        <div class="header-box"><div class="brand-name">BeChand<span>?!</span></div></div>
+        <div class="header-box datetime-box">
+            <div class="time" id="timeDisplay">--:--</div>
+            <div class="date" id="dateDisplay">----/--/--</div>
+        </div>
+    </div>
+
+    <!-- کارت‌ها -->
+    <div id="main-container" class="container"></div>
+
+    <!-- نقطه نرخ زنده -->
+    <div id="liveStatus">
+        <span id="liveDot" class="live-dot"></span>
+        <span class="live-label">نرخ زنده</span>
+    </div>
+
+    <!-- نوار پایین -->
+    <div class="bottom-nav">
+        <i class="fas fa-cog nav-icon" onclick="openModal('settingsModal')"></i>
+        <div class="nav-text">مرجع رسمی نرخ ارز در بازار هرات</div>
+        <i class="fas fa-calculator nav-icon" onclick="openModal('calcModal')"></i>
+    </div>
+
+    <!-- مودال تنظیمات -->
+    <div id="settingsModal" class="full-modal"><div class="settings-panel"><div class="header-settings"><span>تنظیمات</span><i class="fas fa-times close-icon" onclick="closeModal('settingsModal')"></i></div>
+        <div class="setting-group"><div class="group-title">حالت نمایش</div><div class="segmented-control" id="layoutSegmented"><div class="segment-slider" id="layoutSlider"></div><div class="segment-option" id="layoutList"><i class="fas fa-bars"></i> لیست</div><div class="segment-option" id="layoutGrid"><i class="fas fa-th-large"></i> کنار هم</div></div></div>
+        <div class="setting-group"><div class="group-title">تم</div><div class="segmented-control" id="themeSegmented"><div class="segment-slider" id="themeSlider"></div><div class="segment-option" id="themeLight"><i class="fas fa-sun"></i> روشن</div><div class="segment-option" id="themeDark"><i class="fas fa-moon"></i> تیره</div></div></div>
+        <div class="menu-list"><div class="menu-item" id="aboutBtn"><span>درباره برنامه</span><i class="fas fa-chevron-left"></i></div><div class="menu-item" id="updateBtn"><span>بروزرسانی قیمت‌ها</span><i class="fas fa-sync-alt"></i></div><div class="menu-item" id="shareBtn"><span>پیشنهاد به دوستان</span><i class="fas fa-share-nodes"></i></div></div>
+        <div class="double-buttons"><button class="guide-btn" id="installGuideBtn"><i class="fas fa-mobile-alt"></i> راهنمای نصب</button><a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="insta-btn"><i class="fab fa-instagram"></i> اینستاگرام سازنده</a></div>
+    </div></div>
+
+    <!-- مودال درباره -->
+    <div id="aboutModal" class="full-modal"><div class="about-modal-content"><div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><b style="font-size: 1.1rem;">درباره برنامه</b><i class="fas fa-times close-icon" onclick="closeModal('aboutModal')"></i></div>
+        <p><b style="color:#d4af37;">منبع قیمت:</b><br>قیمت‌های نمایش داده‌شده در اپلیکیشن به چند؟! از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند</p>
+        <p>این برنامه نیاز به هیچ ثبت نام و دریافت اطلاعاتی ندارد، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.</p>
+        <p>جهت ارتباط، انتقاد و یا پیشنهاد همکاری با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.</p>
+        <p><b style="color:#d4af37;">DEVELOPER :</b> Safiullah Bahadori Ghouryani</p>
+    </div></div>
+
+    <!-- مودال نصب -->
+    <div id="installModal" class="full-modal"><div class="install-modal-content"><div style="display: flex; justify-content: space-between;"><b style="color:#ffd966;">📱 نصب برنامه</b><i class="fas fa-times close-icon" onclick="closeModal('installModal')"></i></div>
+        <p>برای نصب برنامه ، از منوی سه نقطه ⋮  گوشه بالای مرورگر، گزینه «افزودن به صفحه اصلی» را انتخاب کنید.</p>
+        <div style="background: rgba(255,255,255,0.1); border-radius: 20px; padding: 8px; margin: 12px 0; display: flex; justify-content: space-between;"><span id="appLink">https://nerkhyab.github.io/app</span><button style="padding: 4px 12px; background: #00c853; border: none; border-radius: 12px; color: white; cursor: pointer;" onclick="copyLink()">کپی لینک</button></div>
+        <button onclick="closeModal('installModal')">متوجه شدم</button>
+    </div></div>
+
+    <!-- مودال ماشین حساب -->
+    <div id="calcModal" class="full-modal"><div class="calc-panel"><div style="display: flex; justify-content: space-between; margin-bottom: 16px;"><h3>ماشین حساب</h3><i class="fas fa-times close-icon" onclick="closeModal('calcModal')"></i></div>
+        <div class="calc-display" id="calcDisplay">0</div><div class="calc-buttons" id="calcButtons">
+            <button class="calc-btn" data-type="number" data-value="7">7</button><button class="calc-btn" data-type="number" data-value="8">8</button><button class="calc-btn" data-type="number" data-value="9">9</button><button class="calc-btn operator" data-type="operator" data-value="/">÷</button>
+            <button class="calc-btn" data-type="number" data-value="4">4</button><button class="calc-btn" data-type="number" data-value="5">5</button><button class="calc-btn" data-type="number" data-value="6">6</button><button class="calc-btn operator" data-type="operator" data-value="*">×</button>
+            <button class="calc-btn" data-type="number" data-value="1">1</button><button class="calc-btn" data-type="number" data-value="2">2</button><button class="calc-btn" data-type="number" data-value="3">3</button><button class="calc-btn operator" data-type="operator" data-value="-">-</button>
+            <button class="calc-btn" data-type="number" data-value="0">0</button><button class="calc-btn" data-type="number" data-value="00">00</button><button class="calc-btn" data-type="dot" data-value=".">.</button><button class="calc-btn operator" data-type="operator" data-value="+">+</button>
+            <button class="calc-btn" data-type="clear" data-value="all">AC</button><button class="calc-btn" data-type="clear" data-value="last">C</button><button class="calc-btn equal" data-type="equal">=</button>
+        </div>
+    </div></div>
+
+    <script>
+        // ==================== داده‌های نمونه ====================
+        const sampleRates = {
+            "دالر هرات": { current: "63.80", status: "down", percent: "-0.08%" },
+            "یورو هرات": { current: "73.00", status: "down", percent: "-0.95%" },
+            "تومان بانکی": { current: "0.36", status: "down", percent: "-5.26%" },
+            "تومان چک": { current: "0.48", status: "down", percent: "-11.11%" },
+            "دلار تهران": { current: "173,900", status: "up", percent: "+0.06%" },
+            "کلدار هرات": { current: "221.00", status: "up", percent: "+4.25%" }
+        };
+
+        const itemsList = [
+            { id:"usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png" },
+            { id:"eur-herat", key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png" },
+            { id:"toman-bank", key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png" },
+            { id:"toman-check", key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png" },
+            { id:"tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix" },
+            { id:"kaldar", key:"کلدار هرات", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png" }
+        ];
+
+        let currentRates = { ...sampleRates };
+        let currentTheme = 'light';
+        let currentLayout = true;
+
+        // ==================== توابع عمومی ====================
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function copyLink() {
+            const link = document.getElementById('appLink').innerText;
+            navigator.clipboard.writeText(link).then(()=>alert('✅ لینک کپی شد!')).catch(()=>{const ta=document.createElement('textarea'); ta.value=link; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('✅ لینک کپی شد!');});
+        }
+
+        // ==================== تاریخ و زمان ====================
+        function updateDateTime() {
+            const now = new Date();
+            now.setHours(now.getHours() + 1);
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('timeDisplay').innerText = `${h}:${m}`;
+            const j = toJalaali(now);
+            document.getElementById('dateDisplay').innerText = `${j.jy}/${String(j.jm).padStart(2, '0')}/${String(j.jd).padStart(2, '0')}`;
+        }
+
+        function toJalaali(gregorianDate) {
+            const gy = gregorianDate.getFullYear();
+            const gm = gregorianDate.getMonth() + 1;
+            const gd = gregorianDate.getDate();
+            const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            let days = 0;
+            for (let i = 0; i < gm - 1; i++) {
+                days += daysInMonth[i];
+            }
+            days += gd - 1;
+            let jy = gy - 621;
+            let jm = 1;
+            let jd = 1;
+            const daysInJalali = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+            for (let i = 0; i < 12; i++) {
+                if (days < daysInJalali[i]) {
+                    jm = i + 1;
+                    jd = days + 1;
+                    break;
+                }
+                days -= daysInJalali[i];
+            }
+            return { jy, jm, jd };
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        // ==================== رندر کارت‌ها ====================
+        function createCardHTML(item, r) {
+            const isUp = r.status === 'up';
+            const isDown = r.status === 'down';
+            const isSame = r.status === 'same';
+            const cardDiv = document.createElement('div');
+            const now = new Date();
+            const hour = now.getHours();
+            const isMarketOpen = (hour >= 8 && hour < 18);
+            let cardClass = 'card';
+            if (isMarketOpen && !isSame) {
+                cardClass += isUp ? ' active-up' : ' active-down';
+            }
+            cardDiv.className = cardClass;
+            cardDiv.setAttribute('data-id', item.id);
+
+            let iconHtml = `<img class="icon-img" src="${item.icon}" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">`;
+            if(item.icon === "custom-mix") iconHtml = `<div class="custom-mix-icon"><img src="https://flagcdn.com/w160/us.png"><img src="https://flagcdn.com/w160/ir.png"></div>`;
+
+            let arrowIcon = isUp ? 'fa-arrow-up' : isDown ? 'fa-arrow-down' : 'fa-minus';
+            let badgeClass = isUp ? 'text-up' : isDown ? 'text-down' : 'text-neutral';
+
+            cardDiv.innerHTML = `
+                <div class="card-main-row">
+                    <div class="list-left">
+                        <div class="status-badge ${badgeClass}">
+                            <span class="circle-arrow"><i class="fas ${arrowIcon}"></i></span>
+                            <span>${r.percent}</span>
+                        </div>
+                        <div class="price-val">${r.current}</div>
+                    </div>
+                    <div class="list-right">
+                        <div class="card-info">
+                            <div><b>${item.key}</b><div style="font-size:0.7rem;opacity:0.6;">${item.sub}</div></div>
+                            ${iconHtml}
+                        </div>
+                    </div>
+                </div>`;
+            return cardDiv;
+        }
+
+        function renderCards() {
+            const container = document.getElementById('main-container');
+            container.innerHTML = '';
+            itemsList.forEach(item => {
+                const r = currentRates[item.key] || { current:"---", status:"up", percent:"0%" };
+                container.appendChild(createCardHTML(item, r));
+            });
+            if (currentLayout) container.classList.add('grid-mode');
+            else container.classList.remove('grid-mode');
+        }
+
+        // ==================== تنظیمات ====================
+        function setLayout(isGrid) {
+            currentLayout = isGrid;
+            localStorage.setItem('isGridMode', isGrid);
+            const container = document.getElementById('main-container');
+            if(isGrid) container.classList.add('grid-mode');
+            else container.classList.remove('grid-mode');
+            const layoutSlider = document.getElementById('layoutSlider');
+            layoutSlider.style.transform = isGrid ? 'translateX(-100%)' : 'translateX(0)';
+            document.getElementById('layoutList').classList.toggle('active', !isGrid);
+            document.getElementById('layoutGrid').classList.toggle('active', isGrid);
+        }
+
+        function setTheme(isLight) {
+            currentTheme = isLight ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
+            if(isLight) document.body.classList.add('light-mode');
+            else document.body.classList.remove('light-mode');
+            const themeSlider = document.getElementById('themeSlider');
+            themeSlider.style.transform = !isLight ? 'translateX(-100%)' : 'translateX(0)';
+            document.getElementById('themeLight').classList.toggle('active', isLight);
+            document.getElementById('themeDark').classList.toggle('active', !isLight);
+        }
+
+        document.getElementById('layoutList').onclick = () => { if(currentLayout) setLayout(false); };
+        document.getElementById('layoutGrid').onclick = () => { if(!currentLayout) setLayout(true); };
+        document.getElementById('themeLight').onclick = () => { if(!(currentTheme==='light')) setTheme(true); };
+        document.getElementById('themeDark').onclick = () => { if(!(currentTheme==='dark')) setTheme(false); };
+
+        // ==================== بارگذاری اولیه تنظیمات ====================
+        if (localStorage.getItem('theme') === null) localStorage.setItem('theme', 'light');
+        if (localStorage.getItem('isGridMode') === null) localStorage.setItem('isGridMode', 'true');
+        currentTheme = localStorage.getItem('theme');
+        currentLayout = localStorage.getItem('isGridMode') === 'true';
+        if(currentTheme==='light') document.body.classList.add('light-mode');
+        else document.body.classList.remove('light-mode');
+        setLayout(currentLayout);
+        setTheme(currentTheme === 'light');
+
+        // ==================== ماشین حساب ====================
+        let calcExpression = '';
+        const calcDisplay = document.getElementById('calcDisplay');
+
+        function updateCalcDisplay() { calcDisplay.innerText = calcExpression || '0'; }
+
+        function handleCalcButton(value) {
+            if (value === 'clear_all') { calcExpression = ''; }
+            else if (value === 'clear_last') { calcExpression = calcExpression.slice(0, -1); }
+            else if (value === 'equal') {
+                try {
+                    let expr = calcExpression.replace(/×/g, '*').replace(/÷/g, '/');
+                    let result = eval(expr);
+                    calcExpression = String(result);
+                } catch(e) { calcExpression = 'Error'; }
+            } else {
+                calcExpression += value;
+            }
+            updateCalcDisplay();
+        }
+        document.querySelectorAll('#calcButtons .calc-btn').forEach(btn => {
+            btn.onclick = () => {
+                const type = btn.getAttribute('data-type');
+                const val = btn.getAttribute('data-value');
+                if (type === 'number') handleCalcButton(val);
+                else if (type === 'dot') handleCalcButton('.');
+                else if (type === 'operator') handleCalcButton(val);
+                else if (type === 'clear') handleCalcButton(val === 'all' ? 'clear_all' : 'clear_last');
+                else if (type === 'equal') handleCalcButton('equal');
+            };
+        });
+
+        // ==================== نقطه نرخ زنده ====================
+        function updateLiveDot() {
+            const now = new Date();
+            const hour = now.getHours();
+            const day = now.getDay();
+            const isFriday = (day === 6);
+            const isWorkingHour = (hour >= 8 && hour < 18);
+            const dot = document.getElementById('liveDot');
+            const statusDiv = document.getElementById('liveStatus');
+            if (dot && statusDiv) {
+                if (!isFriday && isWorkingHour) {
+                    dot.style.display = 'inline-block';
+                    statusDiv.classList.remove('dot-hidden');
+                } else {
+                    dot.style.display = 'none';
+                    statusDiv.classList.add('dot-hidden');
+                }
+            }
+        }
+        setInterval(updateLiveDot, 60000);
+        updateLiveDot();
+
+        // ==================== بارگذاری نهایی ====================
+        renderCards();
+    </script>
+</body>
+</html>
