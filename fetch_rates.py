@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 # منابع دیتا
 CHANNEL_HERAT = "https://t.me/s/NerkhYab_Khorasan"
-CHANNEL_TEHRAN = "https://t.me/s/dollarsbze"
+CHANNEL_TEHRAN = "https://t.me/s/dollar3sbze"
 
 def clean_html(raw):
     return re.sub(r'<.*?>', '', raw)
