@@ -77,10 +77,9 @@ def get_rates():
                 if m:
                     found_prices["کلدار هرات"] = m.group(1).replace(',', '')
 
-    # ===== دلار تهران =====
-    tehran_pattern = r'دلار تهران\s*[:]*\s*([\d,]+)'
+    # ===== دلار تهران (اصلاح شده) =====
     for msg in reversed(messages_tehran):
-        m = re.search(tehran_pattern, msg)
+        m = re.search(r'دلار تهران.*?([\d,]+)', msg)
         if m:
             raw_val = m.group(1).replace(',', '')
             if raw_val.isdigit():
