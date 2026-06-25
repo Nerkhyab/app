@@ -11,11 +11,11 @@ CHANNEL_TEHRAN = "https://t.me/s/dollar3sbze"
 def clean_html(raw):
     return re.sub(r'<.*?>', '', raw)
 
-def get_messages(url):
+def get_messages(url, limit=50):
     try:
         res = requests.get(url, timeout=20)
         messages = re.findall(r'<div class="tgme_widget_message_text.*?>(.*?)</div>', res.text, re.S)
-        return [clean_html(m) for m in messages[-30:]]
+        return [clean_html(m) for m in messages[-limit:]]
     except:
         return []
 
@@ -26,8 +26,8 @@ def load_old():
     return {"rates": {}}
 
 def get_rates():
-    messages_herat = get_messages(CHANNEL_HERAT)
-    messages_tehran = get_messages(CHANNEL_TEHRAN)
+    messages_herat = get_messages(CHANNEL_HERAT, 50)
+    messages_tehran = get_messages(CHANNEL_TEHRAN, 50)
     
     found_prices = {
         "دالر هرات": None,
@@ -47,37 +47,60 @@ def get_rates():
 
     # ===== استخراج قیمت‌ها =====
     if summary_message:
-        # ===== پیام کلی =====
-        pattern = r'(دالر هرات|یورو هرات|کلدار هرات|تومان چک|تومان بانکی)[^\d]*([\d,]+\.?\d*)'
+        # ===== پیام کلی (اصلاح شده) =====
+        pattern = r'(دالر|یورو|کلدار|تومان چک)[^\d]*([\d,]+\.?\d*)'
         matches = re.findall(pattern, summary_message)
         for name, price in matches:
-            if name in found_prices:
-                found_prices[name] = price.replace(',', '')
+            key = name + " هرات" if name != "تومان چک" else name
+            if key in found_prices:
+                price = price.replace(',', '.')
+                # فقط عدد اول (قیمت خرید) رو بگیر
+                if ' ' in price:
+                    price = price.split()[0]
+                found_prices[key] = price
     else:
-        # ===== پیام‌های تکی =====
+        # ===== پیام‌های تکی (با پشتیبانی از فرمت جدید و قدیم) =====
         for msg in reversed(messages_herat):
+            # جلوگیری از بررسی پیام‌های تکراری
+            if all(v is not None for v in found_prices.values() if v != "دلار تهران"):
+                break
+                
+            # روش جدید: استخراج اعداد به صورت ترتیبی
+            numbers = re.findall(r'(\d+[.,]\d+)', msg)
+            if len(numbers) >= 4 and not any(keyword in msg for keyword in ["دالر", "یورو", "کلدار", "تومان"]):
+                # اگر نام ارزها نبود، به ترتیب نسبت بده
+                if found_prices["دالر هرات"] is None:
+                    found_prices["دالر هرات"] = numbers[0].replace(',', '.')
+                if found_prices["یورو هرات"] is None:
+                    found_prices["یورو هرات"] = numbers[1].replace(',', '.')
+                if found_prices["کلدار هرات"] is None:
+                    found_prices["کلدار هرات"] = numbers[2].replace(',', '.')
+                if found_prices["تومان چک"] is None:
+                    found_prices["تومان چک"] = numbers[3].replace(',', '.')
+            
+            # روش قدیم: جستجوی نام ارز (برای پیام‌های دارای نام)
             if "دالر هرات" in msg and found_prices["دالر هرات"] is None:
                 m = re.search(r'دالر هرات\s*([\d,.]+)', msg)
                 if m:
-                    found_prices["دالر هرات"] = m.group(1).replace(',', '')
+                    found_prices["دالر هرات"] = m.group(1).replace(',', '.')
             if "یورو هرات" in msg and found_prices["یورو هرات"] is None:
                 m = re.search(r'یورو هرات\s*([\d,.]+)', msg)
                 if m:
-                    found_prices["یورو هرات"] = m.group(1).replace(',', '')
+                    found_prices["یورو هرات"] = m.group(1).replace(',', '.')
             if "تومان چک" in msg and found_prices["تومان چک"] is None:
                 m = re.search(r'تومان چک\s*([\d,.]+)', msg)
                 if m:
-                    found_prices["تومان چک"] = m.group(1).replace(',', '')
+                    found_prices["تومان چک"] = m.group(1).replace(',', '.')
             if "تومان بانکی" in msg and found_prices["تومان بانکی"] is None:
                 m = re.search(r'تومان بانکی\s*([\d,.]+)', msg)
                 if m:
-                    found_prices["تومان بانکی"] = m.group(1).replace(',', '')
+                    found_prices["تومان بانکی"] = m.group(1).replace(',', '.')
             if "کلدار هرات" in msg and found_prices["کلدار هرات"] is None:
                 m = re.search(r'کلدار هرات\s*([\d,.]+)', msg)
                 if m:
-                    found_prices["کلدار هرات"] = m.group(1).replace(',', '')
+                    found_prices["کلدار هرات"] = m.group(1).replace(',', '.')
 
-    # ===== دلار تهران (اصلاح شده) =====
+    # ===== دلار تهران =====
     for msg in reversed(messages_tehran):
         m = re.search(r'دلار تهران.*?([\d,]+)', msg)
         if m:
@@ -86,10 +109,9 @@ def get_rates():
                 found_prices["دلار تهران"] = raw_val
                 break
 
-    # ===== مقدار پیش‌فرض برای موارد پیدا نشده =====
+    # ===== مقدار پیش‌فرض =====
     old_data = load_old()
     old_rates = old_data.get("rates", {})
-
     defaults = {
         "دالر هرات": "63.20",
         "یورو هرات": "73.20",
@@ -101,7 +123,7 @@ def get_rates():
     for key in found_prices:
         if found_prices[key] is None:
             old_val = old_rates.get(key, {}).get("current", "0")
-            if old_val != "---":
+            if old_val not in ["---", "0"]:
                 found_prices[key] = str(old_val).replace(',', '')
             else:
                 found_prices[key] = defaults.get(key, "0")
@@ -136,10 +158,7 @@ def get_rates():
         else:
             percent = "0.00%"
 
-        # ===== تاریخچه با زمان =====
         history = old_item.get("history", [])
-
-        # اگر تاریخچه به فرمت عددی ساده است، تبدیل کن
         if history and isinstance(history[0], (int, float)):
             new_history = []
             now = datetime.now()
@@ -149,22 +168,18 @@ def get_rates():
                 new_history.append({"price": p, "time": dt.isoformat()})
             history = new_history
 
-        # اگر با کلید "ts" ذخیره شده بود، به "time" تغییر بده
         if history and isinstance(history[0], dict) and "ts" in history[0]:
             for h in history:
                 h["time"] = h.pop("ts")
 
-        # اضافه کردن نقطه جدید (حتی اگر قیمت تغییر نکرده باشد)
         history.append({
             "price": nv,
             "time": datetime.now().isoformat()
         })
 
-        # نگهداری حداکثر ۳۰ نقطه
         if len(history) > 30:
             history = history[-30:]
 
-        # فرمت نمایش
         if key == "دلار تهران":
             display_price = f"{int(nv):,}"
         else:
