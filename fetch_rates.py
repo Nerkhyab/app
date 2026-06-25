@@ -195,6 +195,18 @@ def get_rates():
             "history": history
         }
 
+    # ===== به‌روزرسانی current با آخرین قیمت تاریخچه =====
+    for key in new_rates:
+        if new_rates[key]["history"]:
+            last_price = new_rates[key]["history"][-1]["price"]
+            if key == "دلار تهران":
+                new_rates[key]["current"] = f"{int(last_price):,}"
+            else:
+                if last_price < 1:
+                    new_rates[key]["current"] = f"{last_price:.2f}"
+                else:
+                    new_rates[key]["current"] = str(last_price)
+
     return {"rates": new_rates}
 
 if __name__ == "__main__":
