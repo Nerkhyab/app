@@ -1199,8 +1199,19 @@
                             };
                         }
                     }
-                    currentRates = filteredRates;
-                    console.log('✅ قیمت‌ها از فایل بارگذاری و فیلتر شدند:', currentRates);
+                    // به‌روزرسانی کامل با داده‌های جدید
+for (const [key, value] of Object.entries(filteredRates)) {
+    if (currentRates[key]) {
+        currentRates[key].current = value.current;
+        currentRates[key].status = value.status;
+        currentRates[key].percent = value.percent;
+        // فقط تاریخچه رو کامل جایگزین کن
+        if (value.history && value.history.length > 0) {
+            currentRates[key].history = value.history;
+        }
+    }
+}
+console.log('✅ قیمت‌ها به‌روزرسانی شدند:', currentRates);
                 } else {
                     // استفاده از داده‌های ذخیره شده در localStorage
                     const saved = localStorage.getItem('lastRates');
