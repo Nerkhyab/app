@@ -38,75 +38,48 @@ def get_rates():
         "دلار تهران": None
     }
 
-    # ===== تشخیص پیام کلی =====
-    summary_message = None
-    for msg in messages_herat:
-        if "پایان معاملات" in msg:
-            summary_message = msg
+    # ===== استخراج از پیام‌های هرات (همه پیام‌ها) =====
+    # پیام‌ها از جدیدترین به قدیمی‌ترین مرتب هستند (به دلیل reversed)
+    for msg in reversed(messages_herat):
+        # دالر هرات
+        if found_prices["دالر هرات"] is None:
+            # الگوی جدید برای پیام کلی و تکی
+            m = re.search(r'(?:هرات\s*)?دالر(?:\s*هرات)?\s*(?:به\s*افغانی)?[^\d]*([\d,]+\.?\d*)', msg)
+            if m:
+                found_prices["دالر هرات"] = m.group(1).replace(',', '.')
+        
+        # یورو هرات
+        if found_prices["یورو هرات"] is None:
+            m = re.search(r'(?:هرات\s*)?یورو(?:\s*هرات)?\s*(?:به\s*افغانی)?[^\d]*([\d,]+\.?\d*)', msg)
+            if m:
+                found_prices["یورو هرات"] = m.group(1).replace(',', '.')
+        
+        # کلدار هرات
+        if found_prices["کلدار هرات"] is None:
+            m = re.search(r'(?:هرات\s*)?کلدار(?:\s*هرات)?\s*(?:افغانی)?[^\d]*([\d,]+\.?\d*)', msg)
+            if m:
+                found_prices["کلدار هرات"] = m.group(1).replace(',', '.')
+        
+        # تومان چک
+        if found_prices["تومان چک"] is None:
+            m = re.search(r'(?:هرات\s*)?تومان\s*چک[^\d]*([\d,]+\.?\d*)', msg)
+            if m:
+                found_prices["تومان چک"] = m.group(1).replace(',', '.')
+        
+        # تومان بانکی
+        if found_prices["تومان بانکی"] is None:
+            m = re.search(r'(?:هرات\s*)?تومان\s*بانکی[^\d]*([\d,]+\.?\d*)', msg)
+            if m:
+                found_prices["تومان بانکی"] = m.group(1).replace(',', '.')
+        
+        # اگر همه قیمت‌های هرات پیدا شد، حلقه را متوقف کن
+        if all(v is not None for v in [found_prices["دالر هرات"], found_prices["یورو هرات"], 
+                                       found_prices["کلدار هرات"], found_prices["تومان چک"], 
+                                       found_prices["تومان بانکی"]]):
             break
-
-    # ===== استخراج از پیام کلی =====
-    if summary_message:
-        pattern = r'(دالر|یورو|کلدار|تومان چک)\s*به\s*افغانی[^\d]*([\d,]+\.?\d*)'
-        matches = re.findall(pattern, summary_message)
-        for name, price in matches:
-            if name == "دالر":
-                key = "دالر هرات"
-            elif name == "یورو":
-                key = "یورو هرات"
-            elif name == "کلدار":
-                key = "کلدار هرات"
-            elif name == "تومان چک":
-                key = "تومان چک"
-            
-            if key in found_prices:
-                price = price.replace(',', '.')
-                if ' ' in price:
-                    price = price.split()[0]
-                found_prices[key] = price
-
-    # ===== استخراج از پیام‌های تکی هرات =====
-    if not summary_message or any(v is None for v in found_prices.values() if v != "دلار تهران"):
-        for msg in reversed(messages_herat):
-            # دالر هرات
-            if found_prices["دالر هرات"] is None:
-                m = re.search(r'هرات\s*دالر\s*به\s*افغانی[^\d]*([\d,]+\.?\d*)', msg)
-                if m:
-                    found_prices["دالر هرات"] = m.group(1).replace(',', '.')
-            
-            # یورو هرات
-            if found_prices["یورو هرات"] is None:
-                m = re.search(r'هرات\s*یورو\s*به\s*افغانی[^\d]*([\d,]+\.?\d*)', msg)
-                if m:
-                    found_prices["یورو هرات"] = m.group(1).replace(',', '.')
-            
-            # کلدار هرات
-            if found_prices["کلدار هرات"] is None:
-                m = re.search(r'هرات\s*کلدار\s*افغانی[^\d]*([\d,]+\.?\d*)', msg)
-                if m:
-                    found_prices["کلدار هرات"] = m.group(1).replace(',', '.')
-            
-            # تومان چک
-            if found_prices["تومان چک"] is None:
-                m = re.search(r'هرات\s*تومان\s*چک[^\d]*([\d,]+\.?\d*)', msg)
-                if m:
-                    found_prices["تومان چک"] = m.group(1).replace(',', '.')
-            
-            # تومان بانکی
-            if found_prices["تومان بانکی"] is None:
-                m = re.search(r'هرات\s*تومان\s*بانکی[^\d]*([\d,]+\.?\d*)', msg)
-                if m:
-                    found_prices["تومان بانکی"] = m.group(1).replace(',', '.')
-            
-            # اگر همه قیمت‌ها پیدا شدن، دیگه ادامه نده
-            if all(v is not None for v in [found_prices["دالر هرات"], found_prices["یورو هرات"], 
-                                           found_prices["کلدار هرات"], found_prices["تومان چک"], 
-                                           found_prices["تومان بانکی"]]):
-                break
 
     # ===== دلار تهران =====
     for msg in reversed(messages_tehran):
-        # فرمت: دلار تهران⛳️: 165,600 خرید🔵
         m = re.search(r'دلار\s*تهران[^\d]*([\d,]+)', msg)
         if m:
             raw_val = m.group(1).replace(',', '')
