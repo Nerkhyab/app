@@ -1173,10 +1173,7 @@
         // ==================== بارگذاری داده از فایل ====================
         async function load() {
             try {
-                const res = await fetch('last_rates.json?v=' + Date.now());
-                if (!res.ok) throw new Error('Network response was not ok');
-                const data = await res.json();
-                if (data && data.rates) {
+                const res = await fetch('https://raw.githubusercontent.com/Nerkhyab/app/refs/heads/main/last_rates.json?v=' + Date.now());
                     // فیلتر کردن داده‌های دریافتی و جایگزینی با sample در صورت نیاز
                     const filteredRates = {};
                     for (const [key, value] of Object.entries(data.rates)) {
