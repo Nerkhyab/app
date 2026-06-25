@@ -1182,7 +1182,7 @@
                     const filteredRates = {};
                     for (const [key, value] of Object.entries(data.rates)) {
                         // فیلتر تاریخچه: حذف قیمت‌های غیرعادی
-                        const filteredHistory = value.history ? value.history.filter(h => h.price > 0 && h.price < 1000) : [];
+                        const filteredHistory = value.history ? value.history.filter(h => h.price > 0 && h.price < 10000000) : [];
                         // اگر بعد از فیلتر تاریخچه خالی بود، از sample استفاده کن
                         if (filteredHistory.length === 0 && sampleRates[key]) {
                             filteredRates[key] = { ...sampleRates[key] };
