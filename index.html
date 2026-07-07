@@ -2013,18 +2013,7 @@
         // ===== فعال کردن شبیه‌سازی آپدیت قیمت (برای تست) =====
         // setInterval(simulatePriceUpdate, 15000);
         
-        // ===== نمایش پیام برای کاربر =====
-        setTimeout(function() {
-            const h = currentRates["دالر هرات"].history;
-            if (h && h.length === 30) {
-                console.log('✅ ۳۰ روز کامل شد!');
-                alert('✅ ۳۰ روز کامل شد! روی "۳۰ روز اخیر" کلیک کن.');
-            } else {
-                console.log('❌ هنوز ۳۰ روز نشده:', h ? h.length : 0);
-                alert('❌ تعداد نقاط: ' + (h ? h.length : 0));
-            }
-        }, 1500);
-        
+                
     </script>
 </body>
 </html>
