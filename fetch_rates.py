@@ -84,7 +84,7 @@ def get_rates():
         if m:
             raw_val = m.group(1).replace(',', '')
             if raw_val.isdigit():
-                found_prices["دلار تهران"] = raw_val
+                found_prices["دلار"] = raw_val
                 break
 
     # ===== مقدار پیش‌فرض =====
