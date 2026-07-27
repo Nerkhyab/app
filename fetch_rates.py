@@ -80,7 +80,7 @@ def get_rates():
 
     # ===== دلار تهران =====
     for msg in reversed(messages_tehran):
-        m = re.search(r'دلار\s*تهران[^\d]*([\d,]+)', msg)
+        m = re.search(r'دلار\s*[^\d]*([\d,]+)', msg)
         if m:
             raw_val = m.group(1).replace(',', '')
             if raw_val.isdigit():
