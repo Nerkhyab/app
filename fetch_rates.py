@@ -38,12 +38,10 @@ def get_rates():
         "دلار تهران": None
     }
 
-    # ===== استخراج از پیام‌های هرات (همه پیام‌ها) =====
-    # پیام‌ها از جدیدترین به قدیمی‌ترین مرتب هستند (به دلیل reversed)
+    # ===== استخراج از پیام‌های هرات =====
     for msg in reversed(messages_herat):
         # دالر هرات
         if found_prices["دالر هرات"] is None:
-            # الگوی جدید برای پیام کلی و تکی
             m = re.search(r'(?:هرات\s*)?دالر(?:\s*هرات)?\s*(?:به\s*افغانی)?[^\d]*([\d,]+\.?\d*)', msg)
             if m:
                 found_prices["دالر هرات"] = m.group(1).replace(',', '.')
@@ -78,14 +76,17 @@ def get_rates():
                                        found_prices["تومان بانکی"]]):
             break
 
-    # ===== دلار تهران =====
+    # ===== دلار تهران (فقط کلمه دلار + آخرین عدد) =====
     for msg in reversed(messages_tehran):
-        m = re.search(r'دلار\s*[^\d]*([\d,]+)', msg)
-        if m:
-            raw_val = m.group(1).replace(',', '')
-            if raw_val.isdigit():
-                found_prices["دلار"] = raw_val
-                break
+        if found_prices["دلار تهران"] is None and "دلار" in msg:
+            # همه اعداد پیام رو پیدا کن
+            numbers = re.findall(r'([\d,]+)', msg)
+            if numbers:
+                # آخرین عدد رو انتخاب کن
+                raw_val = numbers[-1].replace(',', '')
+                if raw_val.isdigit():
+                    found_prices["دلار تهران"] = raw_val
+                    break
 
     # ===== مقدار پیش‌فرض =====
     old_data = load_old()
